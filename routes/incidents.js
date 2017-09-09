@@ -24,4 +24,26 @@ module.exports = [
       },
     },
   },
+
+  {
+    method: 'PATCH',
+    path: '/incidents/{id}',
+    handler: async (req, reply) => {
+      // TODO: get userId from the token
+      // req.auth.credentials.id
+      const updated = await incidents.updateIncident(req.payload, req.params.id);
+      reply({ updated });
+    },
+    config: {
+      validate: {
+        payload: {
+          description: Joi.string(),
+          category_id: Joi.number(),
+          date_occurred: Joi.date(),
+          status_id: Joi.number(),
+        },
+      },
+    },
+  },
+
 ];
