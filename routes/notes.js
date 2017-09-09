@@ -9,7 +9,7 @@ module.exports = [
     method: 'POST',
     path: '/incidents/{id}/notes',
     handler: async (req, reply) => {
-      const [ added ] = await notes.createNote(req.params.id, req.payload);
+      const [ added ] = await notes.createNote(req.params.id, req.payload.note);
       if (added) return reply({ id: added });
       return reply(Boom.badImplementation());
     },
@@ -21,19 +21,13 @@ module.exports = [
       },
     },
   },
+
   {
     method: 'GET',
-    path: '/notes',
+    path: '/incidents/{id}/notes',
     handler: async (req, reply) => {
       const notesList = await notes.getNotes(req.params.incident_id);
       reply(notesList);
-    },
-    config: {
-      validate: {
-        query: {
-          incident_id: Joi.number().required(), 
-        },
-      },
     },
   },
 
@@ -57,4 +51,4 @@ module.exports = [
       },
     },
   },
-]
+];

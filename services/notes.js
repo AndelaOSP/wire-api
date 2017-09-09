@@ -34,10 +34,8 @@ async function createReply(noteId, text) {
   .insert(Object.assign({}, { note_id: noteId }, text ));
 }
 
-
 module.exports = {
   createNote,
   getNotes,
   createReply
 };
-
