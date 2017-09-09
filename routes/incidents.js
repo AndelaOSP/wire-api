@@ -12,7 +12,7 @@ module.exports = [
       // req.auth.credentials.id
       const userId = 1; // hardcoded for now
       const [ added ] = await incidents.createIncident(req.payload, userId);
-      if (!added) return reply(Boom.badImplementation('something wrong happend'));
+      if (!added) return reply(Boom.badImplementation('something wrong happened'));
       return reply({ id: added });
     },
     config: {
