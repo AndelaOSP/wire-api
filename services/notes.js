@@ -26,7 +26,16 @@ async function getNotes(incidentId) {
     .join('user', 'incident.user_id', 'user.id')
 }
 
+/**
+ * Create a reply for an incident
+ */
+async function createReply(noteId, text) {
+  return Knex('note_reply')
+  .insert(Object.assign({}, { note_id: noteId }, text ));
+}
+
 module.exports = {
   createNote,
   getNotes,
+  createReply
 };
