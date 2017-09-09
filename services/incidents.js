@@ -7,7 +7,6 @@ async function createIncident(payload, userId) {
   return Knex('incident')
     .insert(Object.assign({}, payload, { user_id: userId }));
 }
-
 const columns = [
   'description',
   'incident_category.name as category_name',
@@ -26,8 +25,16 @@ async function viewOneIncident(id) {
     .join('user', 'incident.user_id', 'user.id')
     .where({ 'incident.id': id });
 }
+async function viewIncidents() {
+  return Knex('incidents')
+    .select(...columns).from('incident')
+    .join('incident_category', 'incident.category_id', 'incident_category.id')
+    .leftJoin('location', 'incident.location_id', 'location.id')
+    .join('user', 'incident.user_id', 'user.id')
+}
 
 module.exports = {
   createIncident,
-  viewOneIncident
+  viewOneIncident,
+  viewIncidents,
 }
