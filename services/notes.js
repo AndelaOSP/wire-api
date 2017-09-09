@@ -34,8 +34,27 @@ async function createReply(noteId, text) {
   .insert(Object.assign({}, { note_id: noteId }, text ));
 }
 
+/**
+ * Get a list of all replies for a note
+ * @param {*} noteId 
+ */
+
+const column = [
+  'text',
+  'note_reply.date_created',
+  'user.id as user_id',
+  'user.name as user_name'
+];
+async function getReplies(noteId) {
+  return Knex('note_reply')
+    .select(...column)
+    .join('note', 'note_reply.note_id', 'note.id')
+    .join('user', 'note_reply.user_id', 'user.id')
+}
+
 module.exports = {
   createNote,
   getNotes,
-  createReply
+  createReply,
+  getReplies
 };
