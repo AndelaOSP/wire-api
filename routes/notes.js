@@ -51,4 +51,12 @@ module.exports = [
       },
     },
   },
+  {
+    method: 'GET',
+    path: '/notes/{id}/replies',
+    handler: async (req, reply) => {
+      const replying = await notes.getReplies(req.params.note_id);
+      reply(replying);
+    },
+  }
 ];
