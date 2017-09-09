@@ -9,7 +9,7 @@ module.exports = [
     method: 'POST',
     path: '/incidents/{id}/notes',
     handler: async (req, reply) => {
-      const [ added ] = await notes.createNote(req.params.id, req.payload);
+      const [ added ] = await notes.createNote(req.params.id, req.payload.note);
       if (added) return reply({ id: added });
       return reply(Boom.badImplementation());
     },
@@ -21,17 +21,32 @@ module.exports = [
       },
     },
   },
+
   {
     method: 'GET',
-    path: '/notes',
+    path: '/incidents/{id}/notes',
     handler: async (req, reply) => {
       const notesList = await notes.getNotes(req.params.incident_id);
       reply(notesList);
     },
+  },
+
+  /*
+  Note-reply routes
+  */
+  {
+    method: 'POST',
+    path: '/notes/{id}/replies',
+    handler: async (req, reply) => {
+      const [ replies ] = await notes.createReply(req.params.id, req.payload);
+      if (replies) return reply({ id: replies });
+      return reply(Boom.badImplementation());
+    },
     config: {
       validate: {
-        query: {
-          incident_id: Joi.number().required(), 
+        payload: {
+          text: Joi.string().required(),
+          user_id: Joi.number().required()
         },
       },
     },

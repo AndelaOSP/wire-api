@@ -12,7 +12,7 @@ module.exports = [
       // req.auth.credentials.id
       const userId = 1; // hardcoded for now
       const [ added ] = await incidents.createIncident(req.payload, userId);
-      if (!added) return reply(Boom.badImplementation('something wrong happend'));
+      if (!added) return reply(Boom.badImplementation('something wrong happened'));
       return reply({ id: added });
     },
     config: {
@@ -26,22 +26,10 @@ module.exports = [
       },
     },
   },
-
+  
+  
   /*
-  Get incident by ID
-  */
-
-  {
-    method: 'GET',
-    path: '/incidents/{id}',
-    handler: async (req, reply) => {
-      const [ getOne ] = await incidents.viewOneIncident(req.params.id);
-      reply(getOne);
-    },
-  },
-
-  /** *
-  * Get all incidents
+  Get all incidents
   */
   
   {
@@ -55,6 +43,36 @@ module.exports = [
     }
   },
 
+  {
+    method: 'GET',
+    path: '/incidents/{id}',
+    handler: async (req, reply) => {
+      const [ getOne ] = await incidents.viewOneIncident(req.params.id);
+      reply(getOne);
+    },
+  },
+
+  {
+    method: 'PATCH',
+    path: '/incidents/{id}',
+    handler: async (req, reply) => {
+      // TODO: get userId from the token
+      // req.auth.credentials.id
+      const updated = await incidents.updateIncident(req.payload, req.params.id);
+      reply({ updated });
+    },
+    config: {
+      validate: {
+        payload: {
+          description: Joi.string(),
+          category_id: Joi.number(),
+          date_occurred: Joi.date(),
+          status_id: Joi.number(),
+        },
+      },
+    },
+  },
+
   /**
    * Add an a sentiment rating on an incidence
    */
@@ -64,7 +82,7 @@ module.exports = [
     handler: async (req, reply) => {
       // TODO: get userId from req.
       const userId = 1;
-      const [ added ] = await incidents.addSentiment(
+      const [added] = await incidents.addSentiment(
         req.params.id,
         req.payload.sentiment_id,
         userId
@@ -79,7 +97,6 @@ module.exports = [
       },
     },
   },
-
   /**
    * Get list of all sentiments for an incident
    */
