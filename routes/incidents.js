@@ -79,4 +79,16 @@ module.exports = [
       },
     },
   },
+
+  /**
+   * Get list of all sentiments for an incident
+   */
+  {
+    method: 'GET',
+    path: '/incidents/{id}/sentiments',
+    handler: async (req, reply) => {
+      const sentiments = await incidents.getSentiments(req.params.id);
+      return reply(sentiments);
+    },
+  },
 ];

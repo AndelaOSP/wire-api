@@ -50,9 +50,22 @@ async function addSentiment(incidentId, sentimentId, userId) {
     .insert({ incident_id: incidentId, sentiment_id: sentimentId, user_id: userId });
 }
 
+/**
+ * Gets a list of sentiments on a particular incident
+ * @param {*} incidentId 
+ */
+async function getSentiments(incidentId) {
+  return Knex('incident_sentiment')
+    .select('*')
+    .join('sentiment', 'incident_sentiment.sentiment_id', 'sentiment.id')
+    .join('user', 'incident_sentiment.user_id', 'user.id')
+    .where('incident_id', incidentId);
+}
+
 module.exports = {
   createIncident,
   viewOneIncident,
   viewIncidents,
   addSentiment,
+  getSentiments,
 };
