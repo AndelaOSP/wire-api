@@ -1,3 +1,12 @@
+const Knex = require('../db');
+
+/**
+ * Create a note for an incident
+ */
+async function createNote(incidentId, note) {
+  return Knex('note')
+    .insert({ incident_id: incidentId, note });
+}
 
 /**
  * Get a list of all notes for an incidence
@@ -23,7 +32,7 @@ async function getNotes(incidentId) {
   return Promise.resolve(list);
 }
 
-
 module.exports = {
+  createNote,
   getNotes,
 };
