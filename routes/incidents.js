@@ -40,8 +40,8 @@ module.exports = [
     },
   },
 
-  /*
-  Get all incidents
+  /** *
+  * Get all incidents
   */
   
   {
@@ -51,8 +51,32 @@ module.exports = [
       // Gets all incidents
       // req.auth.credentials.id
       const data = await incidents.viewIncidents();
-      console.log(data);
       reply({ data })
     }
-  }
+  },
+
+  /**
+   * Add an a sentiment rating on an incidence
+   */
+  {
+    method: 'POST',
+    path: '/incidents/{id}/sentiments',
+    handler: async (req, reply) => {
+      // TODO: get userId from req.
+      const userId = 1;
+      const [ added ] = await incidents.addSentiment(
+        req.params.id,
+        req.payload.sentiment_id,
+        userId
+      );
+      return reply({ id: added });
+    },
+    config: {
+      validate: {
+        payload: {
+          sentiment_id: Joi.number().required(),
+        },
+      },
+    },
+  },
 ];
