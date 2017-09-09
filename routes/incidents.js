@@ -39,14 +39,9 @@ module.exports = [
       // Gets all incidents
       // req.auth.credentials.id
       const data = await incidents.viewIncidents();
-      console.log(data);
       reply({ data })
     }
   },
-
-  /*
-  Get incident by ID
-  */
 
   {
     method: 'GET',
@@ -78,4 +73,39 @@ module.exports = [
     },
   },
 
+  /**
+   * Add an a sentiment rating on an incidence
+   */
+  {
+    method: 'POST',
+    path: '/incidents/{id}/sentiments',
+    handler: async (req, reply) => {
+      // TODO: get userId from req.
+      const userId = 1;
+      const [added] = await incidents.addSentiment(
+        req.params.id,
+        req.payload.sentiment_id,
+        userId
+      );
+      return reply({ id: added });
+    },
+    config: {
+      validate: {
+        payload: {
+          sentiment_id: Joi.number().required(),
+        },
+      },
+    },
+  },
+  /**
+   * Get list of all sentiments for an incident
+   */
+  {
+    method: 'GET',
+    path: '/incidents/{id}/sentiments',
+    handler: async (req, reply) => {
+      const sentiments = await incidents.getSentiments(req.params.id);
+      return reply(sentiments);
+    },
+  },
 ];
