@@ -26,20 +26,8 @@ module.exports = [
       },
     },
   },
-
-  /*
-  Get incident by ID
-  */
-
-  {
-    method: 'GET',
-    path: '/incidents/{id}',
-    handler: async (req, reply) => {
-      const [ getOne ] = await incidents.viewOneIncident(req.params.id);
-      reply(getOne);
-    },
-  },
-
+  
+  
   /*
   Get all incidents
   */
@@ -54,5 +42,40 @@ module.exports = [
       console.log(data);
       reply({ data })
     }
-  }
+  },
+
+  /*
+  Get incident by ID
+  */
+
+  {
+    method: 'GET',
+    path: '/incidents/{id}',
+    handler: async (req, reply) => {
+      const [ getOne ] = await incidents.viewOneIncident(req.params.id);
+      reply(getOne);
+    },
+  },
+
+  {
+    method: 'PATCH',
+    path: '/incidents/{id}',
+    handler: async (req, reply) => {
+      // TODO: get userId from the token
+      // req.auth.credentials.id
+      const updated = await incidents.updateIncident(req.payload, req.params.id);
+      reply({ updated });
+    },
+    config: {
+      validate: {
+        payload: {
+          description: Joi.string(),
+          category_id: Joi.number(),
+          date_occurred: Joi.date(),
+          status_id: Joi.number(),
+        },
+      },
+    },
+  },
+
 ];

@@ -33,8 +33,15 @@ async function viewIncidents() {
     .join('user', 'incident.user_id', 'user.id')
 }
 
+async function updateIncident(payload, incidentId) {
+  return Knex('incident')
+    .update(Object.assign({}, payload, { id: incidentId }))
+    .where('id', incidentId);
+}
+
 module.exports = {
   createIncident,
   viewOneIncident,
   viewIncidents,
-}
+  updateIncident,
+};
