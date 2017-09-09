@@ -30,6 +30,7 @@ module.exports = [
   /*
   Get incident by ID
   */
+
   {
     method: 'GET',
     path: '/incidents/{id}',
@@ -38,4 +39,20 @@ module.exports = [
       reply(getOne);
     },
   },
+
+  /*
+  Get all incidents
+  */
+  
+  {
+    method: 'GET',
+    path: '/incidents',
+    handler: async (req, reply) => {
+      // Gets all incidents
+      // req.auth.credentials.id
+      const data = await incidents.viewIncidents();
+      console.log(data);
+      reply({ data })
+    }
+  }
 ];
