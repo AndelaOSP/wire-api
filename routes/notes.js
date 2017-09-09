@@ -36,4 +36,25 @@ module.exports = [
       },
     },
   },
-];
+
+  /*
+  Note-reply routes
+  */
+  {
+    method: 'POST',
+    path: '/notes/{id}/replies',
+    handler: async (req, reply) => {
+      const [ replies ] = await notes.createReply(req.params.id, req.payload);
+      if (replies) return reply({ id: replies });
+      return reply(Boom.badImplementation());
+    },
+    config: {
+      validate: {
+        payload: {
+          text: Joi.string().required(),
+          user_id: Joi.number().required()
+        },
+      },
+    },
+  },
+]
