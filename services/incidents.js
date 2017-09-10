@@ -19,23 +19,24 @@ const columns = [
   'user.id as user_id',
 ];
 
-async function viewOneIncident(id) {
+async function getIncident(id) {
   return Knex('incident')
     .select(...columns)
     .join('incident_category', 'incident.category_id', 'incident_category.id')
     .leftJoin('location', 'incident.location_id', 'location.id')
-    .join('incident_status', 'incident.status_id', 'incident_status.id')
+    .leftJoin('incident_status', 'incident.status_id', 'incident_status.id')
     .join('user', 'incident.user_id', 'user.id')
     .where({ 'incident.id': id });
 }
 
-async function viewIncidents() {
-  return Knex('incidents')
-    .select(...columns).from('incident')
+async function getIncidents() {
+  return Knex('incident')
+    .select(...columns)
     .join('incident_category', 'incident.category_id', 'incident_category.id')
     .leftJoin('location', 'incident.location_id', 'location.id')
-    .join('incident_status', 'incident.status_id', 'incident_status.id')
+    .leftJoin('incident_status', 'incident.status_id', 'incident_status.id')
     .join('user', 'incident.user_id', 'user.id')
+    .orderBy('incident.id', 'DESC');
 }
 
 async function addSentiment(incidentId, sentimentId, userId) {
@@ -71,11 +72,19 @@ async function getSentiments(incidentId) {
     .where('incident_id', incidentId);
 }
 
+/**
+ * Get list of all locations
+ */
+async function getLocations() {
+  return Knex('location');
+}
+
 module.exports = {
   createIncident,
-  viewOneIncident,
-  viewIncidents,
+  getIncident,
+  getIncidents,
   updateIncident,
   addSentiment,
   getSentiments,
+  getLocations,
 };
