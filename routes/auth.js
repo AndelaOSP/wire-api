@@ -2,6 +2,11 @@ const jwt = require('jsonwebtoken');
 const Joi = require('joi');
 const pick = require('lodash/pick');
 
+// We need this to build our post string
+var querystring = require('querystring');
+var http = require('http');
+var fs = require('fs');
+
 function auth(req, reply, profile) {
     googleAuthUri = "https://accounts.google.com/o/oauth2/auth?redirect_uri="
     + process.env.AUTH_REDIRECT_URL + "&response_type=code&client_id="
@@ -15,41 +20,7 @@ function auth(req, reply, profile) {
 
     var code = req.query.code;
     postCode(code);
-
-
-
-
-
-//   if(req.query.error)
-//     if(profile) {
-//         if (profile.email.split('@')[1] !== 'andela.com')
-//           return reply({'token': 0})
-
-//       // extract the relevant data from Profile to store in JWT object
-//       var session = {
-//         firstname : profile.name.givenName, // the person's first name e.g: Anita
-//         image    : profile.image.url,      // profile image url
-//         id       : profile.id,             // google+ id
-//         email    : profile.email,          // email address
-//         exp      : Math.floor(new Date().getTime()/1000) + 7*24*60*60, // Expiry in seconds!
-//       }
-//       // create a JWT to set as the cookie:
-//       var token = JWT.sign(session, process.env.JWT_SECRET);
-
-//       // reply to client with a view
-//       return reply.redirect('/incidents')
-//       .state('token', token);
-//     }
-//     else {
-//       return reply({'token': 0})
-//     }
   }
-
-
-  // We need this to build our post string
-  var querystring = require('querystring');
-  var http = require('http');
-  var fs = require('fs');
 
   function postCode(code) {
     // Build the post string from an object
