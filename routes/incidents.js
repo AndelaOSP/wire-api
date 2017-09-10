@@ -38,8 +38,8 @@ module.exports = [
     handler: async (req, reply) => {
       // Gets all incidents
       // req.auth.credentials.id
-      const data = await incidents.viewIncidents();
-      reply({ data })
+      const data = await incidents.getIncidents();
+      reply(data)
     }
   },
 
@@ -47,8 +47,9 @@ module.exports = [
     method: 'GET',
     path: '/incidents/{id}',
     handler: async (req, reply) => {
-      const [ getOne ] = await incidents.viewOneIncident(req.params.id);
-      reply(getOne);
+      const [ data ] = await incidents.getIncident(req.params.id);
+      if (data) return reply(data);
+      return reply(Boom.notFound('no record found'));
     },
   },
 
@@ -106,6 +107,15 @@ module.exports = [
     handler: async (req, reply) => {
       const sentiments = await incidents.getSentiments(req.params.id);
       return reply(sentiments);
+    },
+  },
+
+  {
+    method: 'GET',
+    path: '/locations',
+    handler: async (req, reply) => {
+      const locations = await incidents.getLocations();
+      return reply(locations);
     },
   },
 ];
