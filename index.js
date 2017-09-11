@@ -33,17 +33,17 @@ server.register(hapiAuthJwt, (err) => {
 
   // add auth config on all routes
   // untill we add Google OAuth
-  // routes = routes.map(route => {
-  //   const authConfig = { strategy: 'token' };
-  //   if (route.config) {
-  //     route.config.auth = authConfig;
-  //   } else {
-  //     route.config = {
-  //       auth: authConfig,
-  //     };
-  //   }
-  //   return route;
-  // });
+  routes = routes.map(route => {
+    const authConfig = { strategy: 'token' };
+    if (route.config) {
+      route.config.auth = authConfig;
+    } else {
+      route.config = {
+        auth: authConfig,
+      };
+    }
+    return route;
+  });
   server.route(routes);
 });
 
@@ -84,6 +84,8 @@ server.register({
   if (err) return console.error(err);
 
   server.start(() => {
+    // set env variable for base_url
+    process.env.BASE_URL = server.info.uri;
     console.log(`Server running at: ${server.info.uri}`);
   });
 });

@@ -1,34 +1,61 @@
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
-const pick = require('lodash/pick');
 
-// We need this to build our post string
-var querystring = require('querystring');
-var http = require('http');
-var fs = require('fs');
-var passport = require('passport')
+const Knex = require('../db');
 
-function auth(req, reply, profile) {
+async function auth(req, reply) {
   // To be put to uri builder
-    googleAuthUri = "https://api.andela.com/login?redirect_url=" + process.env.AUTH_REDIRECT_URL
+  const redirectUri = `https://api.andela.com/login?redirect_url=${process.env.BASE_URL}/auth`;
 
-    if(req.query.token == undefined){
-        return reply.redirect(googleAuthUri)
-    }
-
-    const token = req.query.token;
-    const payload = jwt.decode(token)
-    console.log(payload);
-    const email = payload.UserInfo.email
-
-    if(email.split('@')[1] !== 'andela.com'){
-      return reply({auth: 0})
-    }
-    const id = payload.UserInfo.id
-    const firstName = payload.UserInfo.first_name
-    const lastName = payload.UserInfo.last_name
-    const picture = payload.UserInfo.picture
+  if (!req.query.token) {
+      return reply.redirect(redirectUri);
   }
+  
+  const payload = jwt.decode(req.query.token);
+
+  if (!Object.keys(payload.UserInfo.roles).includes('Andelan')) {
+    // redirect with a different message
+    return reply.redirect(redirectUri);
+  }
+
+  const user = Object.assign({}, payload.UserInfo);
+  user.andela_id = user.id;
+  delete user.id;
+  user.roles = Object.keys(user.roles).join(',');
+
+  let createdOrUpdatedUser;
+  let columns = [ 'id', 'andela_id', 'name', 'picture', 'roles' ];
+  const [ getUser ] = await Knex('user').where({ email: user.email });
+  if (!getUser) {
+    // user not found
+    // create the user
+    createdOrUpdatedUser = await Knex('user')
+      .returning(columns)
+      .insert(user);
+  } else {
+    // update the user details
+    const updated = await Knex('user')
+      .update(user)
+      .where({ email: user.email });
+    
+    createdOrUpdatedUser = await Knex('user')
+      .select(...columns)
+      .where({ email: user.email });
+  }
+
+  console.log(createdOrUpdatedUser);
+  // return our token
+  const token = jwt.sign(
+    createdOrUpdatedUser[0],
+    process.env.JWT_KEY,
+    {
+      algorithm: 'HS256',
+      expiresIn: '400d',
+    }
+  );
+  
+  return reply({ token, id: createdOrUpdatedUser.id });
+}
 
 module.exports = {
   method: 'GET',
