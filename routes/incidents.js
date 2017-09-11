@@ -8,9 +8,8 @@ module.exports = [
     method: 'POST',
     path: '/incidents',
     handler: async (req, reply) => {
-      // TODO: get userId from the token
-      // req.auth.credentials.id
-      const userId = 1; // hardcoded for now
+
+      const userId = req.auth.credentials.id;
       const [ added ] = await incidents.createIncident(req.payload, userId);
       if (!added) return reply(Boom.badImplementation('something wrong happened'));
       return reply({ id: added });
@@ -26,18 +25,16 @@ module.exports = [
       },
     },
   },
-  
-  
+
+
   /*
   Get all incidents
   */
-  
+
   {
     method: 'GET',
     path: '/incidents',
     handler: async (req, reply) => {
-      // Gets all incidents
-      // req.auth.credentials.id
       const data = await incidents.getIncidents();
       reply(data)
     }
@@ -57,8 +54,6 @@ module.exports = [
     method: 'PATCH',
     path: '/incidents/{id}',
     handler: async (req, reply) => {
-      // TODO: get userId from the token
-      // req.auth.credentials.id
       const updated = await incidents.updateIncident(req.payload, req.params.id);
       reply({ updated });
     },
@@ -82,7 +77,7 @@ module.exports = [
     path: '/incidents/{id}/sentiments',
     handler: async (req, reply) => {
       // TODO: get userId from req.
-      const userId = 1;
+      const userId = req.auth.credentials.id;
       const [added] = await incidents.addSentiment(
         req.params.id,
         req.payload.sentiment_id,
