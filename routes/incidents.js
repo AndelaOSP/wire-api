@@ -118,4 +118,41 @@ module.exports = [
       return reply(locations);
     },
   },
+
+  {
+    method: 'GET',
+    path: '/levels',
+    handler: async (req, reply) => {
+      const levels = await incidents.getLevels();
+      return reply(levels);
+    },
+  },
+
+  {
+    method: 'POST',
+    path: '/categories',
+    handler: async (req, reply) => {
+      const [ added ] = await incidents.createIncidentCategory(req.payload);
+      if (added) return reply({ id: added });
+      return reply(Boom.badImplementation);
+    },
+    config: {
+      validate: {
+        payload: {
+          name: Joi.string().min(3).required(),
+          level_id: Joi.number().required(),
+          visible: Joi.boolean(),
+        },
+      },
+    },
+  },
+
+  {
+    method: 'GET',
+    path: '/categories',
+    handler: async (req, reply) => {
+      const cats = await incidents.getIncidentCategories();
+      return reply(cats);
+    },
+  },
 ];
