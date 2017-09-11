@@ -6,12 +6,14 @@ const pick = require('lodash/pick');
 var querystring = require('querystring');
 var http = require('http');
 var fs = require('fs');
+var passport = require('passport')
 
 function auth(req, reply, profile) {
+  // To be put to uri builder
     googleAuthUri = "https://accounts.google.com/o/oauth2/auth?redirect_uri="
     + process.env.AUTH_REDIRECT_URL + "&response_type=code&client_id="
     + process.env.CLIENT_ID +
-    "&scope=https://www.googleapis.com/auth/analytics.readonly+" +
+    "&scope=https://www.googleapis.com/auth/userinfo.profile+" +
     "https://www.googleapis.com/auth/userinfo.email&approval_prompt=force&access_type=offline"
 
     if(req.query.code == undefined){
@@ -60,4 +62,6 @@ module.exports = {
   method: 'GET',
   path: '/auth',
   handler: auth,
-};
+}
+
+
