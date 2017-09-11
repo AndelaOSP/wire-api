@@ -28,7 +28,7 @@ CREATE TABLE `incident` (
   `category_id` int(11) DEFAULT NULL,
   `location_id` int(11) DEFAULT NULL,
   `description` text,
-  `date_occurred` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `date_occurred` datetime,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status_id` int(11) DEFAULT '1',
   PRIMARY KEY (`id`),

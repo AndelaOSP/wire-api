@@ -79,6 +79,35 @@ async function getLocations() {
   return Knex('location');
 }
 
+/**
+ * Get list of incident category levels
+ */
+async function getLevels() {
+  return Knex('incident_level');
+}
+
+/**
+ * Create incident category
+ */
+async function createIncidentCategory(payload) {
+  return Knex('incident_category').insert(payload);
+}
+
+/**
+ * GEt list of incident categories
+ */
+async function getIncidentCategories() {
+  return Knex('incident_category')
+    .select(...[
+      'incident_category.id',
+      'incident_category.name',
+      'incident_level.name as level_name',
+      'incident_level.id as level_id',
+      'incident_category.visible',
+    ])
+    .join('incident_level', 'incident_category.level_id', 'incident_level.id');
+}
+
 module.exports = {
   createIncident,
   getIncident,
@@ -87,4 +116,7 @@ module.exports = {
   addSentiment,
   getSentiments,
   getLocations,
+  getLevels,
+  createIncidentCategory,
+  getIncidentCategories,
 };
