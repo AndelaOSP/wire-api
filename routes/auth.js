@@ -63,5 +63,3 @@ module.exports = {
   path: '/auth',
   handler: auth,
 }
-
-
