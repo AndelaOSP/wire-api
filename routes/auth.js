@@ -4,9 +4,6 @@ const pick = require('lodash/pick');
 
 // We need this to build our post string
 var querystring = require('querystring');
-var http = require('http');
-var fs = require('fs');
-var passport = require('passport')
 
 function auth(req, reply, profile) {
   // To be put to uri builder
