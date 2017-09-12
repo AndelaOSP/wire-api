@@ -29,3 +29,13 @@ Start the dev server:
 ```
 yarn start:dev
 ```
+
+### Authentication
+
+Just redirect the user to the ```/auth``` endpoint for authentication with Gmail:
+
+On success, this will return a token, which is then used on all subsequent requests by setting it in the Authorization header.
+
+```
+Authorization: Bearer 'token'
+```
