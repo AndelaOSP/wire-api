@@ -9,6 +9,7 @@ async function createIncident(payload, userId) {
 }
 
 const columns = [
+  'incident.id',
   'description',
   'incident_category.name as category_name',
   'location.name as location_name',
