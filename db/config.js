@@ -2,7 +2,7 @@
 require('dotenv').config();
 
 let database = process.env.DB_NAME;
-if (process.env.NODE_ENV == 'test') {
+if (process.env.NODE_ENV === 'test') {
   database = process.env.DB_NAME_TEST;
 }
 
