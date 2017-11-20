@@ -1,45 +1,45 @@
-const Knex = require('../db');
+const Knex = require('../models/incidents');
 
 /**
  * Creating a incident entry
  */
 async function createIncident(payload, userId) {
-  return Knex('incident')
+  return Knex('incidents')
     .insert(Object.assign({}, payload, { user_id: userId }));
 }
 
 const columns = [
   'description',
-  'incident_category.name as category_name',
-  'location.name as location_name',
-  'incident_status.status as status',
+  'categories.name as category_name',
+  'locations.name as location_name',
+  'statuses.status as status',
   'date_created',
   'date_occurred',
-  'user.name as user_name',
+  'users.username as user_name',
   'user.id as user_id',
 ];
 
 async function viewOneIncident(id) {
-  return Knex('incident')
+  return Knex('incidents')
     .select(...columns)
-    .join('incident_category', 'incident.category_id', 'incident_category.id')
-    .leftJoin('location', 'incident.location_id', 'location.id')
-    .join('incident_status', 'incident.status_id', 'incident_status.id')
-    .join('user', 'incident.user_id', 'user.id')
-    .where({ 'incident.id': id });
+    .join('categories', 'incidents.category_id', 'category.id')
+    .leftJoin('locations', 'incidents.location_id', 'location.id')
+    .join('statuses', 'incidents.status_id', 'incident_status.id')
+    .join('users', 'incidents.user_id', 'user.id')
+    .where({ 'incidents.id': id });
 }
 
 async function viewIncidents() {
   return Knex('incidents')
     .select(...columns).from('incident')
-    .join('incident_category', 'incident.category_id', 'incident_category.id')
-    .leftJoin('location', 'incident.location_id', 'location.id')
-    .join('incident_status', 'incident.status_id', 'incident_status.id')
-    .join('user', 'incident.user_id', 'user.id')
+    .join('categories', 'incidents.category_id', 'category.id')
+    .leftJoin('locations', 'incidents.location_id', 'location.id')
+    .join('statuses', 'incidents.status_id', 'status.id')
+    .join('users', 'incidents.user_id', 'user.id')
 }
 
 async function addSentiment(incidentId, sentimentId, userId) {
-  // if there was previous rating, should benoverwriten
+  // if there was previous rating, should beoverwriten
   const [ previous ] = await Knex('incident_sentiment')
     .where({ incident_id: incidentId, user_id: userId });
   if (previous) {
@@ -67,7 +67,7 @@ async function getSentiments(incidentId) {
   return Knex('incident_sentiment')
     .select('*')
     .join('sentiment', 'incident_sentiment.sentiment_id', 'sentiment.id')
-    .join('user', 'incident_sentiment.user_id', 'user.id')
+    .join('users', 'incident_sentiment.user_id', 'user.id')
     .where('incident_id', incidentId);
 }
 

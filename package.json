@@ -23,6 +23,9 @@
     "jsonwebtoken": "^7.4.2",
     "knex": "^0.13.0",
     "lodash": "^4.17.4",
-    "mysql": "^2.14.1"
+    "pg": "^7.4.0",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.22.6",
+    "sequelize-cli": "^3.0.0"
   }
 }

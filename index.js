@@ -7,8 +7,8 @@ const Boom = require('boom');
 require('dotenv').config();
 
 // load routes
-let routes = require('./routes');
-const auth = require('./routes/auth');
+let routes = require('./server/routes');
+const auth = require('./server/routes/auth');
 
 const env = process.env.NODE_ENV;
 
