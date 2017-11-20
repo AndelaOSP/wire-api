@@ -9,6 +9,7 @@ async function createIncident(payload, userId) {
 }
 
 const columns = [
+  'incident.id',
   'description',
   'categories.name as category_name',
   'locations.name as location_name',
@@ -19,23 +20,24 @@ const columns = [
   'user.id as user_id',
 ];
 
-async function viewOneIncident(id) {
-  return Knex('incidents')
+async function getIncident(id) {
+  return Knex('incident')
     .select(...columns)
-    .join('categories', 'incidents.category_id', 'category.id')
-    .leftJoin('locations', 'incidents.location_id', 'location.id')
-    .join('statuses', 'incidents.status_id', 'incident_status.id')
-    .join('users', 'incidents.user_id', 'user.id')
-    .where({ 'incidents.id': id });
+    .join('incident_category', 'incident.category_id', 'incident_category.id')
+    .leftJoin('location', 'incident.location_id', 'location.id')
+    .leftJoin('incident_status', 'incident.status_id', 'incident_status.id')
+    .join('user', 'incident.user_id', 'user.id')
+    .where({ 'incident.id': id });
 }
 
-async function viewIncidents() {
-  return Knex('incidents')
-    .select(...columns).from('incident')
-    .join('categories', 'incidents.category_id', 'category.id')
-    .leftJoin('locations', 'incidents.location_id', 'location.id')
-    .join('statuses', 'incidents.status_id', 'status.id')
-    .join('users', 'incidents.user_id', 'user.id')
+async function getIncidents() {
+  return Knex('incident')
+    .select(...columns)
+    .join('incident_category', 'incident.category_id', 'incident_category.id')
+    .leftJoin('location', 'incident.location_id', 'location.id')
+    .leftJoin('incident_status', 'incident.status_id', 'incident_status.id')
+    .join('user', 'incident.user_id', 'user.id')
+    .orderBy('incident.id', 'DESC');
 }
 
 async function addSentiment(incidentId, sentimentId, userId) {
@@ -71,11 +73,51 @@ async function getSentiments(incidentId) {
     .where('incident_id', incidentId);
 }
 
+/**
+ * Get list of all locations
+ */
+async function getLocations() {
+  return Knex('location');
+}
+
+/**
+ * Get list of incident category levels
+ */
+async function getLevels() {
+  return Knex('incident_level');
+}
+
+/**
+ * Create incident category
+ */
+async function createIncidentCategory(payload) {
+  return Knex('incident_category').insert(payload);
+}
+
+/**
+ * GEt list of incident categories
+ */
+async function getIncidentCategories() {
+  return Knex('incident_category')
+    .select(...[
+      'incident_category.id',
+      'incident_category.name',
+      'incident_level.name as level_name',
+      'incident_level.id as level_id',
+      'incident_category.visible',
+    ])
+    .join('incident_level', 'incident_category.level_id', 'incident_level.id');
+}
+
 module.exports = {
   createIncident,
-  viewOneIncident,
-  viewIncidents,
+  getIncident,
+  getIncidents,
   updateIncident,
   addSentiment,
   getSentiments,
+  getLocations,
+  getLevels,
+  createIncidentCategory,
+  getIncidentCategories,
 };

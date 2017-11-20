@@ -35,8 +35,7 @@ function auth(req, reply) {
     error: true,
     message: 'server error',
   }));
-};
-
+}
 module.exports = {
   method: 'POST',
   path: '/auth',
