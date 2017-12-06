@@ -24,7 +24,7 @@ module.exports = {
           .catch(error => {
             res.status(400).send(error);
           });
-  },
+        },
 
   // get all incidents
   list(req, res) {
@@ -48,10 +48,34 @@ module.exports = {
             message: 'Incident not found'
           });
         }
-        else res.status(200).send(incident);
+        res.status(200).send(incident);
       })
       .catch(error => {
         res.status(400).send(error);
       });
-  },  
+  },
+
+// update an incident
+update(req, res) {
+  return Incident
+    .findById(req.params.id)
+    .then(incident => {
+      if (!incident) {
+        res.status(404).send({
+          message: 'Incident Not Found'
+        });
+      }
+      return incident
+        .update({
+          description: req.body.description || incident.description,
+          dateOccurred: req.body.dateOccurred || incident.description,
+          statusId: req.body.statusId || incident.statusId,
+          locationId: req.body.locationId || incident.locationId,
+          categoryId: req.body.categoryId || incident.categoryId,
+          witnesses: req.body.witnesses || incident.witnesses
+        })
+        .then(() => res.status(200).send(incident))
+        .catch(error => res.status(400).send(error));
+    });
+  },
 }
