@@ -7,4 +7,5 @@ module.exports = (app) => {
   }));
 
 app.post('/api/incidents', incidentsService.create);
+app.get("/api/incidents", incidentsService.list);
 }

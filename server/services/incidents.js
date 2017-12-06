@@ -22,8 +22,17 @@ module.exports = {
           res.status(201).send(incident);
         })
           .catch(error => {
-            console.log(error)
             res.status(400).send(error);
           });
   },
+  list(req, res) {
+    return Incident
+    .findAll()
+    .then(incident => {
+      res.status(200).send(incident);
+    })
+    .catch(error => {
+      res.status(400).send(error)
+    })
+  }
 }
