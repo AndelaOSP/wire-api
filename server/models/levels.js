@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     classMethods: {
       associate: (models) => {
-        Levels.hasMany(models.Levels, {
+        Levels.hasMany(models.Categories, {
         foreignKey: 'levelId',
         as: 'categories'
       })

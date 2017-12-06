@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     witnesses: {
       type: DataTypes.TEXT
     },
-    date_occurred: {
+    dateOccurred: {
       type: DataTypes.DATE,
       allowNull: false
     },
@@ -17,19 +17,23 @@ module.exports = (sequelize, DataTypes) => {
       associate: (models) => {
         Incidents.belongsTo(models.Users, {
         foreignKey: 'userId',
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
+        allowNull: false
       });
         Incidents.belongsTo(models.Categories, {
           foreignKey: 'categoryId',
-          onDelete: 'CASCADE'
+          onDelete: 'CASCADE',
+          allowNull: false
         });
         Incidents.belongsTo(models.Status, {
           foreignKey: 'statusId',
-          onDelete: 'CASCADE'
+          onDelete: 'CASCADE',
+          allowNull: false
         });
         Incidents.belongsTo(models.Locations, {
           foreignKey: 'locationId',
-          onDelete: 'CASCADE'
+          onDelete: 'CASCADE',
+          allowNull: false
         });
         Incidents.hasMany(models.Notes, {
           foreignKey: 'incidentId',
