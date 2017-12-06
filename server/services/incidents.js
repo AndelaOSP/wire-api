@@ -25,6 +25,8 @@ module.exports = {
             res.status(400).send(error);
           });
   },
+
+  // get all incidents
   list(req, res) {
     return Incident
     .findAll()
@@ -33,6 +35,23 @@ module.exports = {
     })
     .catch(error => {
       res.status(400).send(error)
-    })
-  }
+    });
+  },
+
+  // retrieve an incident by ID
+  findById(req, res) {
+    return Incident
+      .findById(req.params.id)
+      .then(incident => {
+        if (!incident) {
+          res.status(404).send({
+            message: 'Incident not found'
+          });
+        }
+        else res.status(200).send(incident);
+      })
+      .catch(error => {
+        res.status(400).send(error);
+      });
+  },  
 }
