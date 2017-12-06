@@ -78,4 +78,21 @@ update(req, res) {
         .catch(error => res.status(400).send(error));
     });
   },
+
+// delete an incident by ID
+delete(req, res) {
+  return Incident
+    .findById(req.params.id)
+    .then(incident => {
+      if (!incident) {
+        res.status(404).send({
+          message: 'Incident not found'
+        });
+      }
+      return incident
+      .destroy()
+      .then(() => res.status(204).send())
+      .catch(error => res.status(400).send(error));
+    });
+  },
 }
