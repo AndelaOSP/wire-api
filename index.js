@@ -1,91 +1,32 @@
-const Hapi = require('hapi');
-const hapiAuthJwt = require('hapi-auth-jwt');
-const Joi = require('joi');
-const Boom = require('boom');
-
+const express = require('express');
+const logger = require('morgan');
+const bodyParser = require('body-parser');
+const NODE_ENV = process.env.NODE_ENV;
+const port = process.env.PORT || 8000;
 // load env
-require('dotenv').config();
-
-// load routes
-let routes = require('./server/routes');
-const auth = require('./server/routes/auth');
-
-const env = process.env.NODE_ENV;
-
-const config = {};
-if (env == 'development') {
-  config.debug = { request: [ 'error' ] };
+if (NODE_ENV !== 'development') {
+  require('dotenv').load();
 }
 
-const server = new Hapi.Server(config);
+// set up the express app
+const app = express();
+// Log requests to the console.
+app.use(logger('dev'));
 
-let port = process.env.PORT;
+// Parse incoming requests data (https://github.com/expressjs/body-parser)
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
-server.connection({ host: 'localhost', port });
+// Require routes
+require('./server/routes/index')(app);
+// Setup a default catch-all route that sends back a welcome message in JSON format.
+app.get('*', (req, res) => res.status(200).send({
+  message: 'Welcome to WIRE.',
+}));
 
-server.register(hapiAuthJwt, (err) => {
-  server.auth.strategy('token', 'jwt', {
-    key: process.env.JWT_KEY,
-    verifyOptions: {
-      algorithms: [ 'HS256' ],
-    },
-  });
+app.listen(port, function(err) {
+  if (err) {
+    console.log(err);
+  }})
 
-  // add auth config on all routes
-  // untill we add Google OAuth
-  // routes = routes.map(route => {
-  //   const authConfig = { strategy: 'token' };
-  //   if (route.config) {
-  //     route.config.auth = authConfig;
-  //   } else {
-  //     route.config = {
-  //       auth: authConfig,
-  //     };
-  //   }
-  //   return route;
-  // });
-  server.route(routes);
-});
-
-server.route(auth);
-
-server.route({
-  method: 'GET',
-  path: '/',
-  handler: (req, reply) => {
-    return reply({ message: 'Wire API' });
-  },
-});
-
-/**
- * logging
- */
-const options = {
-  ops: {
-    interval: 1800000 // reporting interval (30 minutes)
-  },
-  reporters: {
-    myConsoleReporter: [
-      {
-        module: 'good-squeeze',
-        name: 'Squeeze',
-        args: [{ log: '*', error: '*', response: '*', request: '*', ops: '*' }]
-      },
-      { module: 'good-console' },
-      'stdout',
-    ]
-  }
-};
-
-server.register({
-  register: require('good'),
-  options,
-}, (err) => {
-  if (err) return console.error(err);
-
-  server.start(() => {
-    console.log(`Server running at: ${server.info.uri}`);
-  });
-});
-
-module.exports = server;
+module.exports = app;

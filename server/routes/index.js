@@ -1,14 +1,10 @@
-// combine all the routes
-const fs = require('fs');
+const incidentsService = require("../services/index").incidents;
 
-let routes = [];
 
-let exclude = [ 'index.js', 'auth.js' ];
+module.exports = (app) => {
+  app.get('/api', (req,res) => res.status(200).send({
+    message: "Log an incident on WIRE"
+  }));
 
-fs.readdirSync(__dirname)
-  .filter(file => !exclude.includes(file))
-  .forEach(file => {
-    routes = routes.concat(require(`./${file}`))
-  });
-
-module.exports = routes;
+app.post('/api/incidents', incidentsService.create);
+}
