@@ -3,6 +3,7 @@ const app = require('../index.js'); // The express app we just created
 
 const port = parseInt(process.env.PORT, 10) || 8000;
 app.set('port', port);
+console.log("Application started at http://localhost:"+port)
 
 const server = http.createServer(app);
 server.listen(port);

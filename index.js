@@ -2,7 +2,7 @@ const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const NODE_ENV = process.env.NODE_ENV;
-const port = process.env.PORT || 8000;
+
 // load env
 if (NODE_ENV !== 'development') {
   require('dotenv').load();
@@ -23,10 +23,5 @@ require('./server/routes/index')(app);
 app.get('*', (req, res) => res.status(200).send({
   message: 'Welcome to WIRE.',
 }));
-
-app.listen(port, function(err) {
-  if (err) {
-    console.log(err);
-  }})
 
 module.exports = app;
