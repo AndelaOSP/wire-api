@@ -24,15 +24,15 @@ module.exports = (sequelize, DataTypes) => {
         associate: (models) => {
           Users.hasMany(models.Incidents, {
             foreignKey: 'userId',
-            as: 'userId'
+            as: "incidents"
           });
           Users.hasMany(models.Notes, {
             foreignKey: 'userId',
-            as: 'userId'
+            as: 'notes'
           });
           Users.hasMany(models.Replies, {
             foreignKey: 'userId',
-            as: 'userId'
+            as: 'replies'
           });
         },
       },
