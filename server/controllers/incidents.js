@@ -1,9 +1,8 @@
-const db = require('../models/');
-const Incident = db.Incidents;
-const User = db.Users;
-const Location = db.Locations;
-const Category = db.Categories;
-const Status = db.Statuses;
+const Incident = require("../models").Incidents;
+const User = require("../models").Users;
+const Location = require("../models").Locations;
+const Category = require("../models").Categories;
+const Status = require("../models").Statuses;
 
 module.exports = {
   //create an incident

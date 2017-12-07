@@ -1,4 +1,4 @@
-const incidentsService = require("../services/index").incidents;
+const incidentsService = require("../controllers/index").incidents;
 
 
 module.exports = (app) => {
