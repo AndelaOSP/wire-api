@@ -18,7 +18,7 @@ module.exports = {
         witnesses: req.body.witnesses
       })
         .then(incident => {
-          res.status(201).send(incident);
+          res.status(201).send({ data:incident, status: "success" });
         })
           .catch(error => {
             res.status(400).send(error);
@@ -30,7 +30,7 @@ module.exports = {
     return Incident
     .findAll()
     .then(incident => {
-      res.status(200).send(incident);
+      res.status(200).send({ data: { incidents: incident }, status: "success" });
     })
     .catch(error => {
       res.status(400).send(error)
@@ -43,11 +43,11 @@ module.exports = {
       .findById(req.params.id)
       .then(incident => {
         if (!incident) {
-          res.status(404).send({
-            message: 'Incident not found'
+          return res.status(404).send({
+            message: 'Incident not found', status: "fail"
           });
         }
-        res.status(200).send(incident);
+        res.status(200).send({ data:incident, status: "success" });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -60,8 +60,8 @@ update(req, res) {
     .findById(req.params.id)
     .then(incident => {
       if (!incident) {
-        res.status(404).send({
-          message: 'Incident Not Found'
+        return res.status(404).send({
+          message: 'Incident Not Found', status: "fail"
         });
       }
       return incident
@@ -73,19 +73,19 @@ update(req, res) {
           categoryId: req.body.categoryId || incident.categoryId,
           witnesses: req.body.witnesses || incident.witnesses
         })
-        .then(() => res.status(200).send(incident))
+        .then(() => res.status(200).send({ data:incident, status: "success" }))
         .catch(error => res.status(400).send(error));
     });
   },
 
-// delete an incident by ID
+// delete an incident by ID. To be refactored into archive incidents that are old and resolved.
 delete(req, res) {
   return Incident
     .findById(req.params.id)
     .then(incident => {
       if (!incident) {
-        res.status(404).send({
-          message: 'Incident not found'
+        return res.status(404).send({
+          message: 'Incident not found', status: "fail"
         });
       }
       return incident

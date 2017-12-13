@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
           onDelete: 'CASCADE',
           allowNull: false
         });
-        Incidents.belongsTo(models.Status, {
+        Incidents.belongsTo(models.Statuses, {
           foreignKey: 'statusId',
           onDelete: 'CASCADE',
           allowNull: false

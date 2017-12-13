@@ -10,7 +10,7 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         Statuses.hasMany(models.Incidents, {
           foreignKey: 'statusId',
-          onDelete: 'CASCADE'
+          as: "incidents"
         })
       }
     }
