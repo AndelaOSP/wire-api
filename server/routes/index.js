@@ -1,5 +1,7 @@
-const incidentsService = require("../controllers/index").incidents;
-const locationsService = require("../controllers/index").locations;
+const controllers = require("../controllers/index");
+const incidentsService = controllers.incidents;
+const locationsService = controllers.locations;
+const statusService = controllers.status;
 
 
 module.exports = (app) => {
@@ -18,4 +20,11 @@ app.post('/api/locations', locationsService.create);
 app.get('/api/locations', locationsService.list);
 app.get('/api/locations/:id', locationsService.findById);
 app.put('/api/locations/:id', locationsService.update);
+
+
+// statuses endpoints
+app.post('/api/status', statusService.create);
+app.get('/api/status', statusService.list);
+app.get('/api/status/:id', statusService.findById);
+app.put('/api/status/:id', statusService.update);
 }
