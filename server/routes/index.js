@@ -2,7 +2,7 @@ const controllers = require("../controllers/index");
 const incidentsService = controllers.incidents;
 const locationsService = controllers.locations;
 const statusService = controllers.status;
-
+const levelsService = controllers.levels;
 
 module.exports = (app) => {
   app.get('/api', (req,res) => res.status(200).send({
@@ -21,10 +21,16 @@ app.get('/api/locations', locationsService.list);
 app.get('/api/locations/:id', locationsService.findById);
 app.put('/api/locations/:id', locationsService.update);
 
-
 // statuses endpoints
 app.post('/api/status', statusService.create);
 app.get('/api/status', statusService.list);
 app.get('/api/status/:id', statusService.findById);
 app.put('/api/status/:id', statusService.update);
+
+// levels endpoints
+app.post('/api/levels', levelsService.create);
+app.get('/api/levels', levelsService.list);
+app.get('/api/levels/:id', levelsService.findById);
+app.put('/api/levels/:id', levelsService.update);
+
 }
