@@ -58,22 +58,22 @@ module.exports = {
       });
   },
 
-// update a location
-update(req, res) {
-  return Location
-    .findById(req.params.id)
-    .then(location => {
-      if (!location) {
-        return res.status(404).send({
-          message: 'Location not found', status: "fail"
-        });
-      }
-      return location
-        .update({
-          name: req.body.name || location.name
-        })
-        .then(() => res.status(200).send({ data:location, status: "success" }))
-        .catch(error => res.status(400).send(error));
-    });
+  // update a location
+  update(req, res) {
+    return Location
+      .findById(req.params.id)
+      .then(location => {
+        if (!location) {
+          return res.status(404).send({
+            message: 'Location not found', status: "fail"
+          });
+        }
+        return location
+          .update({
+            name: req.body.name || location.name
+          })
+          .then(() => res.status(200).send({ data: location, status: "success" }))
+          .catch(error => res.status(400).send(error));
+      });
   }
 }

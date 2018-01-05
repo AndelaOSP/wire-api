@@ -58,25 +58,25 @@ module.exports = {
       });
   },
 
-// update a status
-update(req, res) {
-  return Status
-  .findById(req.params.id)
-  .then(status => {
-    if (!status) {
-      return res.status(404).send({
-        message: 'status not found', status: "fail"
+  // update a status
+  update(req, res) {
+    return Status
+      .findById(req.params.id)
+      .then(status => {
+        if (!status) {
+          return res.status(404).send({
+            message: 'status not found', status: "fail"
+          });
+        }
+        return status
+          .update({
+            status: req.body.status
+          })
+          .then(() => res.status(200).send({ data: status, status: "success" })
+          )
+      })
+      .catch(error => {
+        res.status(400).send(error);
       });
-    }
-    return status
-    .update({
-      status: req.body.status
-    })
-    .then(() => res.status(200).send({ data: status, status: "success"})
-  )
-  })
-  .catch(error => {
-    res.status(400).send(error);
-  });
-}
+  }
 }
