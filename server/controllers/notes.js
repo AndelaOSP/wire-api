@@ -5,15 +5,15 @@ module.exports = {
   create(req, res) {
     return Note
       .create({
-          note: req.body.note,
-          userId: req.body.userId,
-          incidentId: req.params.id
+        note: req.body.note,
+        userId: req.body.userId,
+        incidentId: req.params.id
       })
       .then(note => {
-          res.status(201).send({ data: note, status: "success" });
+        res.status(201).send({ data: note, status: "success" });
       })
       .catch(error => {
-          res.status(400).send(error);
+        res.status(400).send(error);
       });
     },
   
@@ -26,10 +26,10 @@ module.exports = {
         },
       })
       .then(note=> {
-      res.status(200).send({ data: { notes: note }, status: "success" });
+        res.status(200).send({ data: { notes: note }, status: "success" });
       })
       .catch(error => {
-      res.status(400).send(error)
+        res.status(400).send(error)
       });
   },
 
@@ -73,17 +73,17 @@ module.exports = {
   // delete a Note
   delete(req, res) {
     return Note
-        .findById(req.params.id)
-        .then(Note => {
-          if (!Note) {
+      .findById(req.params.id)
+      .then(Note => {
+        if (!Note) {
             return res.status(404).send({
                 message: 'Note not found', status: 'fail'
             });
-          }
-          return Note
-            .destroy()
-            .then(() => res.status(204).send({ message: 'Note deleted successfully.' }))
-        })
+        }
+        return Note
+          .destroy()
+          .then(() => res.status(204).send())
+          .catch(error => res.status(400).send(error));
+      })
   }
-
 }
