@@ -3,6 +3,7 @@ const incidentsService = controllers.incidents;
 const locationsService = controllers.locations;
 const statusService = controllers.status;
 const levelsService = controllers.levels;
+const notesService = controllers.notes;
 
 module.exports = (app) => {
   app.get('/api', (req,res) => res.status(200).send({
@@ -32,5 +33,12 @@ app.post('/api/levels', levelsService.create);
 app.get('/api/levels', levelsService.list);
 app.get('/api/levels/:id', levelsService.findById);
 app.put('/api/levels/:id', levelsService.update);
+
+// notes endpoints
+app.post('/api/incidents/:id/notes', notesService.create);
+app.get('/api/incidents/:id/notes', notesService.list);  
+app.get('/api/notes/:id', notesService.findById);
+app.put('/api/notes/:id', notesService.update);
+app.delete('/api/notes/:id', notesService.delete);
 
 }
