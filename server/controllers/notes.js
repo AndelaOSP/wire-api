@@ -1,23 +1,33 @@
 const Note = require("../models").Notes;
+const Reply = require("../models").Replies;
 
 module.exports = {
   // add a Note
   create(req, res) {
+    const { note } = req.body
     return Note
-      .create({
-        note: req.body.note,
-        userId: req.body.userId,
-        incidentId: req.params.id
-      })
+      .findOne({ where: { note } })
       .then(note => {
-        res.status(201).send({ data: note, status: "success" });
+        if (!note) {
+          return res.status(400).send({
+            message: "Please enter a valid note", status: "fail"
+          });
+        }
+        Note.create({
+          note: req.body.note,
+          userId: req.body.userId,
+          incidentId: req.params.id
+        })
+          .then(note => {
+            res.status(201).send({ data: note, status: "success" });
+          });
       })
       .catch(error => {
         res.status(400).send(error);
       });
-    },
-  
-    // view all Notes of an Incident
+  },
+
+  // view all Notes of an Incident
   list(req, res) {
     return Note
       .findAll({
@@ -25,7 +35,7 @@ module.exports = {
           incidentId: req.params.id
         },
       })
-      .then(note=> {
+      .then(note => {
         res.status(200).send({ data: { notes: note }, status: "success" });
       })
       .catch(error => {
@@ -36,14 +46,19 @@ module.exports = {
   // retrieve a Note by ID
   findById(req, res) {
     return Note
-      .findById(req.params.id)
+      .findById(req.params.id, {
+        include: [{
+          model: Reply,
+          as: 'replies',
+        }]
+      })
       .then(Note => {
         if (!Note) {
           return res.status(404).send({
             message: 'Note not found', status: "fail"
           });
         }
-        res.status(200).send({ data:Note, status: "success" });
+        res.status(200).send({ data: Note, status: "success" });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -53,20 +68,20 @@ module.exports = {
   // update a Note
   update(req, res) {
     return Note
-        .findById(req.params.id)
-        .then(Note => {
-            if (!Note) {
-            return res.status(404).send({
-                message: 'Note not found', status: "fail"
-            });
-            }
+      .findById(req.params.id)
+      .then(Note => {
+        if (!Note) {
+          return res.status(404).send({
+            message: 'Note not found', status: "fail"
+          });
+        }
         return Note
-            .update({
-              note: req.body.note || Note.note,
-              userId: req.body.userId || Note.userId
-            })
-            .then(() => res.status(200).send({ data: Note, status: "success" }))
-            .catch(error => res.status(400).send(error));
+          .update({
+            note: req.body.note || Note.note,
+            userId: req.body.userId || Note.userId
+          })
+          .then(() => res.status(200).send({ data: Note, status: "success" }))
+          .catch(error => res.status(400).send(error));
       });
   },
 
@@ -76,9 +91,9 @@ module.exports = {
       .findById(req.params.id)
       .then(Note => {
         if (!Note) {
-            return res.status(404).send({
-                message: 'Note not found', status: 'fail'
-            });
+          return res.status(404).send({
+            message: 'Note not found', status: 'fail'
+          });
         }
         return Note
           .destroy()
