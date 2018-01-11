@@ -9,17 +9,13 @@ module.exports = (sequelize, DataTypes) => {
     classMethods: {
       associate: (models) => {
         Notes.belongsTo(models.Incidents, {
-        foreignKey: 'incidentId',
-        onDelete: 'CASCADE'
-      });
-      Notes.belongsTo(models.Users, {
-        foreignKey: 'userId',
-        onDelete: 'CASCADE'
-      });
-        Notes.hasMany(models.Replies, {
-        foreignKey: 'noteId',
-        as: 'replies'
-      })
+          foreignKey: 'incidentId',
+          onDelete: 'CASCADE'
+        });
+        Notes.belongsTo(models.Users, {
+          foreignKey: 'userId',
+          onDelete: 'CASCADE'
+        });
     }
   }
 });

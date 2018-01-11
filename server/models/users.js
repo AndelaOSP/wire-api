@@ -30,9 +30,9 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: 'userId',
             as: 'notes'
           });
-          Users.hasMany(models.Replies, {
+          Users.hasMany(models.Chats, {
             foreignKey: 'userId',
-            as: 'replies'
+            as: 'chats'
           });
           Users.belongsTo(models.Roles, {
             foreignKey: 'roleId',

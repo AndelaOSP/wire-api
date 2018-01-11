@@ -8,11 +8,6 @@ module.exports = {
     return Note
       .findOne({ where: { note } })
       .then(note => {
-        if (!note) {
-          return res.status(400).send({
-            message: "Please enter a valid note", status: "fail"
-          });
-        }
         Note.create({
           note: req.body.note,
           userId: req.body.userId,
@@ -46,12 +41,7 @@ module.exports = {
   // retrieve a Note by ID
   findById(req, res) {
     return Note
-      .findById(req.params.id, {
-        include: [{
-          model: Reply,
-          as: 'replies',
-        }]
-      })
+      .findById(req.params.id)
       .then(Note => {
         if (!Note) {
           return res.status(404).send({
