@@ -39,6 +39,10 @@ module.exports = (sequelize, DataTypes) => {
           foreignKey: 'incidentId',
           as: 'notes'
         });
+        Incidents.hasMany(models.Chats, {
+          foreignKey: 'incidentId',
+          as: 'chats'
+        });
     }
   }
 });

@@ -5,7 +5,7 @@ const statusService = controllers.status;
 const levelsService = controllers.levels;
 const notesService = controllers.notes;
 const categoriesService = controllers.categories;
-const repliesService = controllers.replies;
+const chatsService = controllers.chats;
 
 module.exports = (app) => {
   app.get('/api', (req,res) => res.status(200).send({
@@ -49,10 +49,10 @@ app.get('/api/categories', categoriesService.list);
 app.get('/api/categories/:id', categoriesService.findById);
 app.put('/api/categories/:id', categoriesService.update);
 
-// replies endpoints
-app.post('/api/notes/:id/replies', repliesService.create);
-app.get('/api/notes/:id/replies', repliesService.list);  
-app.get('/api/replies/:id', repliesService.findById);
-app.put('/api/replies/:id', repliesService.update);
-app.delete('/api/replies/:id', repliesService.delete);
+// chats endpoints
+app.post('/api/incidents/:id/chats', chatsService.create);
+app.get('/api/incidents/:id/chats', chatsService.list);  
+app.get('/api/chats/:id', chatsService.findById);
+app.put('/api/chats/:id', chatsService.update);
+app.delete('/api/chats/:id', chatsService.delete);
 }

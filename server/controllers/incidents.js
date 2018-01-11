@@ -1,6 +1,7 @@
 const Incident = require("../models").Incidents;
 const User = require("../models").Users;
 const Note = require("../models").Notes;
+const Chat = require("../models").Chats;
 const Location = require("../models").Locations;
 const Category = require("../models").Categories;
 const Status = require("../models").Statuses;
@@ -29,12 +30,7 @@ module.exports = {
   // get all incidents
   list(req, res) {
     return Incident
-      .findAll({
-        include: [{
-          model: Note,
-          as: 'notes',
-        }],
-      })
+      .findAll()
       .then(incident => {
         res.status(200).send({ data: { incidents: incident }, status: "success" });
       })
@@ -46,12 +42,7 @@ module.exports = {
   // retrieve an incident by ID
   findById(req, res) {
     return Incident
-      .findById(req.params.id, {
-        include: [{
-          model: Note,
-          as: 'notes',
-        }],
-      })
+      .findById(req.params.id)
       .then(incident => {
         if (!incident) {
           return res.status(404).send({

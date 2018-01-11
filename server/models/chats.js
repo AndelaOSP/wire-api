@@ -1,23 +1,23 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Replies = sequelize.define('Replies', {
-    reply: {
+  const Chats = sequelize.define('Chats', {
+    chat: {
       type: DataTypes.TEXT,
       allowNull: false
     }
   }, {
     classMethods: {
       associate: (models) => {
-        Replies.belongsTo(models.Notes, {
-        foreignKey: 'noteId',
+        Chats.belongsTo(models.Incidents, {
+        foreignKey: 'incidentId',
         onDelete: 'CASCADE'
       });
-        Replies.belongsTo(models.Users, {
+        Chats.belongsTo(models.Users, {
         foreignKey: 'userId',
         onDelete: 'CASCADE'
       })
     }
   }
 });
-  return Replies;
+  return Chats;
 };
