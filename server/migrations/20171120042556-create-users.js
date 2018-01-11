@@ -4,13 +4,8 @@ module.exports = {
     return queryInterface.createTable('Users', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
-      },
-      username: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.STRING
       },
       email: {
         type: Sequelize.STRING,
@@ -20,9 +15,23 @@ module.exports = {
         },
         unique: true,
       },
-      access_level: {
-        type: Sequelize.STRING,
+      names: {
+        type: Sequelize.TEXT,
         allowNull: false
+      },
+      imageUrl: {
+        type: Sequelize.TEXT,
+        allowNull: false
+      },
+      roleId: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'Roles',
+          key: 'id',
+          as: 'roleId',
+          allowNull: false
+        }
       },
       createdAt: {
         allowNull: false,

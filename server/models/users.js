@@ -2,10 +2,6 @@
 
 module.exports = (sequelize, DataTypes) => {
   const Users = sequelize.define('Users', {
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -14,8 +10,12 @@ module.exports = (sequelize, DataTypes) => {
       },
       unique: true,
     },
-    access_level: {
-      type: DataTypes.STRING,
+    names: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
+    imageUrl: {
+      type: DataTypes.TEXT,
       allowNull: false
     }
   },
@@ -33,6 +33,11 @@ module.exports = (sequelize, DataTypes) => {
           Users.hasMany(models.Replies, {
             foreignKey: 'userId',
             as: 'replies'
+          });
+          Users.belongsTo(models.Roles, {
+            foreignKey: 'roleId',
+            onDelete: 'CASCADE',
+            allowNull: false
           });
         },
       },
