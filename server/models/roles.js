@@ -1,8 +1,11 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Roles = sequelize.define('Roles', {
-    role: DataTypes.STRING,
-    allowNull: false
+    name: {
+      type: DataTypes.STRING,
+      unique: true,
+      allowNull: false
+    }
   }, {
       classMethods: {
         associate: (models) => {
