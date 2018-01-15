@@ -6,6 +6,7 @@ const levelsService = controllers.levels;
 const notesService = controllers.notes;
 const categoriesService = controllers.categories;
 const chatsService = controllers.chats;
+const rolesService = controllers.roles;
 
 module.exports = (app) => {
   app.get('/api', (req,res) => res.status(200).send({
@@ -55,4 +56,10 @@ app.get('/api/incidents/:id/chats', chatsService.list);
 app.get('/api/chats/:id', chatsService.findById);
 app.put('/api/chats/:id', chatsService.update);
 app.delete('/api/chats/:id', chatsService.delete);
+
+// roles endpoints
+app.post('/api/roles', rolesService.create);
+app.get('/api/roles', rolesService.list);  
+app.get('/api/roles/:id', rolesService.findById);
+app.put('/api/roles/:id', rolesService.update);
 }
