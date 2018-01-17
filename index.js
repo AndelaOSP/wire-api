@@ -1,6 +1,7 @@
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const NODE_ENV = process.env.NODE_ENV;
 
 // load env
@@ -10,6 +11,7 @@ if (NODE_ENV !== 'development') {
 
 // set up the express app
 const app = express();
+app.use(cors());
 // Log requests to the console.
 app.use(logger('dev'));
 
