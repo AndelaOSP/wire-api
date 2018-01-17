@@ -69,7 +69,7 @@ module.exports = {
         return incident
           .update({
             description: req.body.description || incident.description,
-            dateOccurred: req.body.dateOccurred || incident.description,
+            dateOccurred: req.body.dateOccurred || incident.dateOccurred,
             statusId: req.body.statusId || incident.statusId,
             locationId: req.body.locationId || incident.locationId,
             categoryId: req.body.categoryId || incident.categoryId,
