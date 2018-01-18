@@ -1,4 +1,5 @@
 const Status = require("../models").Statuses;
+const Incident = require("../models").Incidents;
 
 module.exports = {
   //add a status, incase admin needs an additional one
@@ -78,5 +79,21 @@ module.exports = {
       .catch(error => {
         res.status(400).send(error);
       });
-  }
+  },
+
+  // filter incidents by status
+  listIncidents(req, res) {
+    return Incident
+      .findAll({
+        where: {
+          statusId: req.params.id
+        },
+      })
+      .then(incident => {
+        res.status(200).send({ data: { incidents: incident }, status: "success" });
+      })
+      .catch(error => {
+        res.status(400).send(error)
+      });
+  },
 }

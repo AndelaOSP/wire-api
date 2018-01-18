@@ -62,4 +62,11 @@ app.post('/api/roles', rolesService.create);
 app.get('/api/roles', rolesService.list);  
 app.get('/api/roles/:id', rolesService.findById);
 app.put('/api/roles/:id', rolesService.update);
+
+// filter incidents
+app.get('/api/categories/:id/incidents', categoriesService.listIncidents);
+app.get('/api/status/:id/incidents', statusService.listIncidents);
+app.get('/api/locations/:id/incidents', locationsService.listIncidents);
+app.get('/api/levels/:id/incidents', levelsService.listIncidents);
+
 }

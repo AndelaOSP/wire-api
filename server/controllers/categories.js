@@ -1,4 +1,5 @@
 const Category = require("../models").Categories;
+const Incident = require("../models").Incidents;
 
 module.exports = {
   //add a category
@@ -80,4 +81,21 @@ module.exports = {
           .catch(error => res.status(400).send(error));
       });
   },
+
+    // filter incidents by category
+    listIncidents(req, res) {
+      return Incident
+        .findAll({
+          where: {
+            categoryId: req.params.id
+          },
+        })
+        .then(incident => {
+          res.status(200).send({ data: { incidents: incident }, status: "success" });
+        })
+        .catch(error => {
+          res.status(400).send(error)
+        });
+    },
+
 }

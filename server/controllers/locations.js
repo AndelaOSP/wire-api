@@ -1,4 +1,5 @@
 const Location = require("../models").Locations;
+const Incident = require("../models").Incidents;
 
 module.exports = {
   //add a location
@@ -75,5 +76,20 @@ module.exports = {
           .then(() => res.status(200).send({ data: location, status: "success" }))
           .catch(error => res.status(400).send(error));
       });
-  }
+  },
+  // filter incidents by location
+     listIncidents(req, res) {
+      return Incident
+        .findAll({
+          where: {
+            locationId: req.params.id
+          },
+        })
+        .then(incident => {
+          res.status(200).send({ data: { incidents: incident }, status: "success" });
+        })
+        .catch(error => {
+          res.status(400).send(error)
+        });
+    },
 }

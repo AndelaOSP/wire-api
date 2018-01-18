@@ -17,6 +17,7 @@ module.exports = {
         statusId: req.body.statusId,
         locationId: req.body.locationId,
         categoryId: req.body.categoryId,
+        levelId: req.body.levelId,
         witnesses: req.body.witnesses
       })
       .then(incident => {
@@ -73,6 +74,7 @@ module.exports = {
             statusId: req.body.statusId || incident.statusId,
             locationId: req.body.locationId || incident.locationId,
             categoryId: req.body.categoryId || incident.categoryId,
+            levelId: req.body.levelId || incident.levelId,
             witnesses: req.body.witnesses || incident.witnesses
           })
           .then(() => res.status(200).send({ data: incident, status: "success" }))

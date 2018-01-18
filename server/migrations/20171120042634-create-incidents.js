@@ -57,6 +57,15 @@ module.exports = {
           allowNull: false
         }
       },
+      levelId: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'Levels',
+          key: 'id',
+          as: 'levelId'
+        }
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
