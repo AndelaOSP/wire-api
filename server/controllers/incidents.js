@@ -12,9 +12,10 @@ module.exports = {
     return Incident
       .create({
         description: req.body.description,
+        subject: req.body.subject,
         dateOccurred: req.body.dateOccurred,
         userId: req.body.userId,
-        statusId: req.body.statusId,
+        statusId: req.body.statusId || 1,
         locationId: req.body.locationId,
         categoryId: req.body.categoryId,
         levelId: req.body.levelId,
@@ -70,6 +71,7 @@ module.exports = {
         return incident
           .update({
             description: req.body.description || incident.description,
+            subject: req.body.subject|| incident.subject,
             dateOccurred: req.body.dateOccurred || incident.dateOccurred,
             statusId: req.body.statusId || incident.statusId,
             locationId: req.body.locationId || incident.locationId,
