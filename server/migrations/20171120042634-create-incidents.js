@@ -11,6 +11,9 @@ module.exports = {
       description: {
         type: Sequelize.TEXT
       },
+      subject: {
+        type: Sequelize.TEXT
+      },
       witnesses: {
         type: Sequelize.TEXT
       },
@@ -33,8 +36,7 @@ module.exports = {
         references: {
           model: 'Categories',
           key: 'id',
-          as: 'categoryId',
-          allowNull: false
+          as: 'categoryId'
         }
       },
       statusId: {
@@ -43,8 +45,7 @@ module.exports = {
         references: {
           model: 'Statuses',
           key: 'id',
-          as: 'statusId',
-          allowNull: false
+          as: 'statusId'
         }
       },
       locationId: {

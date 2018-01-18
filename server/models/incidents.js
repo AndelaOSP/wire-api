@@ -5,6 +5,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: false
     },
+    subject: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
     witnesses: {
       type: DataTypes.TEXT
     },
