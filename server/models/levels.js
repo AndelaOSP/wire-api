@@ -11,7 +11,11 @@ module.exports = (sequelize, DataTypes) => {
         Levels.hasMany(models.Categories, {
         foreignKey: 'levelId',
         as: 'categories'
-      })
+      });
+      Levels.hasMany(models.Incidents, {
+        foreignKey: 'levelId',
+        as: 'incidents'
+      });
     }
   }
 });

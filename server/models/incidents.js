@@ -35,6 +35,10 @@ module.exports = (sequelize, DataTypes) => {
           onDelete: 'CASCADE',
           allowNull: false
         });
+        Incidents.belongsTo(models.Levels, {
+          foreignKey: 'levelId',
+          onDelete: 'CASCADE'
+        });
         Incidents.hasMany(models.Notes, {
           foreignKey: 'incidentId',
           as: 'notes'

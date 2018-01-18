@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       associate: (models) => {
         Categories.hasMany(models.Incidents, {
         foreignKey: 'categoryId',
-        as: 'categories'
+        as: 'incidents'
       })
       Categories.belongsTo(models.Levels, {
         foreignKey: 'levelId',

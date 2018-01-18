@@ -1,11 +1,12 @@
 const Level = require("../models").Levels;
+const Incident = require("../models").Incidents;
 
 module.exports = {
   //add a level, incase admin needs an additional one
   create(req, res) {
     const { name } = req.body;
     return Level
-    .findOne({ where: { name } })
+      .findOne({ where: { name } })
       .then((level) => {
         if (level) {
           return res.status(400).send({
@@ -18,27 +19,27 @@ module.exports = {
           });
         }
         Level.create({
-        name: req.body.name
+          name: req.body.name
+        })
+          .then(level => {
+            return res.status(201).send({ data: level, status: "success" })
+          });
       })
-      .then (level => {
-        return res.status(201).send({ data:level, status: "success" })
+      .catch(error => {
+        res.status(400).send(error);
       });
-    })
-    .catch(error => {
-      res.status(400).send(error);
-    });
   },
 
   // view all levels
   list(req, res) {
     return Level
-    .findAll()
-    .then(level => {
-      res.status(200).send({ data: { levels: level }, status: "success" });
-    })
-    .catch(error => {
-      res.status(400).send(error)
-    });
+      .findAll()
+      .then(level => {
+        res.status(200).send({ data: { levels: level }, status: "success" });
+      })
+      .catch(error => {
+        res.status(400).send(error)
+      });
   },
 
   // retrieve a level by ID
@@ -51,7 +52,7 @@ module.exports = {
             message: 'level does not exist', status: "fail"
           });
         }
-        res.status(200).send({ data:level, status: "success" });
+        res.status(200).send({ data: level, status: "success" });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -61,22 +62,38 @@ module.exports = {
   // update a level
   update(req, res) {
     return Level
-    .findById(req.params.id)
-    .then(level => {
-      if (!level) {
-        return res.status(404).send({
-          message: 'level not found', status: "fail"
-        });
-      }
-      return level
-      .update({
-        name: req.body.name
+      .findById(req.params.id)
+      .then(level => {
+        if (!level) {
+          return res.status(404).send({
+            message: 'level not found', status: "fail"
+          });
+        }
+        return level
+          .update({
+            name: req.body.name
+          })
+          .then(() => res.status(200).send({ data: level, status: "success" })
+          )
       })
-      .then(() => res.status(200).send({ data: level, status: "success"})
-    )
-  })
-  .catch(error => {
-    res.status(400).send(error);
-  });
-}
+      .catch(error => {
+        res.status(400).send(error);
+      });
+  },
+
+    // filter incidents by level
+    listIncidents(req, res) {
+      return Incident
+        .findAll({
+          where: {
+            levelId: req.params.id
+          },
+        })
+        .then(incident => {
+          res.status(200).send({ data: { incidents: incident }, status: "success" });
+        })
+        .catch(error => {
+          res.status(400).send(error)
+        });
+    },
 }
