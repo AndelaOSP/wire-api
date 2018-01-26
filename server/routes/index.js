@@ -7,6 +7,7 @@ const notesService = controllers.notes;
 const categoriesService = controllers.categories;
 const chatsService = controllers.chats;
 const rolesService = controllers.roles;
+const usersService = controllers.users;
 
 module.exports = (app) => {
   app.get('/api', (req,res) => res.status(200).send({
@@ -68,5 +69,8 @@ app.get('/api/categories/:id/incidents', categoriesService.listIncidents);
 app.get('/api/status/:id/incidents', statusService.listIncidents);
 app.get('/api/locations/:id/incidents', locationsService.listIncidents);
 app.get('/api/levels/:id/incidents', levelsService.listIncidents);
+
+// users endpoints
+app.post('/api/users', usersService.create);
 
 }
