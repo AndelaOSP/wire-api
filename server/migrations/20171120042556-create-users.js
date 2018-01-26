@@ -15,7 +15,7 @@ module.exports = {
         },
         unique: true,
       },
-      names: {
+      name: {
         type: Sequelize.TEXT,
         allowNull: false
       },
