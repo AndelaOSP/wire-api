@@ -9,9 +9,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: false
     },
-    witnesses: {
-      type: DataTypes.TEXT
-    },
     dateOccurred: {
       type: DataTypes.DATE,
       allowNull: false
@@ -50,6 +47,10 @@ module.exports = (sequelize, DataTypes) => {
         Incidents.hasMany(models.Chats, {
           foreignKey: 'incidentId',
           as: 'chats'
+        });
+        Incidents.hasMany(models.Witnesses, {
+          foreignKey: 'incidentId',
+          as: 'witnesses'
         });
     }
   }

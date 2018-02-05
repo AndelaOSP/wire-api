@@ -91,8 +91,7 @@ module.exports = {
             statusId: req.body.statusId || incident.statusId,
             locationId: req.body.locationId || incident.locationId,
             categoryId: req.body.categoryId || incident.categoryId,
-            levelId: req.body.levelId || incident.levelId,
-            witnesses: req.body.witnesses || incident.witnesses
+            levelId: req.body.levelId || incident.levelId
           })
           .then(() => res.status(200).send({ data: incident, status: "success" }))
           .catch(error => res.status(400).send(error));
