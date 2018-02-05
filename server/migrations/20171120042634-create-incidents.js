@@ -14,9 +14,6 @@ module.exports = {
       subject: {
         type: Sequelize.TEXT
       },
-      witnesses: {
-        type: Sequelize.TEXT
-      },
       dateOccurred: {
         type: Sequelize.DATE
       },
