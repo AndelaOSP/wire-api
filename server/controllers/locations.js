@@ -1,38 +1,24 @@
+const locationService = require("../services/locations");
 const Location = require("../models").Locations;
 const Incident = require("../models").Incidents;
 
 module.exports = {
-  //add a location
+  // add a location
   create(req, res) {
-    name = req.body.name;
-    centre = req.body.centre;
-    country = req.body.country;
-    return Location
-      .findOne({ where: { name, centre, country } })
-      .then((location) => {
-        if (location) {
-          return res.status(400).send({
-            message: `The location ${name}, ${centre}, ${country} already exists`, status: "fail"
-          });
-        }
-        {(name==null) || (country==null) || (centre==null)
-          ? res.status(400).send({
-            message: "Please fill all the required fields(name,centre,country)", status: "fail"
-          })
-          : Location
-            .create({
-              name: req.body.name,
-              centre: req.body.centre,
-              country: req.body.country
-            })
-            .then(location => {
-              return res.status(201).send({ data: location, status: "success" })
-            });
-        }
-      })  
-      .catch(error => {
-        res.status(400).send(error);
-      });
+    name = req.body.name,
+      centre = req.body.centre,
+      country = req.body.country
+    return locationService.create(name, centre, country).then(location => {
+      if (location === "Resolved") {
+        return res.status(200).send({ message: "This location already exists" })
+      }
+      if (location === "Reject") {
+        return res.status(400).send({ message: "Please enter (name, centre, country)" })
+      }
+      res.status(201).send({ data: location, status: "success" });
+    }).catch(error => {
+      res.status(400).send(error);
+    });
   },
 
   // view all locations
@@ -57,7 +43,7 @@ module.exports = {
             message: 'Location not found', status: "fail"
           });
         }
-        res.status(200).send({ data:location, status: "success" });
+        res.status(200).send({ data: location, status: "success" });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -85,18 +71,18 @@ module.exports = {
       });
   },
   // filter incidents by location
-     listIncidents(req, res) {
-      return Incident
-        .findAll({
-          where: {
-            locationId: req.params.id
-          },
-        })
-        .then(incident => {
-          res.status(200).send({ data: { incidents: incident }, status: "success" });
-        })
-        .catch(error => {
-          res.status(400).send(error)
-        });
-    },
+  listIncidents(req, res) {
+    return Incident
+      .findAll({
+        where: {
+          locationId: req.params.id
+        },
+      })
+      .then(incident => {
+        res.status(200).send({ data: { incidents: incident }, status: "success" });
+      })
+      .catch(error => {
+        res.status(400).send(error)
+      });
+  },
 }
