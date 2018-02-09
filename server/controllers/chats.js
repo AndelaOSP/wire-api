@@ -1,4 +1,5 @@
 const Chat = require("../models").Chats;
+const User = require("../models").Users;
 
 module.exports = {
   // add a Chat
@@ -24,6 +25,10 @@ module.exports = {
   list(req, res) {
     return Chat
       .findAll({
+        include: {
+          model: User,
+          attributes: ['name', 'imageUrl', 'email']
+        },
         where: {
           incidentId: req.params.id
         },
@@ -38,7 +43,12 @@ module.exports = {
   // retrieve a Chat by ID
   findById(req, res) {
     return Chat
-      .findById(req.params.id)
+      .findById(req.params.id, {
+        include: {
+          model: User,
+          attributes: ['name', 'imageUrl', 'email']
+        },
+      })
       .then(Chat => {
         if (!Chat) {
           return res.status(404).send({
