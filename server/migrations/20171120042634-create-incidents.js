@@ -64,6 +64,15 @@ module.exports = {
           as: 'levelId'
         }
       },
+      assigneeId: {
+        type: Sequelize.STRING,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'Users',
+          key: 'id',
+          as: 'assigneeId'
+        }
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

@@ -52,6 +52,10 @@ module.exports = (sequelize, DataTypes) => {
           foreignKey: 'incidentId',
           as: 'witnesses'
         });
+        Incidents.belongsTo(models.Assignees, {
+          foreignKey: 'assigneeId',
+          onDelete: 'CASCADE',
+        });
     }
   }
 });

@@ -43,6 +43,10 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: 'userId',
             as: 'witnesses'
           });
+          Users.hasMany(models.Assignees, {
+            foreignKey: 'userId',
+            as: 'assignees'
+          });
           Users.belongsTo(models.Roles, {
             foreignKey: 'roleId',
             onDelete: 'CASCADE',
