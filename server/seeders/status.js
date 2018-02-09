@@ -3,7 +3,7 @@
 module.exports = {
   up(queryInterface, Sequelize) {
     return queryInterface.bulkInsert('Statuses', [{
-      status: 'Open',
+      status: 'Pending',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString() 
     },
