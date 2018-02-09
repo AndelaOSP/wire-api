@@ -1,4 +1,5 @@
 const Chat = require("../models").Chats;
+const User = require("../models").Users;
 
 module.exports = {
   // add a Chat
@@ -24,12 +25,16 @@ module.exports = {
   list(req, res) {
     return Chat
       .findAll({
+        include: {
+          model: User,
+          attributes: ['name', 'imageUrl', 'email']
+        },
         where: {
           incidentId: req.params.id
         },
       })
       .then(chat => {
-        res.status(200).send({ data: { Chats: chat }, status: "success" });
+        res.status(200).send({ data: { chats: chat }, status: "success" });
       })
       .catch(error => {
         res.status(400).send(error)
@@ -38,7 +43,12 @@ module.exports = {
   // retrieve a Chat by ID
   findById(req, res) {
     return Chat
-      .findById(req.params.id)
+      .findById(req.params.id, {
+        include: {
+          model: User,
+          attributes: ['name', 'imageUrl', 'email']
+        },
+      })
       .then(Chat => {
         if (!Chat) {
           return res.status(404).send({
@@ -54,7 +64,12 @@ module.exports = {
   // update a Chat
   update(req, res) {
     return Chat
-      .findById(req.params.id)
+      .findById(req.params.id, {
+        include: {
+        model: User,
+        attributes: ['name', 'imageUrl', 'email']
+      }
+    })
       .then(Chat => {
         if (!Chat) {
           return res.status(404).send({

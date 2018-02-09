@@ -1,5 +1,5 @@
 const Note = require("../models").Notes;
-const Reply = require("../models").Replies;
+const User = require("../models").Users;
 
 module.exports = {
   // add a Note
@@ -26,6 +26,10 @@ module.exports = {
   list(req, res) {
     return Note
       .findAll({
+        include: {
+          model: User,
+          attributes: ['name', 'imageUrl', 'email']
+        },
         where: {
           incidentId: req.params.id
         },
@@ -41,8 +45,13 @@ module.exports = {
   // retrieve a Note by ID
   findById(req, res) {
     return Note
-      .findById(req.params.id)
-      .then(Note => {
+      .findById(req.params.id, {
+        include: {
+        model: User,
+        attributes: ['name', 'imageUrl', 'email']
+      }
+    })
+    .then(Note => {
         if (!Note) {
           return res.status(404).send({
             message: 'Note not found', status: "fail"
@@ -58,7 +67,12 @@ module.exports = {
   // update a Note
   update(req, res) {
     return Note
-      .findById(req.params.id)
+      .findById(req.params.id,{
+        include: {
+        model: User,
+        attributes: ['name', 'imageUrl', 'email']
+      }
+    })
       .then(Note => {
         if (!Note) {
           return res.status(404).send({
