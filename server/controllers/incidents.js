@@ -1,7 +1,7 @@
 const Incident = require("../models").Incidents;
 const User = require("../models").Users;
 const Location = require("../models").Locations;
-const Category = require("../models").Categories;
+const Level = require("../models").Levels;
 const Status = require("../models").Statuses;
 const LocationService = require("../services/locations");
 
@@ -10,44 +10,58 @@ module.exports = {
   create(req, res) {
     let locationPromise;
     name = req.body.name,
-    centre = req.body.centre,
-    country = req.body.country
+      centre = req.body.centre,
+      country = req.body.country
     return Location.findOne({ where: { name, centre, country } })
-    .then(location => {
-      (!location) ?
-      locationPromise =
-      LocationService.create(name, centre, country).then(location => {
-        return Promise.resolve(location.dataValues.id);
-      }).catch(error => {
-        res.status(400).send(error);
-      })
-      :
-      locationPromise = Promise.resolve(location.dataValues.id);
-      locationPromise.then(locationId => {
-        Incident
-        .create({
-          description: req.body.description,
-          subject: req.body.subject,
-          dateOccurred: req.body.dateOccurred,
-          userId: req.body.userId,
-          statusId: req.body.statusId || 1,
-          locationId,
-          levelId: req.body.levelId,
-          witnesses: req.body.witnesses
+      .then(location => {
+        (!location) ?
+          locationPromise =
+          LocationService.create(name, centre, country).then(location => {
+            return Promise.resolve(location.dataValues.id);
+          }).catch(error => {
+            res.status(400).send(error);
+          })
+          :
+          locationPromise = Promise.resolve(location.dataValues.id);
+        locationPromise.then(locationId => {
+          Incident
+            .create({
+              description: req.body.description,
+              subject: req.body.subject,
+              dateOccurred: req.body.dateOccurred,
+              userId: req.body.userId,
+              statusId: req.body.statusId || 1,
+              locationId,
+              levelId: req.body.levelId,
+              witnesses: req.body.witnesses
+            })
+            .then(incident => {
+              res.status(201).send({ data: incident, status: "success" });
+            }).catch(error => {
+              res.status(400).send(error);
+            });
         })
-        .then(incident => {
-          res.status(201).send({ data: incident, status: "success" });
-        }).catch(error => {
-          res.status(400).send(error);
-        });
       })
-    })
   },
 
   // get all incidents
   list(req, res) {
     return Incident
-      .findAll()
+      .findAll({
+        include: [{
+          model: Level,
+          attributes: ['name']
+        }, {
+          model: Status,
+          attributes: ['status']
+        }, {
+          model: Location,
+          attributes: ['name', 'centre', 'country']
+        }, {
+          model: User,
+          attributes: ['name', 'imageUrl', 'email']
+        }]
+      })
       .then(incident => {
         res.status(200).send({ data: { incidents: incident }, status: "success" });
       })
@@ -59,7 +73,21 @@ module.exports = {
   // retrieve an incident by ID
   findById(req, res) {
     return Incident
-      .findById(req.params.id)
+      .findById(req.params.id, {
+        include: [{
+          model: Level,
+          attributes: ['name']
+        }, {
+          model: Status,
+          attributes: ['status']
+        }, {
+          model: Location,
+          attributes: ['name', 'centre', 'country']
+        }, {
+          model: User,
+          attributes: ['name', 'imageUrl', 'email']
+        }]
+      })
       .then(incident => {
         if (!incident) {
           return res.status(404).send({
