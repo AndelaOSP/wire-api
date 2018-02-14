@@ -3,6 +3,13 @@
     "use_env_variable": "DATABASE_URL",
     "dialect": "postgres"
   },
+  "staging": {
+    "username": "",
+    "password": null,
+    "database": "wire_staging",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
   "test": {
     "username": "",
     "password": null,
