@@ -48,12 +48,9 @@ module.exports = (sequelize, DataTypes) => {
           foreignKey: 'incidentId',
           as: 'chats'
         });
-        Incidents.hasMany(models.Witnesses, {
-          foreignKey: 'incidentId',
-          as: 'witnesses'
-        });
-        Incidents.belongsTo(models.Assignees, {
+        Incidents.belongsTo(models.Users, {
           foreignKey: 'assigneeId',
+          as: 'Assignees',
           onDelete: 'CASCADE',
         });
     }
