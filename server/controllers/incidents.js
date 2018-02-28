@@ -62,7 +62,7 @@ module.exports = {
           },
           {
           model: User,
-          as: 'Assignees',
+          as: 'Assignee',
           attributes: ['name', 'imageUrl', 'email']
           }
         ]
@@ -94,7 +94,7 @@ module.exports = {
           attributes: ['name', 'imageUrl', 'email']
         },{
           model: User,
-          as: 'Assignees',
+          as: 'Assignee',
           attributes: ['name', 'imageUrl', 'email']
           }]
       })
@@ -131,7 +131,7 @@ module.exports = {
             attributes: ['name', 'imageUrl', 'email']
           },{
             model: User,
-            as: 'Assignees',
+            as: 'Assignee',
             attributes: ['name', 'imageUrl', 'email']
             }]
         })
