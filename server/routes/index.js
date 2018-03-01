@@ -71,5 +71,6 @@ app.get('/api/levels/:id/incidents', levelsService.listIncidents);
 
 // users endpoints
 app.post('/api/users', usersService.create);
+app.get('/api/users', usersService.list);
 
 }

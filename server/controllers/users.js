@@ -1,4 +1,5 @@
 const userService = require("../services/users");
+const User = require("../models").Users;
 
 module.exports = {
   // add a user
@@ -7,7 +8,7 @@ module.exports = {
       email = req.body.email,
       name = req.body.name,
       imageUrl = req.body.imageUrl,
-      roleId = req.body.roleId || 2,
+      roleId = req.body.roleId || 1,
       userService.create(id, email, name, imageUrl, roleId).then(user => {
         if (user === "Resolved") {
           return res.status(200).send({message: "This user already exists"});
@@ -15,6 +16,21 @@ module.exports = {
         res.status(201).send({ data: user, status: "success" });
       }).catch(error => {
         res.status(400).send(error);
+      });
+  },
+  // GET admins/super admins
+  list(req, res) {
+    return User
+      .findAll({
+        where: {
+          roleId: 2 || 3
+        }
+      })
+      .then(user => {
+        res.status(200).send({ data: { users: user }, status: "success" });
+      })
+      .catch(error => {
+        res.status(400).send(error)
       });
   }
 }

@@ -39,10 +39,6 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: 'userId',
             as: 'chats'
           });
-          Users.hasMany(models.Users, {
-            foreignKey: 'userId',
-            as: 'Assignee'
-          });
           Users.belongsTo(models.Roles, {
             foreignKey: 'roleId',
             onDelete: 'CASCADE',

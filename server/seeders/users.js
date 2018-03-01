@@ -8,7 +8,7 @@ module.exports = {
       email: "caroline.nkirote@andela.com",
       name: "Caroline Nkirote",
       imageUrl: "https://lh4.googleusercontent.com/-rVipu2W1sBk/AAAAAAAAAAI/AAAAAAAAACQ/rOgW25IUgb8/photo.jpg",
-      roleId: 1,
+      roleId: 2,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString() 
     },
@@ -17,7 +17,7 @@ module.exports = {
       email: "mercy.muchai@andela.com",
       name: "Mercy Muchai",
       imageUrl: "https://lh3.googleusercontent.com/-XxYl2Ryrfns/AAAAAAAAAAI/AAAAAAAAABg/QJRPuQnerrk/photo.jpg",
-      roleId: 1,
+      roleId: 2,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString() 
     },
