@@ -48,7 +48,7 @@ module.exports = {
         }
       },
       locationId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         onDelete: 'CASCADE',
         references: {
           model: 'Locations',

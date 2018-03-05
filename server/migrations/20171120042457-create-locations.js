@@ -1,12 +1,14 @@
 'use strict';
+let cuid = require("cuid");
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Locations', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING,
+        defaultValue: () => cuid()
       },
       name: {
         type: Sequelize.STRING
