@@ -1,12 +1,14 @@
 'use strict';
+let cuid = require("cuid");
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Incidents', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING,
+        defaultValue: () => cuid()
       },
       description: {
         type: Sequelize.TEXT
@@ -46,7 +48,7 @@ module.exports = {
         }
       },
       locationId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         onDelete: 'CASCADE',
         references: {
           model: 'Locations',
@@ -62,15 +64,6 @@ module.exports = {
           model: 'Levels',
           key: 'id',
           as: 'levelId'
-        }
-      },
-      assigneeId: {
-        type: Sequelize.STRING,
-        onDelete: 'CASCADE',
-        references: {
-          model: 'Users',
-          key: 'id',
-          as: 'assigneeId'
         }
       },
       createdAt: {
