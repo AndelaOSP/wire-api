@@ -1,6 +1,13 @@
 'use strict';
+let cuid = require("cuid");
+
 module.exports = (sequelize, DataTypes) => {
   const Locations = sequelize.define('Locations', {
+    id: {
+      type: DataTypes.STRING,
+      primaryKey: true,
+      defaultValue: () => cuid()
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,

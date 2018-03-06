@@ -1,6 +1,13 @@
 'use strict';
+let cuid = require("cuid");
+
 module.exports = (sequelize, DataTypes) => {
   const Chats = sequelize.define('Chats', {
+    id: {
+      type: DataTypes.STRING,
+      primaryKey: true,
+      defaultValue: () => cuid()
+    },
     chat: {
       type: DataTypes.TEXT,
       allowNull: false

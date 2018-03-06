@@ -1,18 +1,20 @@
 'use strict';
+let cuid = require("cuid");
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Notes', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING,
+        defaultValue: () => cuid()
       },
       note: {
         type: Sequelize.TEXT
       },
      incidentId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         onDelete: 'CASCADE',
         references: {
           model: 'Incidents',

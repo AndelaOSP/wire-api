@@ -1,12 +1,14 @@
 'use strict';
+let cuid = require("cuid");
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Chats', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING,
+        defaultValue: () => cuid()
       },
       chat: {
         type: Sequelize.TEXT
@@ -22,7 +24,7 @@ module.exports = {
         }
       },
       incidentId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         onDelete: 'CASCADE',
         references: {
           model: 'Incidents',
