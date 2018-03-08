@@ -59,13 +59,7 @@ module.exports = {
         }, {
           model: User, 
           attributes: ['name', 'imageUrl', 'email']
-          },
-          {
-          model: User,
-          as: 'Assignee',
-          attributes: ['name', 'imageUrl', 'email']
-          }
-        ]
+        }]
       })
       .then(incident => {
         res.status(200).send({ data: { incidents: incident }, status: "success" });
@@ -89,14 +83,9 @@ module.exports = {
           model: Location,
           attributes: ['name', 'centre', 'country']
         }, {
-          model: User,
-          key: 'userId',
+          model: User, 
           attributes: ['name', 'imageUrl', 'email']
-        },{
-          model: User,
-          as: 'Assignee',
-          attributes: ['name', 'imageUrl', 'email']
-          }]
+        }]
       })
       .then(incident => {
         if (!incident) {
@@ -126,14 +115,9 @@ module.exports = {
             model: Location,
             attributes: ['name', 'centre', 'country']
           }, {
-            model: User,
-            key: 'userId',
+            model: User, 
             attributes: ['name', 'imageUrl', 'email']
-          },{
-            model: User,
-            as: 'Assignee',
-            attributes: ['name', 'imageUrl', 'email']
-            }]
+          }]
         })
       .then(incident => {
         if (!incident) {

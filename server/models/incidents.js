@@ -1,6 +1,13 @@
 'use strict';
+let cuid = require("cuid");
+
 module.exports = (sequelize, DataTypes) => {
   const Incidents = sequelize.define('Incidents', {
+    id: {
+      type: DataTypes.STRING,
+      primaryKey: true,
+      defaultValue: () => cuid()
+    },
     description: {
       type: DataTypes.TEXT,
       allowNull: false
@@ -47,11 +54,6 @@ module.exports = (sequelize, DataTypes) => {
         Incidents.hasMany(models.Chats, {
           foreignKey: 'incidentId',
           as: 'chats'
-        });
-        Incidents.belongsTo(models.Users, {
-          foreignKey: 'assigneeId',
-          as: 'Assignee',
-          onDelete: 'CASCADE',
         });
     }
   }
