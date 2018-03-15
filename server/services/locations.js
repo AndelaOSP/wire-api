@@ -3,21 +3,18 @@ const Location = require("../models").Locations;
 module.exports = {
   // add a location
   create(name, centre, country, req, res) {
-    return Location
-      .findOne({ where: { name, centre, country } })
+    if (!name || !centre || !country) {
+      return Promise.reject("Provide the location name, centre and country");
+    } else {
+      return Location.findOne({ where: { name, centre, country } })
       .then(location => {
-        if (location) {
-          return Promise.resolve("Resolved");
-        }
-        if ((name == null) || (centre == null) || (country == null)) {
-          return Promise.resolve("Reject")
-        }
-        return Location.create({ name, centre, country });
+        return location ? Promise.resolve(location) : Location.create({ name, centre, country });
       }).then(location => {
-        return Promise.resolve(location);
+        return location;
       })
       .catch(error => {
         throw(error);
       });
+    }
   },
 }
