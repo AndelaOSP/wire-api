@@ -53,7 +53,7 @@ module.exports = {
           attributes: ['name', 'centre', 'country']
         }, {
           model: User, 
-          as: 'assignee',
+          as: 'assignees',
           userAttributes,
           through: {
             attributes: []
