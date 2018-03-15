@@ -69,7 +69,11 @@ module.exports = {
         }]
       })
       .then(incidents => {
-        res.status(200).send({ data: { incidents }, status: "success" });
+        let mappedIncidents = incidents.map(incident=> {
+          incident.dataValues.reporter = incident.dataValues.reporter[0];
+          return incident;
+        })
+        res.status(200).send({ data: { incidents: mappedIncidents }, status: "success" });
       })
       .catch(error => {
         res.status(400).send(error)
