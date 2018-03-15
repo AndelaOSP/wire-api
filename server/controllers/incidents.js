@@ -10,41 +10,36 @@ module.exports = {
   create(req, res) {
     let locationPromise;
     name = req.body.name,
-      centre = req.body.centre,
-      country = req.body.country
-    return Location.findOne({ where: { name, centre, country } })
-      .then(location => {
-        (!location) ?
-          locationPromise =
-          LocationService.create(name, centre, country).then(location => {
-            return Promise.resolve(location.dataValues.id);
-          }).catch(error => {
-            res.status(400).send(error);
-          })
-          :
-          locationPromise = Promise.resolve(location.dataValues.id);
-        locationPromise.then(locationId => {
-          Incident
-            .create({
-              description: req.body.description,
-              subject: req.body.subject,
-              dateOccurred: req.body.dateOccurred,
-              userId: req.body.userId,
-              statusId: req.body.statusId || 1,
-              locationId,
-              levelId: req.body.levelId
-            })
-            .then(incident => {
-              res.status(201).send({ data: incident, status: "success" });
-            }).catch(error => {
-              res.status(400).send(error);
-            });
-        })
-      })
+    centre = req.body.centre,
+    country = req.body.country
+    return LocationService.create(name, centre, country).then(location => {
+      return location.dataValues.id;
+    }).then(locationId=> {
+      return Incident.create({
+        description: req.body.description,
+        subject: req.body.subject,
+        dateOccurred: req.body.dateOccurred,
+        statusId: req.body.statusId || 1,
+        locationId,
+        levelId: req.body.levelId
+      });
+    }).then(incident=> {
+      return User.findById(req.body.userId).then(user=>{
+        return incident.addReporter(user);
+      }).then(()=> {
+        return incident;
+      });
+    }).then(incident=> {
+      res.status(201).send({ data: incident, status: "success" });
+    })
+    .catch(error => {
+      res.status(400).send(error);
+    });
   },
 
   // get all incidents
   list(req, res) {
+    let userAttributes = ['name', 'imageUrl', 'email'];
     return Incident
       .findAll({
         include: [{
@@ -58,11 +53,23 @@ module.exports = {
           attributes: ['name', 'centre', 'country']
         }, {
           model: User, 
-          attributes: ['name', 'imageUrl', 'email']
+          as: 'assignee',
+          userAttributes,
+          through: {
+            attributes: []
+          }
+        },
+        {
+          model: User, 
+          as: 'reporter',
+          userAttributes,
+          through: {
+            attributes: []
+          }
         }]
       })
-      .then(incident => {
-        res.status(200).send({ data: { incidents: incident }, status: "success" });
+      .then(incidents => {
+        res.status(200).send({ data: { incidents }, status: "success" });
       })
       .catch(error => {
         res.status(400).send(error)
