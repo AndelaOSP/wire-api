@@ -22,6 +22,10 @@ module.exports = {
           as: "incidentId"
         }
       },
+      assignedRole: {
+        type:   Sequelize.ENUM,
+        values: ['ccd', 'assignee', 'other']
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
