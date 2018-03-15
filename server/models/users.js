@@ -27,14 +27,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       classMethods: {
         associate: (models) => {
-          Users.hasMany(models.Incidents, {
-            foreignKey: 'userId',
-            as: "incidents"
-          });
-          Users.hasMany(models.Notes, {
-            foreignKey: 'userId',
-            as: 'notes'
-          });
           Users.hasMany(models.Chats, {
             foreignKey: 'userId',
             as: 'chats'
@@ -47,6 +39,13 @@ module.exports = (sequelize, DataTypes) => {
           Users.belongsToMany(models.Incidents, {
             through: "userIncidents",
             foreignKey: "userId",
+            as: "reportedIncidents",
+            otherKey: "incidentId"
+          });
+          Users.belongsToMany(models.Incidents, {
+            through: "assigneeIncidents",
+            foreignKey: "userId",
+            as: "assignedIncidents",
             otherKey: "incidentId"
           });
         },

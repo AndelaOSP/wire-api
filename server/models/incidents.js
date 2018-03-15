@@ -23,11 +23,6 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     classMethods: {
       associate: (models) => {
-        Incidents.belongsTo(models.Users, {
-        foreignKey: 'userId',
-        onDelete: 'CASCADE',
-        allowNull: false
-      });
         Incidents.belongsTo(models.Categories, {
           foreignKey: 'categoryId',
           onDelete: 'CASCADE',
@@ -58,6 +53,13 @@ module.exports = (sequelize, DataTypes) => {
         Incidents.belongsToMany(models.Users, {
           through: "userIncidents",
           foreignKey: "incidentId",
+          as: "reporter",
+          otherKey: "userId"
+        });
+        Incidents.belongsToMany(models.Users, {
+          through: "assigneeIncidents",
+          foreignKey: "incidentId",
+          as: "assignee",
           otherKey: "userId"
         });
     }
