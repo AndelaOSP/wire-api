@@ -9,6 +9,6 @@ const schema = dataTypes => ({
 });
 
 module.exports = (sequelize, DataTypes) => {
-  const userIncidents = sequelize.define("assigneeIncidents", schema(DataTypes));
-  return userIncidents;
+  const assigneeIncidents = sequelize.define("assigneeIncidents", schema(DataTypes));
+  return assigneeIncidents;
 };
