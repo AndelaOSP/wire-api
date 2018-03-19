@@ -1,46 +1,46 @@
-'use strict';
+
 
 module.exports = {
   up(queryInterface, Sequelize) {
     return queryInterface.bulkInsert('Locations', [{
-      name: "Quiet Room",
-      centre: "Nairobi",
-      country: "Kenya",
+      name: 'Quiet Room',
+      centre: 'Nairobi',
+      country: 'Kenya',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString() 
     },
     {
-      name: "Cafeteria",
-      centre: "Nairobi",
-      country: "Kenya",
+      name: 'Cafeteria',
+      centre: 'Nairobi',
+      country: 'Kenya',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString() 
     },
     {
-      name: "Block A 1st Floor",
-      centre: "Nairobi",
-      country: "Kenya",
+      name: 'Block A 1st Floor',
+      centre: 'Nairobi',
+      country: 'Kenya',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     },
     {
-      name: "Block A 2nd Floor",
-      centre: "Nairobi",
-      country: "Kenya",
+      name: 'Block A 2nd Floor',
+      centre: 'Nairobi',
+      country: 'Kenya',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString() 
     },
     {
-      name: "Tsavo",
-      centre: "Nairobi",
-      country: "Kenya",
+      name: 'Tsavo',
+      centre: 'Nairobi',
+      country: 'Kenya',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString() 
     },
     {
-      name: "Bootcamp Room",
-      centre: "Nairobi",
-      country: "Kenya",
+      name: 'Bootcamp Room',
+      centre: 'Nairobi',
+      country: 'Kenya',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString() 
     },

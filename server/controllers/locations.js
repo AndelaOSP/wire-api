@@ -1,21 +1,21 @@
-const locationService = require("../services/locations");
-const Location = require("../models").Locations;
-const Incident = require("../models").Incidents;
+const locationService = require('../services/locations');
+const Location = require('../models').Locations;
+const Incident = require('../models').Incidents;
 
 module.exports = {
   // add a location
   create(req, res) {
     name = req.body.name,
       centre = req.body.centre,
-      country = req.body.country
+      country = req.body.country;
     return locationService.create(name, centre, country).then(location => {
-      if (location === "Resolved") {
-        return res.status(200).send({ message: "This location already exists" })
+      if (location === 'Resolved') {
+        return res.status(200).send({ message: 'This location already exists' });
       }
-      if (location === "Reject") {
-        return res.status(400).send({ message: "Please enter (name, centre, country)" })
+      if (location === 'Reject') {
+        return res.status(400).send({ message: 'Please enter (name, centre, country)' });
       }
-      res.status(201).send({ data: location, status: "success" });
+      res.status(201).send({ data: location, status: 'success' });
     }).catch(error => {
       res.status(400).send(error);
     });
@@ -26,10 +26,10 @@ module.exports = {
     return Location
     .findAll()
     .then(location => {
-      res.status(200).send({ data: { locations: location }, status: "success" });
+      res.status(200).send({ data: { locations: location }, status: 'success' });
     })
     .catch(error => {
-      res.status(400).send(error)
+      res.status(400).send(error);
     });
   },
 
@@ -40,10 +40,10 @@ module.exports = {
       .then(location => {
         if (!location) {
           return res.status(404).send({
-            message: 'Location not found', status: "fail"
+            message: 'Location not found', status: 'fail'
           });
         }
-        res.status(200).send({ data: location, status: "success" });
+        res.status(200).send({ data: location, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -57,7 +57,7 @@ module.exports = {
       .then(location => {
         if (!location) {
           return res.status(404).send({
-            message: 'Location not found', status: "fail"
+            message: 'Location not found', status: 'fail'
           });
         }
         return location
@@ -66,7 +66,7 @@ module.exports = {
             centre: req.body.centre || location.centre,
             country: req.body.country || location.country
           })
-          .then(() => res.status(200).send({ data: location, status: "success" }))
+          .then(() => res.status(200).send({ data: location, status: 'success' }))
           .catch(error => res.status(400).send(error));
       });
   },
@@ -79,10 +79,10 @@ module.exports = {
         },
       })
       .then(incident => {
-        res.status(200).send({ data: { incidents: incident }, status: "success" });
+        res.status(200).send({ data: { incidents: incident }, status: 'success' });
       })
       .catch(error => {
-        res.status(400).send(error)
+        res.status(400).send(error);
       });
   },
-}
+};

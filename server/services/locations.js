@@ -1,4 +1,4 @@
-const Location = require("../models").Locations;
+const Location = require('../models').Locations;
 
 module.exports = {
   // add a location
@@ -7,10 +7,10 @@ module.exports = {
       .findOne({ where: { name, centre, country } })
       .then(location => {
         if (location) {
-          return Promise.resolve("Resolved");
+          return Promise.resolve('Resolved');
         }
         if ((name == null) || (centre == null) || (country == null)) {
-          return Promise.resolve("Reject")
+          return Promise.resolve('Reject');
         }
         return Location.create({ name, centre, country });
       }).then(location => {
@@ -20,4 +20,4 @@ module.exports = {
         throw(error);
       });
   },
-}
+};

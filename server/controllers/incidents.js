@@ -1,17 +1,17 @@
-const Incident = require("../models").Incidents;
-const User = require("../models").Users;
-const Location = require("../models").Locations;
-const Category = require("../models").Categories;
-const Status = require("../models").Statuses;
-const LocationService = require("../services/locations");
+const Incident = require('../models').Incidents;
+const User = require('../models').Users;
+const Location = require('../models').Locations;
+const Category = require('../models').Categories;
+const Status = require('../models').Statuses;
+const LocationService = require('../services/locations');
 
 module.exports = {
   //create an incident
   create(req, res) {
     let locationPromise;
-    name = req.body.name,
+    let name = req.body.name,
     centre = req.body.centre,
-    country = req.body.country
+    country = req.body.country;
     return Location.findOne({ where: { name, centre, country } })
     .then(location => {
       (!location) ?
@@ -36,12 +36,12 @@ module.exports = {
           witnesses: req.body.witnesses
         })
         .then(incident => {
-          res.status(201).send({ data: incident, status: "success" });
+          res.status(201).send({ data: incident, status: 'success' });
         }).catch(error => {
           res.status(400).send(error);
         });
-      })
-    })
+      });
+    });
   },
 
   // get all incidents
@@ -49,10 +49,10 @@ module.exports = {
     return Incident
       .findAll()
       .then(incident => {
-        res.status(200).send({ data: { incidents: incident }, status: "success" });
+        res.status(200).send({ data: { incidents: incident }, status: 'success' });
       })
       .catch(error => {
-        res.status(400).send(error)
+        res.status(400).send(error);
       });
   },
 
@@ -63,10 +63,10 @@ module.exports = {
       .then(incident => {
         if (!incident) {
           return res.status(404).send({
-            message: 'Incident not found', status: "fail"
+            message: 'Incident not found', status: 'fail'
           });
         }
-        res.status(200).send({ data: incident, status: "success" });
+        res.status(200).send({ data: incident, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -80,7 +80,7 @@ module.exports = {
       .then(incident => {
         if (!incident) {
           return res.status(404).send({
-            message: 'Incident Not Found', status: "fail"
+            message: 'Incident Not Found', status: 'fail'
           });
         }
         return incident
@@ -93,7 +93,7 @@ module.exports = {
             categoryId: req.body.categoryId || incident.categoryId,
             levelId: req.body.levelId || incident.levelId
           })
-          .then(() => res.status(200).send({ data: incident, status: "success" }))
+          .then(() => res.status(200).send({ data: incident, status: 'success' }))
           .catch(error => res.status(400).send(error));
       });
   },
@@ -105,7 +105,7 @@ module.exports = {
       .then(incident => {
         if (!incident) {
           return res.status(404).send({
-            message: 'Incident not found', status: "fail"
+            message: 'Incident not found', status: 'fail'
           });
         }
         return incident
@@ -114,4 +114,4 @@ module.exports = {
           .catch(error => res.status(400).send(error));
       });
   },
-}
+};
