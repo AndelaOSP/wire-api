@@ -157,4 +157,26 @@ module.exports = {
           .catch(error => res.status(400).send(error));
       });
   },
+
+  //search an incident by subject or description.
+  search(req, res) {
+    if (!req.query.q) {
+      return res.status(400).send({ message: 'please provide query' });
+    }
+    return Incident.findAll({
+      where: {
+        $or: [
+          { subject: { $ilike: `%${req.query.q}%` } },
+          { description: { $ilike: `%${req.query.q}%` } },
+        ]
+      }
+    })
+      .then(incident => {
+        res.status(200).send({ data: { incidents: incident }, status: "success" });
+      })
+      .catch(error => {
+        res.status(400).send(error)
+      });
+
+  }
 }
