@@ -1,5 +1,5 @@
-const User = require("../models").Users;
-const Role = require("../models").Roles;
+const User = require('../models').Users;
+const Role = require('../models').Roles;
 
 module.exports = {
   // add a User
@@ -8,7 +8,7 @@ module.exports = {
       .findOne({ where: { id, email } })
       .then(user => {
         if (user) {
-          return Promise.resolve("Resolved");
+          return Promise.resolve('Resolved');
         }
         return User.create({
           id,
@@ -24,4 +24,4 @@ module.exports = {
         throw (error);
       });
   },
-}
+};

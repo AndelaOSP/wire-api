@@ -1,5 +1,5 @@
-const Status = require("../models").Statuses;
-const Incident = require("../models").Incidents;
+const Status = require('../models').Statuses;
+const Incident = require('../models').Incidents;
 
 module.exports = {
   //add a status, incase admin needs an additional one
@@ -10,19 +10,19 @@ module.exports = {
       .then((stati) => {
         if (stati) {
           return res.status(400).send({
-            message: `The status '${status}' already exists`, status: "fail"
+            message: `The status '${status}' already exists`, status: 'fail'
           });
         }
         if (!status) {
           return res.status(400).send({
-            message: "Please enter the status name", status: "fail"
+            message: 'Please enter the status name', status: 'fail'
           });
         }
         Status.create({
         status: req.body.status
       })
       .then (status => {
-        return res.status(201).send({ data:status, status: "success" })
+        return res.status(201).send({ data:status, status: 'success' });
       });
     })
     .catch(error => {
@@ -35,10 +35,10 @@ module.exports = {
     return Status
     .findAll()
     .then(status => {
-      res.status(200).send({ data: { statuses: status }, status: "success" });
+      res.status(200).send({ data: { statuses: status }, status: 'success' });
     })
     .catch(error => {
-      res.status(400).send(error)
+      res.status(400).send(error);
     });
   },
 
@@ -49,10 +49,10 @@ module.exports = {
       .then(status => {
         if (!status) {
           return res.status(404).send({
-            message: 'status not found', status: "fail"
+            message: 'status not found', status: 'fail'
           });
         }
-        res.status(200).send({ data:status, status: "success" });
+        res.status(200).send({ data:status, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -66,15 +66,15 @@ module.exports = {
       .then(status => {
         if (!status) {
           return res.status(404).send({
-            message: 'status not found', status: "fail"
+            message: 'status not found', status: 'fail'
           });
         }
         return status
           .update({
             status: req.body.status
           })
-          .then(() => res.status(200).send({ data: status, status: "success" })
-          )
+          .then(() => res.status(200).send({ data: status, status: 'success' })
+          );
       })
       .catch(error => {
         res.status(400).send(error);
@@ -90,10 +90,10 @@ module.exports = {
         },
       })
       .then(incident => {
-        res.status(200).send({ data: { incidents: incident }, status: "success" });
+        res.status(200).send({ data: { incidents: incident }, status: 'success' });
       })
       .catch(error => {
-        res.status(400).send(error)
+        res.status(400).send(error);
       });
   },
-}
+};
