@@ -19,16 +19,6 @@ module.exports = {
       dateOccurred: {
         type: Sequelize.DATE
       },
-      userId: {
-        type: Sequelize.STRING,
-        onDelete: 'CASCADE',
-        references: {
-          model: 'Users',
-          key: 'id',
-          as: 'userId',
-          allowNull: false
-        }
-      },
       categoryId: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',

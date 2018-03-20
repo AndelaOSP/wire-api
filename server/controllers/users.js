@@ -1,5 +1,6 @@
 const userService = require("../services/users");
 const User = require("../models").Users;
+const Incident = require("../models").Incidents;
 
 module.exports = {
   // add a user
@@ -32,5 +33,31 @@ module.exports = {
       .catch(error => {
         res.status(400).send(error)
       });
+  },
+  getUserById(req, res) {
+    return User.findById(req.params.userId, 
+    {
+      include: [
+        {
+          model: Incident, 
+          as: 'reportedIncidents',
+          through: {
+            attributes: []
+          }
+        },
+        {
+          model: Incident,
+          as: 'assignedIncidents',
+          through: {
+            attributes: []
+          }
+        }
+      ]
+    }
+    ).then(user=> {
+      res.status(200).send(user);
+    }).catch(err=> {
+      res.status(400).send(err);
+    })
   }
 }
