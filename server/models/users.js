@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       unique: true,
     },
-    name: {
+    username: {
       type: DataTypes.TEXT,
       allowNull: false
     },
@@ -46,6 +46,12 @@ module.exports = (sequelize, DataTypes) => {
             through: "assigneeIncidents",
             foreignKey: "userId",
             as: "assignedIncidents",
+            otherKey: "incidentId"
+          });
+          Users.belongsToMany(models.Incidents, {
+            through: "Witnesses",
+            foreignKey: "userId",
+            as: "incidentWitnesses",
             otherKey: "incidentId"
           });
         },
