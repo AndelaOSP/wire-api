@@ -8,6 +8,8 @@
   "license": "MIT",
   "scripts": {
     "start:dev": "nodemon ./bin/www",
+    "format": "prettier --write --single-quote --print-width=120 --tab-width=2 \"server/**/*.{js}\"",
+    "lint": "./node_modules/.bin/eslint --fix ./server",
     "seed": "sequelize db:seed:undo:all && sequelize db:seed --seed levels && sequelize db:seed --seed categories && sequelize db:seed --seed status && sequelize db:seed --seed locations && sequelize db:seed --seed roles && sequelize db:seed --seed users",
     "migrate": "sequelize db:migrate:undo:all && sequelize db:migrate",
     "postinstall": "NODE_ENV=development && npm run migrate && npm run seed",
@@ -23,7 +25,6 @@
     "knex": "^0.13.0",
     "lodash": "^4.17.4",
     "morgan": "^1.9.0",
-    "nodemon": "^1.14.11",
     "pg": "^6.2.3",
     "pg-hstore": "^2.3.2",
     "sequelize": "^3.30.4",
@@ -31,10 +32,13 @@
   },
   "devDependencies": {
     "babel-eslint": "^8.0.1",
-    "eslint": "^4.9.0",
+    "eslint": "^4.19.0",
     "eslint-config-airbnb": "^16.1.0",
-    "eslint-plugin-import": "^2.8.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.9.0",
     "eslint-plugin-jsx-a11y": "^2.0.0",
-    "eslint-plugin-react": "^7.4.0"
+    "eslint-plugin-react": "^7.4.0",
+    "nodemon": "^1.14.11",
+    "prettier": "^1.11.1"
   }
 }

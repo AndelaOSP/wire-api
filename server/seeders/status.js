@@ -1,4 +1,4 @@
-'use strict';
+
 
 module.exports = {
   up(queryInterface, Sequelize) {
@@ -13,13 +13,13 @@ module.exports = {
       updatedAt: new Date().toISOString() 
     },
     {
-    status: 'Resolved',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  }]);
+      status: 'Resolved',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    }]);
   },
 
   down(queryInterface, Sequelize) {
-      return queryInterface.bulkDelete('Statuses', null);
+    return queryInterface.bulkDelete('Statuses', null);
   }
 };

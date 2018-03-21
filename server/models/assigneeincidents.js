@@ -1,4 +1,4 @@
-"use strict";
+
 const schema = dataTypes => ({
   userId: { type: dataTypes.STRING, allowNull: false },
   incidentId: { type: dataTypes.STRING, allowNull: false },
@@ -9,6 +9,6 @@ const schema = dataTypes => ({
 });
 
 module.exports = (sequelize, DataTypes) => {
-  const assigneeIncidents = sequelize.define("assigneeIncidents", schema(DataTypes));
+  const assigneeIncidents = sequelize.define('assigneeIncidents', schema(DataTypes));
   return assigneeIncidents;
 };

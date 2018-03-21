@@ -1,5 +1,5 @@
-'use strict';
-let cuid = require("cuid");
+
+let cuid = require('cuid');
 
 module.exports = (sequelize, DataTypes) => {
   const Notes = sequelize.define('Notes', {
@@ -23,8 +23,8 @@ module.exports = (sequelize, DataTypes) => {
           foreignKey: 'userId',
           onDelete: 'CASCADE'
         });
+      }
     }
-  }
-});
+  });
   return Notes;
 };

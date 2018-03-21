@@ -1,4 +1,4 @@
-'use strict';
+
 module.exports = (sequelize, DataTypes) => {
   const Categories = sequelize.define('Categories', {
     name: {
@@ -13,15 +13,15 @@ module.exports = (sequelize, DataTypes) => {
     classMethods: {
       associate: (models) => {
         Categories.hasMany(models.Incidents, {
-        foreignKey: 'categoryId',
-        as: 'incidents'
-      })
-      Categories.belongsTo(models.Levels, {
-        foreignKey: 'levelId',
-        onDelete: 'CASCADE'
-      })
+          foreignKey: 'categoryId',
+          as: 'incidents'
+        });
+        Categories.belongsTo(models.Levels, {
+          foreignKey: 'levelId',
+          onDelete: 'CASCADE'
+        });
+      }
     }
-  }
-});
+  });
   return Categories;
 };
