@@ -85,29 +85,46 @@ module.exports = {
           })
           .then(incident => {
             let userId = req.body.id;
-            return userId
-              .map((id, index) => {
-                return User.findOrCreate({
-                  where: {
-                    id: req.body.id[index],
-                    email: req.body.email[index],
-                    imageUrl: req.body.imageUrl[index],
-                    username: req.body.username[index],
-                    roleId: 1
-                  }
-                }).spread((witnesses, created) => {
-                  return witnesses;
-                });
+            if (!userId) {
+              return incident;
+            } if (userId.constructor !== Array) {
+              return User.findOrCreate({
+                where: {
+                  id: req.body.id,
+                  email: req.body.email,
+                  imageUrl: req.body.imageUrl,
+                  username: req.body.username,
+                  roleId: 1
+                }
+              }).spread((witness, created) => {
+                return witness;
+              }).then(witness => {
+                return incident.addWitnesses(witness);
               })
-              .map(witness => {
-                return witness
-                  .then(witnesses => {
-                    return incident.addWitnesses(witnesses);
-                  })
-                  .then(witness => {
-                    return witness;
+            } else
+              return userId
+                .map((id, index) => {
+                  return User.findOrCreate({
+                    where: {
+                      id: req.body.id[index],
+                      email: req.body.email[index],
+                      imageUrl: req.body.imageUrl[index],
+                      username: req.body.username[index],
+                      roleId: 1
+                    }
+                  }).spread((witnesses, created) => {
+                    return witnesses;
                   });
-              });
+                })
+                .map(witness => {
+                  return witness
+                    .then(witnesses => {
+                      return incident.addWitnesses(witnesses);
+                    })
+                    .then(witness => {
+                      return witness;
+                    });
+                });
           })
           .then(witness => {
             res.status(201).send({ data: incident, status: "success" });
