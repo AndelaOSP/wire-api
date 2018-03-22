@@ -51,6 +51,13 @@ module.exports = {
           through: {
             attributes: []
           }
+        },
+        {
+          model: Incident,
+          as: 'incidentWitnesses',
+          through: {
+            attributes: []
+          }
         }
       ]
     }

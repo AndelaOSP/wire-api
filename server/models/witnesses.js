@@ -1,7 +1,6 @@
 "use strict";
-
 module.exports = (sequelize, DataTypes) => {
-  const assigneeIncidents = sequelize.define("assigneeIncidents", {
+  const Witnesses = sequelize.define("Witnesses", {
     userId: {
       type: DataTypes.STRING,
       allowNull: false
@@ -9,11 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     incidentId: {
       type: DataTypes.STRING,
       allowNull: false
-    },
-    assignedRole: {
-      type: DataTypes.ENUM,
-      values: ['ccd', 'assignee', 'other']
     }
   });
-  return assigneeIncidents;
+  return Witnesses;
 };
