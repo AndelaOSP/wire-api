@@ -62,6 +62,12 @@ module.exports = (sequelize, DataTypes) => {
           as: "assignees",
           otherKey: "userId"
         });
+        Incidents.belongsToMany(models.Users, {
+          through: "Witnesses",
+          foreignKey: "incidentId",
+          as: "witnesses",
+          otherKey: "userId"
+        });
     }
   }
 });

@@ -6,7 +6,7 @@ module.exports = {
     {
       id: "-KhLsLqucbC1WAMylcFt",
       email: "caroline.nkirote@andela.com",
-      name: "Caroline Nkirote",
+      username: "Caroline Nkirote",
       imageUrl: "https://lh4.googleusercontent.com/-rVipu2W1sBk/AAAAAAAAAAI/AAAAAAAAACQ/rOgW25IUgb8/photo.jpg",
       roleId: 2,
       createdAt: new Date().toISOString(),
@@ -15,7 +15,7 @@ module.exports = {
     {
       id: "-KhLsOxrKcKZC8i2n888",
       email: "mercy.muchai@andela.com",
-      name: "Mercy Muchai",
+      username: "Mercy Muchai",
       imageUrl: "https://lh3.googleusercontent.com/-XxYl2Ryrfns/AAAAAAAAAAI/AAAAAAAAABg/QJRPuQnerrk/photo.jpg",
       roleId: 2,
       createdAt: new Date().toISOString(),
