@@ -1,5 +1,5 @@
-'use strict';
-let cuid = require("cuid");
+
+let cuid = require('cuid');
 
 module.exports = (sequelize, DataTypes) => {
   const Chats = sequelize.define('Chats', {
@@ -16,15 +16,15 @@ module.exports = (sequelize, DataTypes) => {
     classMethods: {
       associate: (models) => {
         Chats.belongsTo(models.Incidents, {
-        foreignKey: 'incidentId',
-        onDelete: 'CASCADE'
-      });
+          foreignKey: 'incidentId',
+          onDelete: 'CASCADE'
+        });
         Chats.belongsTo(models.Users, {
-        foreignKey: 'userId',
-        onDelete: 'CASCADE'
-      })
+          foreignKey: 'userId',
+          onDelete: 'CASCADE'
+        });
+      }
     }
-  }
-});
+  });
   return Chats;
 };

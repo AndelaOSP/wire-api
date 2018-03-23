@@ -1,4 +1,4 @@
-'use strict';
+
 
 module.exports = {
   up(queryInterface, Sequelize) {
@@ -174,6 +174,6 @@ module.exports = {
   },
 
   down(queryInterface, Sequelize) {
-      return queryInterface.bulkDelete('Categories', null);
+    return queryInterface.bulkDelete('Categories', null);
   }
 };
