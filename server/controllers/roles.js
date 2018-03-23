@@ -1,4 +1,4 @@
-const Role = require('../models').Roles
+const Role = require('../models').Roles;
 
 module.exports = {
   // add a role, incase admin needs an additional one
@@ -9,24 +9,24 @@ module.exports = {
       .then((role) => {
         if (role) {
           return res.status(400).send({
-            message: `The role ${name} already exists`, status: "fail"
+            message: `The role ${name} already exists`, status: 'fail'
           });
         }
         if (!name) {
           return res.status(400).send({
-            message: "Please enter the role name", status: "fail"
+            message: 'Please enter the role name', status: 'fail'
           });
         }
         Role.create({
-        name: req.body.name
+          name: req.body.name
+        })
+          .then (role => {
+            return res.status(201).send({ data:role, status: 'success' });
+          });
       })
-      .then (role => {
-        return res.status(201).send({ data:role, status: "success" })
+      .catch(error => {
+        res.status(400).send(error);
       });
-    })
-    .catch(error => {
-      res.status(400).send(error);
-    });
   },
 
   // view all roles
@@ -34,10 +34,10 @@ module.exports = {
     return Role
       .findAll()
       .then(role => {
-        res.status(200).send({ data: { roles: role }, status: "success" });
+        res.status(200).send({ data: { roles: role }, status: 'success' });
       })
       .catch(error => {
-        res.status(400).send(error)
+        res.status(400).send(error);
       });
   },
 
@@ -48,10 +48,10 @@ module.exports = {
       .then(role => {
         if (!role) {
           return res.status(404).send({
-            message: 'Role not found', status: "fail"
+            message: 'Role not found', status: 'fail'
           });
         }
-        res.status(200).send({ data: role, status: "success" });
+        res.status(200).send({ data: role, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -66,17 +66,17 @@ module.exports = {
       .then(role => {
         if (!role) {
           return res.status(404).send({
-            message: 'Role not found', status: "fail"
+            message: 'Role not found', status: 'fail'
           });
         }
         return role
           .update({
             name: req.body.name
           })
-          .then(() => res.status(200).send({ data: role, status: "success" }))
+          .then(() => res.status(200).send({ data: role, status: 'success' }));
       })
       .catch(error => {
         res.status(400).send(error);
       });
   },
-}
+};

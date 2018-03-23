@@ -1,4 +1,4 @@
-'use strict';
+
 
 module.exports = {
   up(queryInterface, Sequelize) {
@@ -11,15 +11,15 @@ module.exports = {
       name: 'Yellow',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
-  },
-  {
-    name: 'Green',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString() 
-  }]);
+    },
+    {
+      name: 'Green',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString() 
+    }]);
   },
 
   down(queryInterface, Sequelize) {
-      return queryInterface.bulkDelete('Levels', null);
+    return queryInterface.bulkDelete('Levels', null);
   }
 };

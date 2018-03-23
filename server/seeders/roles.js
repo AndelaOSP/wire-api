@@ -1,4 +1,4 @@
-'use strict';
+
 
 module.exports = {
   up(queryInterface, Sequelize) {
@@ -16,10 +16,10 @@ module.exports = {
       name: 'Super Admin',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
-  }]);
+    }]);
   },
 
   down(queryInterface, Sequelize) {
-      return queryInterface.bulkDelete('Roles', null);
+    return queryInterface.bulkDelete('Roles', null);
   }
 };

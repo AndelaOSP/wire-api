@@ -1,4 +1,4 @@
-'use strict';
+
 module.exports = function(sequelize, DataTypes) {
   const Statuses = sequelize.define('Statuses', {
     status: {
@@ -10,8 +10,8 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         Statuses.hasMany(models.Incidents, {
           foreignKey: 'statusId',
-          as: "incidents"
-        })
+          as: 'incidents'
+        });
       }
     }
   });

@@ -1,5 +1,5 @@
-'use strict';
-let cuid = require("cuid");
+
+let cuid = require('cuid');
 
 module.exports = (sequelize, DataTypes) => {
   const Locations = sequelize.define('Locations', {
@@ -27,11 +27,11 @@ module.exports = (sequelize, DataTypes) => {
     classMethods: {
       associate: (models) => {
         Locations.hasMany(models.Incidents, {
-        foreignKey: 'locationId',
-        as: 'incidents'
-      })
+          foreignKey: 'locationId',
+          as: 'incidents'
+        });
+      }
     }
-  }
-});
+  });
   return Locations;
 };

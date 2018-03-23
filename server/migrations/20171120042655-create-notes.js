@@ -1,5 +1,5 @@
-'use strict';
-let cuid = require("cuid");
+
+let cuid = require('cuid');
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -13,7 +13,7 @@ module.exports = {
       note: {
         type: Sequelize.TEXT
       },
-     incidentId: {
+      incidentId: {
         type: Sequelize.STRING,
         onDelete: 'CASCADE',
         references: {

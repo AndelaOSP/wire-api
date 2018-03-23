@@ -1,7 +1,7 @@
-const Note = require("../models").Notes;
-const User = require("../models").Users;
+const Note = require('../models').Notes;
+const User = require('../models').Users;
 
-let userAttributes = ["username", "imageUrl", "email"];
+let userAttributes = ['username', 'imageUrl', 'email'];
 
 module.exports = {
   // add a Note
@@ -14,7 +14,7 @@ module.exports = {
           userId: req.body.userId,
           incidentId: req.params.id
         }).then(note => {
-          res.status(201).send({ data: note, status: "success" });
+          res.status(201).send({ data: note, status: 'success' });
         });
       })
       .catch(error => {
@@ -34,7 +34,7 @@ module.exports = {
       }
     })
       .then(note => {
-        res.status(200).send({ data: { notes: note }, status: "success" });
+        res.status(200).send({ data: { notes: note }, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -52,11 +52,11 @@ module.exports = {
       .then(Note => {
         if (!Note) {
           return res.status(404).send({
-            message: "Note not found",
-            status: "fail"
+            message: 'Note not found',
+            status: 'fail'
           });
         }
-        res.status(200).send({ data: Note, status: "success" });
+        res.status(200).send({ data: Note, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -73,15 +73,15 @@ module.exports = {
     }).then(Note => {
       if (!Note) {
         return res.status(404).send({
-          message: "Note not found",
-          status: "fail"
+          message: 'Note not found',
+          status: 'fail'
         });
       }
       return Note.update({
         note: req.body.note || Note.note,
         userId: req.body.userId || Note.userId
       })
-        .then(() => res.status(200).send({ data: Note, status: "success" }))
+        .then(() => res.status(200).send({ data: Note, status: 'success' }))
         .catch(error => res.status(400).send(error));
     });
   },
@@ -91,8 +91,8 @@ module.exports = {
     return Note.findById(req.params.id).then(Note => {
       if (!Note) {
         return res.status(404).send({
-          message: "Note not found",
-          status: "fail"
+          message: 'Note not found',
+          status: 'fail'
         });
       }
       return Note.destroy()
