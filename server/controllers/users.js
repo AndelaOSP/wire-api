@@ -1,18 +1,18 @@
-const User = require("../models").Users;
-const Incident = require("../models").Incidents;
+const User = require('../models').Users;
+const Incident = require('../models').Incidents;
 
 module.exports = {
   // add a user
   create(req, res) {
-    (id = req.body.id),
-      (email = req.body.email),
-      (username = req.body.username),
-      (imageUrl = req.body.imageUrl),
-      (roleId = req.body.roleId);
+    let id = req.body.id;
+    let email = req.body.email;
+    let username = req.body.username;
+    let imageUrl = req.body.imageUrl;
+    let roleId = req.body.roleId;
     if (email) {
       return res
         .status(400)
-        .send({ status: "fail", message: "User already exists" });
+        .send({ status: 'fail', message: 'User already exists' });
     }
     return User.findOrCreate({
       where: {
@@ -24,7 +24,7 @@ module.exports = {
       }
     })
       .spread((user, created) => {
-        return res.status(201).send({ data: user, status: "success" });
+        return res.status(201).send({ data: user, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -38,7 +38,7 @@ module.exports = {
       }
     })
       .then(user => {
-        res.status(200).send({ data: { users: user }, status: "success" });
+        res.status(200).send({ data: { users: user }, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -49,21 +49,21 @@ module.exports = {
       include: [
         {
           model: Incident,
-          as: "reportedIncidents",
+          as: 'reportedIncidents',
           through: {
             attributes: []
           }
         },
         {
           model: Incident,
-          as: "assignedIncidents",
+          as: 'assignedIncidents',
           through: {
             attributes: []
           }
         },
         {
           model: Incident,
-          as: "incidentWitnesses",
+          as: 'incidentWitnesses',
           through: {
             attributes: []
           }

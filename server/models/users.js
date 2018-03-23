@@ -1,4 +1,4 @@
-'use strict';
+
 
 module.exports = (sequelize, DataTypes) => {
   const Users = sequelize.define('Users', {
@@ -24,38 +24,38 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     }
   },
-    {
-      classMethods: {
-        associate: (models) => {
-          Users.hasMany(models.Chats, {
-            foreignKey: 'userId',
-            as: 'chats'
-          });
-          Users.belongsTo(models.Roles, {
-            foreignKey: 'roleId',
-            onDelete: 'CASCADE',
-            allowNull: false
-          });
-          Users.belongsToMany(models.Incidents, {
-            through: "userIncidents",
-            foreignKey: "userId",
-            as: "reportedIncidents",
-            otherKey: "incidentId"
-          });
-          Users.belongsToMany(models.Incidents, {
-            through: "assigneeIncidents",
-            foreignKey: "userId",
-            as: "assignedIncidents",
-            otherKey: "incidentId"
-          });
-          Users.belongsToMany(models.Incidents, {
-            through: "Witnesses",
-            foreignKey: "userId",
-            as: "incidentWitnesses",
-            otherKey: "incidentId"
-          });
-        },
+  {
+    classMethods: {
+      associate: (models) => {
+        Users.hasMany(models.Chats, {
+          foreignKey: 'userId',
+          as: 'chats'
+        });
+        Users.belongsTo(models.Roles, {
+          foreignKey: 'roleId',
+          onDelete: 'CASCADE',
+          allowNull: false
+        });
+        Users.belongsToMany(models.Incidents, {
+          through: 'userIncidents',
+          foreignKey: 'userId',
+          as: 'reportedIncidents',
+          otherKey: 'incidentId'
+        });
+        Users.belongsToMany(models.Incidents, {
+          through: 'assigneeIncidents',
+          foreignKey: 'userId',
+          as: 'assignedIncidents',
+          otherKey: 'incidentId'
+        });
+        Users.belongsToMany(models.Incidents, {
+          through: 'Witnesses',
+          foreignKey: 'userId',
+          as: 'incidentWitnesses',
+          otherKey: 'incidentId'
+        });
       },
-    });
+    },
+  });
   return Users;
 };

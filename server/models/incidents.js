@@ -1,5 +1,5 @@
-'use strict';
-let cuid = require("cuid");
+
+let cuid = require('cuid');
 
 module.exports = (sequelize, DataTypes) => {
   const Incidents = sequelize.define('Incidents', {
@@ -51,25 +51,25 @@ module.exports = (sequelize, DataTypes) => {
           as: 'chats'
         });
         Incidents.belongsToMany(models.Users, {
-          through: "userIncidents",
-          foreignKey: "incidentId",
-          as: "reporter",
-          otherKey: "userId"
+          through: 'userIncidents',
+          foreignKey: 'incidentId',
+          as: 'reporter',
+          otherKey: 'userId'
         });
         Incidents.belongsToMany(models.Users, {
-          through: "assigneeIncidents",
-          foreignKey: "incidentId",
-          as: "assignees",
-          otherKey: "userId"
+          through: 'assigneeIncidents',
+          foreignKey: 'incidentId',
+          as: 'assignees',
+          otherKey: 'userId'
         });
         Incidents.belongsToMany(models.Users, {
-          through: "Witnesses",
-          foreignKey: "incidentId",
-          as: "witnesses",
-          otherKey: "userId"
+          through: 'Witnesses',
+          foreignKey: 'incidentId',
+          as: 'witnesses',
+          otherKey: 'userId'
         });
+      }
     }
-  }
-});
+  });
   return Incidents;
 };

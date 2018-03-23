@@ -1,5 +1,5 @@
-'use strict';
-let cuid = require("cuid");
+
+let cuid = require('cuid');
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
