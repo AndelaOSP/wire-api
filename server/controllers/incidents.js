@@ -3,7 +3,7 @@ const User = require('../models').Users;
 const Location = require('../models').Locations;
 const Level = require('../models').Levels;
 const Status = require('../models').Statuses;
-const AssigneeModel = require('../models').assigneeincidents;
+const AssigneeModel = require('../models').assigneeIncidents;
 const LocationService = require('../controllers/locations');
 
 let userAttributes = ['username', 'imageUrl', 'email'];
@@ -185,87 +185,94 @@ module.exports = {
     let assignee = req.body.assignee;
     let ccd = req.body.ccd;
     let destroyCcdPromise;
-    let addAssigneePromise;
     let addCcdPromises = [];
-    let ccdDestroyPromises = [];
-    return Incident.findById(
+
+    let findIncidentPromise = Incident.findById(
       req.params.id,
       {
         include: includes
       }
-    )
-      .then(incident => {
-        if (!incident) {
-          res.status(404).send({
-            message: 'Incident not found',
-            status: 'fail',
+    ).then(incident=> {
+      return incident ? Promise.resolve(incident): Promise.reject({
+        message: 'Incident not found',
+        status: 'fail',
+      });
+    });
+
+    if(assignee) {
+      return findIncidentPromise.then(incident=> {
+        if (incident.dataValues.assignees.length === 0) {
+          return User.findById(assignee.userId).then(assignee => {
+            return incident.addAssignee(assignee, { assignedRole: 'assignee' });
+          }).then(() => {
+            return findIncidentById(incident.id, res);
+          }).then(data => {
+            return res.status(200).send({ data, status: 'success' });
+          });
+        } else {
+          return AssigneeModel.destroy({
+            where: {
+              assignedRole: 'assignee'
+            }
+          }).then(() => {
+            return User.findById(assignee.userId);
+          }).then((assignee) => {
+            return incident.addAssignee(assignee, { assignedRole: 'assignee' });
+          }).then(() => {
+            return findIncidentById(incident.id, res);
+          }).then(data => {
+            return res.status(200).send({ data, status: 'success' });
           });
         }
-        if (assignee) {
-          if (incident.dataValues.assignees.length === 0) {
-            addAssigneePromise = User.findById(req.body.assignee.userId).then(assignee => {
-              return incident.addAssignee(assignee, { assignedRole: 'assignee' });
+      }).catch(error => {
+        return res.status(400).send(error);
+      });
+    } else if(ccd) {
+      return findIncidentPromise.then(incident=> {
+        if (incident.dataValues.assignees.length === 0) {
+          for (let i = 0; i < ccd.length; i++) {
+            let addCcdPromise = User.findById(ccd[i].userId).then((ccd) => {
+              return incident.addAssignee(ccd, { assignedRole: 'ccd' });
             });
-          } else {
-            addAssigneePromise = AssigneeModel.destroy({
-              where: {
-                userId: req.body.assignee.userId,
-                incidentId: req.body.assignee.incidentId
-              }
-            }).then(() => {
-              return User.findById(req.body.assignee.userId);
-            }).then((assignee) => {
-              return incident.addAssignee(assignee, { assignedRole: 'assignee' });
-            });
-          }
-        }
-        if (ccd) {
-          if (incident.dataValues.assignees.length === 0) {
+            addCcdPromises.push(addCcdPromise);
+          }  
+        } else {
+          return AssigneeModel.destroy({
+            where: {
+              assignedRole: 'ccd'
+            }
+          }).then(()=> {
             for (let i = 0; i < ccd.length; i++) {
-              let addCcdPromise = User.findById(req.body.ccd.userId).then((ccd) => {
-                return incident.addCcd(ccd, { assignedRole: 'ccd' });
-              });
-              addCcdPromises.push(addCcdPromise);
-            }  
-          } else {
-            for (let i = 0; i < ccd.length; i++) {
-              let destroyCcdPromise = AssigneeModel.destroy({
-                where: {
-                  userId: req.body.ccd.userId,
-                  incidentId: req.body.ccd.incidentId
-                }
-              });
-              ccdDestroyPromises.push(destroyCcdPromise);
-              let addCcdPromise = User.findById(req.body.ccd.userId).then((ccd) => {
+              let addCcdPromise = User.findById(ccd[i].userId).then((ccd) => {
                 return incident.addAssignee(ccd, { assignedRole: 'ccd' });
               });
               addCcdPromises.push(addCcdPromise);
-            }
-          }
-        }
-        let promise = Promise.resolve();
-        return promise.then(() => {
-          return Promise.resolve(addAssigneePromise);
-        }).then(() => {
-          return Promise.resolve(ccdDestroyPromises);
-        }).then(() => {
-          return Promise.resolve(addCcdPromises);
-        }).then(() => {
-          return incident.update({
-            statusId: req.body.statusId || incident.statusId,
-            categoryId: req.body.categoryId || incident.categoryId,
-            levelId: req.body.levelId || incident.levelId,
-          });
+            } 
+            return Promise.all(addCcdPromises);
+          }).then(() => {
+            return findIncidentById(incident.id, res);
+          }).then(data => {
+            return res.status(200).send({ data, status: 'success' });
+          });  
+        } 
+      }).catch(error => {
+        return res.status(400).send(error);
+      });
+    } else {
+      return findIncidentPromise.then(incident=> {
+        return incident.update({
+          statusId: req.body.statusId || incident.statusId,
+          categoryId: req.body.categoryId || incident.categoryId,
+          levelId: req.body.levelId || incident.levelId
         }).then(() => {
           return findIncidentById(incident.id, res);
-        })
-          .then(data => {
-            res.status(201).send({ data, status: 'success' });
-          })
-          .catch(error => {
-            res.status(400).send(error);
-          });
+        }).then(data => {
+          return res.status(200).send({ data, status: 'success' });
+        });
+      }).catch(error => {
+        return res.status(400).send(error);
       });
+    }
   },
 
   // delete an incident by ID. To be refactored into archive incidents that are old and resolved.
