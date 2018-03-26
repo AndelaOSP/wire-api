@@ -30,7 +30,7 @@ module.exports = {
   list(req, res) {
     return Location.findAll()
       .then(location => {
-        res.status(200).send({ data: { locations: location }, status: 'success' });
+        return res.status(200).send({ data: { locations: location }, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -47,7 +47,7 @@ module.exports = {
             status: 'fail',
           });
         }
-        res.status(200).send({ data: location, status: 'success' });
+        return res.status(200).send({ data: location, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -69,7 +69,9 @@ module.exports = {
           centre: req.body.centre || location.centre,
           country: req.body.country || location.country,
         })
-        .then(() => res.status(200).send({ data: location, status: 'success' }))
+        .then(() => {
+          return res.status(200).send({ data: location, status: 'success' });
+        })
         .catch(error => res.status(400).send(error));
     });
   },
@@ -81,7 +83,7 @@ module.exports = {
       },
     })
       .then(incident => {
-        res.status(200).send({ data: { incidents: incident }, status: 'success' });
+        return res.status(200).send({ data: { incidents: incident }, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);

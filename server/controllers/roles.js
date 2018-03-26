@@ -34,7 +34,7 @@ module.exports = {
     return Role
       .findAll()
       .then(role => {
-        res.status(200).send({ data: { roles: role }, status: 'success' });
+        return res.status(200).send({ data: { roles: role }, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -51,7 +51,7 @@ module.exports = {
             message: 'Role not found', status: 'fail'
           });
         }
-        res.status(200).send({ data: role, status: 'success' });
+        return res.status(200).send({ data: role, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -73,7 +73,9 @@ module.exports = {
           .update({
             name: req.body.name
           })
-          .then(() => res.status(200).send({ data: role, status: 'success' }));
+          .then(() => {
+            return res.status(200).send({ data: role, status: 'success' });
+          });
       })
       .catch(error => {
         res.status(400).send(error);

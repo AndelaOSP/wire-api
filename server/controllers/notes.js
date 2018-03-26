@@ -14,7 +14,7 @@ module.exports = {
           userId: req.body.userId,
           incidentId: req.params.id
         }).then(note => {
-          res.status(201).send({ data: note, status: 'success' });
+          return res.status(201).send({ data: note, status: 'success' });
         });
       })
       .catch(error => {
@@ -34,7 +34,7 @@ module.exports = {
       }
     })
       .then(note => {
-        res.status(200).send({ data: { notes: note }, status: 'success' });
+        return res.status(200).send({ data: { notes: note }, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -56,7 +56,7 @@ module.exports = {
             status: 'fail'
           });
         }
-        res.status(200).send({ data: Note, status: 'success' });
+        return res.status(200).send({ data: Note, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -81,7 +81,9 @@ module.exports = {
         note: req.body.note || Note.note,
         userId: req.body.userId || Note.userId
       })
-        .then(() => res.status(200).send({ data: Note, status: 'success' }))
+        .then(() => {
+          return res.status(200).send({ data: Note, status: 'success' });
+        })
         .catch(error => res.status(400).send(error));
     });
   },
@@ -96,7 +98,9 @@ module.exports = {
         });
       }
       return Note.destroy()
-        .then(() => res.status(204).send())
+        .then(() => {
+          return res.status(204).send();
+        })
         .catch(error => res.status(400).send(error));
     });
   }

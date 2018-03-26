@@ -14,7 +14,7 @@ module.exports = {
           userId: req.body.userId,
           incidentId: req.params.id
         }).then(chat => {
-          res.status(201).send({ data: chat, status: 'success' });
+          return res.status(201).send({ data: chat, status: 'success' });
         });
       })
       .catch(error => {
@@ -33,7 +33,7 @@ module.exports = {
       }
     })
       .then(chat => {
-        res.status(200).send({ data: { chats: chat }, status: 'success' });
+        return res.status(200).send({ data: { chats: chat }, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -54,7 +54,7 @@ module.exports = {
             status: 'fail'
           });
         }
-        res.status(200).send({ data: Chat, status: 'success' });
+        return res.status(200).send({ data: Chat, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -79,7 +79,9 @@ module.exports = {
         incidentId: req.body.incidentId || Chat.incidentId,
         userId: req.body.userId || Chat.userId
       })
-        .then(() => res.status(200).send({ data: Chat, status: 'success' }))
+        .then(Chat => {
+          return res.status(200).send({ data: Chat, status: 'success' });
+        })
         .catch(error => res.status(400).send(error));
     });
   },
@@ -93,7 +95,9 @@ module.exports = {
         });
       }
       return Chat.destroy()
-        .then(() => res.status(204).send())
+        .then(() => {
+          return res.status(204).send();
+        })
         .catch(error => res.status(400).send(error));
     });
   }

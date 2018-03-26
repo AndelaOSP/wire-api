@@ -38,7 +38,7 @@ module.exports = {
       }
     })
       .then(user => {
-        res.status(200).send({ data: { users: user }, status: 'success' });
+        return res.status(200).send({ data: { users: user }, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -71,7 +71,7 @@ module.exports = {
       ]
     })
       .then(user => {
-        res.status(200).send(user);
+        return res.status(200).send(user);
       })
       .catch(err => {
         res.status(400).send(err);

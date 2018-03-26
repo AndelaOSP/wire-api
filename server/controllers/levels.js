@@ -35,7 +35,7 @@ module.exports = {
     return Level
       .findAll()
       .then(level => {
-        res.status(200).send({ data: { levels: level }, status: 'success' });
+        return res.status(200).send({ data: { levels: level }, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -52,7 +52,7 @@ module.exports = {
             message: 'level does not exist', status: 'fail'
           });
         }
-        res.status(200).send({ data: level, status: 'success' });
+        return res.status(200).send({ data: level, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -73,8 +73,9 @@ module.exports = {
           .update({
             name: req.body.name
           })
-          .then(() => res.status(200).send({ data: level, status: 'success' })
-          );
+          .then(() => {
+            return res.status(200).send({ data: level, status: 'success' });
+          });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -90,7 +91,7 @@ module.exports = {
         },
       })
       .then(incident => {
-        res.status(200).send({ data: { incidents: incident }, status: 'success' });
+        return res.status(200).send({ data: { incidents: incident }, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);

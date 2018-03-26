@@ -35,7 +35,7 @@ module.exports = {
     return Status
       .findAll()
       .then(status => {
-        res.status(200).send({ data: { statuses: status }, status: 'success' });
+        return res.status(200).send({ data: { statuses: status }, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -52,7 +52,7 @@ module.exports = {
             message: 'status not found', status: 'fail'
           });
         }
-        res.status(200).send({ data:status, status: 'success' });
+        return res.status(200).send({ data:status, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -73,8 +73,9 @@ module.exports = {
           .update({
             status: req.body.status
           })
-          .then(() => res.status(200).send({ data: status, status: 'success' })
-          );
+          .then(() => {
+            return res.status(200).send({ data: status, status: 'success' });
+          });
       })
       .catch(error => {
         res.status(400).send(error);
@@ -89,7 +90,7 @@ module.exports = {
         },		
       })		
       .then(incident => {		
-        res.status(200).send({ data: { incidents: incident }, status: 'success' });		
+        return res.status(200).send({ data: { incidents: incident }, status: 'success' });		
       })		
       .catch(error => {		
         res.status(400).send(error);		
