@@ -11,7 +11,7 @@
     "seed": "sequelize db:seed:undo:all && sequelize db:seed --seed levels && sequelize db:seed --seed categories && sequelize db:seed --seed status && sequelize db:seed --seed locations && sequelize db:seed --seed roles && sequelize db:seed --seed users",
     "migrate": "sequelize db:migrate:undo:all && sequelize db:migrate",
     "lint": "./node_modules/.bin/eslint --fix ./server",
-    "postinstall": "NODE_ENV=development && npm run migrate && npm run seed",
+    "postinstall": "npm run migrate && npm run seed",
     "test": "echo 'No tests' && exit 1"
   },
   "dependencies": {

@@ -12,6 +12,7 @@ if (NODE_ENV !== 'development') {
 // set up the express app
 const app = express();
 app.use(cors());
+
 // Log requests to the console.
 app.use(logger('dev'));
 
