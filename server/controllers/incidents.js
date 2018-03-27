@@ -94,6 +94,8 @@ module.exports = {
     let incidentReporter = req.body.incidentReporter;
     let { subject, description, dateOccurred, levelId } = req.body;
     let createdIncident;
+    let [dd, mm, yy] = req.body.dateOccurred.split('-');
+    dateOccurred = `${mm}-${dd}-${yy}`
 
     return LocationService.create(location, res)
       .then(location => {
@@ -103,7 +105,7 @@ module.exports = {
         return Incident.create({
           description: req.body.description,
           subject: req.body.subject,
-          dateOccurred: req.body.dateOccurred,
+          dateOccurred,
           statusId: req.body.statusId || 1,
           locationId,
           levelId: req.body.levelId || 3
