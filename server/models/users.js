@@ -28,8 +28,12 @@ module.exports = (sequelize, DataTypes) => {
     classMethods: {
       associate: (models) => {
         Users.hasMany(models.Chats, {
-          foreignKey: 'userId',
+          foreignKey: 'userEmail',
           as: 'chats'
+        });
+        Users.hasMany(models.Notes, {
+          foreignKey: 'userEmail',
+          as: 'notes'
         });
         Users.belongsTo(models.Roles, {
           foreignKey: 'roleId',
