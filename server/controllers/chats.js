@@ -1,17 +1,15 @@
 const Chat = require('../models').Chats;
 const User = require('../models').Users;
 
-let userAttributes = ['username', 'imageUrl', 'email'];
-
 module.exports = {
   // add a Chat
   create(req, res) {
     const { chat } = req.body;
     return Chat.findOne({ where: { chat } })
       .then(chat => {
-        Chat.create({
+        return Chat.create({
           chat: req.body.chat,
-          userId: req.body.userId,
+          userEmail: req.body.userEmail,
           incidentId: req.params.id
         }).then(chat => {
           return res.status(201).send({ data: chat, status: 'success' });
@@ -24,10 +22,6 @@ module.exports = {
   // view all Chats of a Note
   list(req, res) {
     return Chat.findAll({
-      include: {
-        model: User,
-        attributes: userAttributes
-      },
       where: {
         incidentId: req.params.id
       }
@@ -41,12 +35,7 @@ module.exports = {
   },
   // retrieve a Chat by ID
   findById(req, res) {
-    return Chat.findById(req.params.id, {
-      include: {
-        model: User,
-        attributes: userAttributes
-      }
-    })
+    return Chat.findById(req.params.id)
       .then(Chat => {
         if (!Chat) {
           return res.status(404).send({
@@ -62,28 +51,24 @@ module.exports = {
   },
   // update a Chat
   update(req, res) {
-    return Chat.findById(req.params.id, {
-      include: {
-        model: User,
-        attributes: userAttributes
-      }
-    }).then(Chat => {
-      if (!Chat) {
-        return res.status(404).send({
-          message: 'Chat not found',
-          status: 'fail'
-        });
-      }
-      return Chat.update({
-        chat: req.body.chat || Chat.chat,
-        incidentId: req.body.incidentId || Chat.incidentId,
-        userId: req.body.userId || Chat.userId
-      })
-        .then(Chat => {
-          return res.status(200).send({ data: Chat, status: 'success' });
+    return Chat.findById(req.params.id)
+      .then(Chat => {
+        if (!Chat) {
+          return res.status(404).send({
+            message: 'Chat not found',
+            status: 'fail'
+          });
+        }
+        return Chat.update({
+          chat: req.body.chat || Chat.chat,
+          incidentId: req.body.incidentId || Chat.incidentId,
+          userEmail: req.body.userEmail || Chat.userEmail
         })
-        .catch(error => res.status(400).send(error));
-    });
+          .then(Chat => {
+            return res.status(200).send({ data: Chat, status: 'success' });
+          })
+          .catch(error => res.status(400).send(error));
+      });
   },
   // delete a Chat
   delete(req, res) {

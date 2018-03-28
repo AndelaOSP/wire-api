@@ -1,8 +1,6 @@
 const Note = require('../models').Notes;
 const User = require('../models').Users;
 
-let userAttributes = ['username', 'imageUrl', 'email'];
-
 module.exports = {
   // add a Note
   create(req, res) {
@@ -11,7 +9,7 @@ module.exports = {
       .then(note => {
         Note.create({
           note: req.body.note,
-          userId: req.body.userId,
+          userEmail: req.body.userEmail,
           incidentId: req.params.id
         }).then(note => {
           return res.status(201).send({ data: note, status: 'success' });
@@ -25,10 +23,6 @@ module.exports = {
   // view all Notes of an Incident
   list(req, res) {
     return Note.findAll({
-      include: {
-        model: User,
-        attributes: userAttributes
-      },
       where: {
         incidentId: req.params.id
       }
@@ -43,12 +37,7 @@ module.exports = {
 
   // retrieve a Note by ID
   findById(req, res) {
-    return Note.findById(req.params.id, {
-      include: {
-        model: User,
-        attributes: userAttributes
-      }
-    })
+    return Note.findById(req.params.id)
       .then(Note => {
         if (!Note) {
           return res.status(404).send({
@@ -65,27 +54,23 @@ module.exports = {
 
   // update a Note
   update(req, res) {
-    return Note.findById(req.params.id, {
-      include: {
-        model: User,
-        attributes: userAttributes
-      }
-    }).then(Note => {
-      if (!Note) {
-        return res.status(404).send({
-          message: 'Note not found',
-          status: 'fail'
-        });
-      }
-      return Note.update({
-        note: req.body.note || Note.note,
-        userId: req.body.userId || Note.userId
-      })
-        .then(() => {
-          return res.status(200).send({ data: Note, status: 'success' });
+    return Note.findById(req.params.id)
+      .then(Note => {
+        if (!Note) {
+          return res.status(404).send({
+            message: 'Note not found',
+            status: 'fail'
+          });
+        }
+        return Note.update({
+          note: req.body.note || Note.note,
+          userEmail: req.body.userEmail || Note.userEmail
         })
-        .catch(error => res.status(400).send(error));
-    });
+          .then(() => {
+            return res.status(200).send({ data: Note, status: 'success' });
+          })
+          .catch(error => res.status(400).send(error));
+      });
   },
 
   // delete a Note

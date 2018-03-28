@@ -23,13 +23,13 @@ module.exports = {
           allowNull: false
         }
       },
-      userId: {
+      userEmail: {
         type: Sequelize.STRING,
         onDelete: 'CASCADE',
         references: {
           model: 'Users',
-          key: 'id',
-          as: 'userId',
+          key: 'email',
+          as: 'userEmail',
           allowNull: false
         }
       },
