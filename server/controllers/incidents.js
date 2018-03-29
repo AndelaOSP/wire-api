@@ -299,6 +299,7 @@ module.exports = {
       return res.status(400).send({ message: 'please provide query' });
     }
     return Incident.findAll({
+      include: includes,
       where: {
         $or: [{ subject: { $ilike: `%${req.query.q}%` } }, { description: { $ilike: `%${req.query.q}%` } }],
       },
