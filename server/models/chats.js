@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         });
         Chats.belongsTo(models.Users, {
           foreignKey: 'userEmail',
+          targetKey: 'email',
           onDelete: 'CASCADE'
         });
       }

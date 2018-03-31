@@ -21,7 +21,8 @@ module.exports = (sequelize, DataTypes) => {
         });
         Notes.belongsTo(models.Users, {
           foreignKey: 'userEmail',
-          onDelete: 'CASCADE'
+          onDelete: 'CASCADE',
+          targetKey: 'email'
         });
       }
     }
