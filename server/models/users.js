@@ -29,10 +29,12 @@ module.exports = (sequelize, DataTypes) => {
       associate: (models) => {
         Users.hasMany(models.Chats, {
           foreignKey: 'userEmail',
+          sourceKey: 'email',
           as: 'chats'
         });
         Users.hasMany(models.Notes, {
           foreignKey: 'userEmail',
+          sourceKey: 'email',
           as: 'notes'
         });
         Users.belongsTo(models.Roles, {
