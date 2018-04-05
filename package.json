@@ -8,11 +8,13 @@
   "license": "MIT",
   "scripts": {
     "start:dev": "nodemon ./bin/www",
-    "seed": "sequelize db:seed:undo:all && sequelize db:seed --seed levels && sequelize db:seed --seed categories && sequelize db:seed --seed status && sequelize db:seed --seed locations && sequelize db:seed --seed roles && sequelize db:seed --seed users",
+    "seed":
+      "sequelize db:seed:undo:all && sequelize db:seed --seed levels && sequelize db:seed --seed categories && sequelize db:seed --seed status && sequelize db:seed --seed locations && sequelize db:seed --seed roles && sequelize db:seed --seed users",
     "migrate": "sequelize db:migrate:undo:all && sequelize db:migrate",
-    "lint": "./node_modules/.bin/eslint --fix ./server",
+    "lint": "./node_modules/.bin/eslint --fix ./server ./test",
     "postinstall": "npm run migrate && npm run seed",
-    "test": "echo 'No tests' && exit 1"
+    "test":
+      "NODE_ENV=test nyc --reporter=html --reporter=text mocha --recursive -t 10000"
   },
   "dependencies": {
     "body-parser": "^1.18.2",
@@ -32,9 +34,17 @@
   },
   "devDependencies": {
     "babel-eslint": "^8.0.1",
+    "chai": "^4.1.2",
+    "chai-http": "^4.0.0",
     "eslint": "^4.19.0",
     "eslint-plugin-import": "^2.9.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^5.0.5",
     "nodemon": "^1.14.11",
-    "prettier": "^1.11.1"
+    "nyc": "^11.6.0",
+    "prettier": "^1.11.1",
+    "sinon": "^4.5.0",
+    "sinon-as-promised": "^4.0.3",
+    "supertest": "^3.0.0"
   }
 }

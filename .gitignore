@@ -6,3 +6,6 @@
 .idea
 package-lock.json
 yarn-error.log
+
+/coverage
+*.nyc_output
