@@ -1,5 +1,3 @@
-
-
 module.exports = {
   up(queryInterface, Sequelize) {
     return queryInterface.bulkInsert('Locations', [{
@@ -29,8 +27,8 @@ module.exports = {
     {
       id: 'cjee24n0n0000hfxsefer9tjh',
       name: 'Block A 2nd Floor',
-      centre: 'Nairobi',
-      country: 'Kenya',
+      centre: 'Lagos',
+      country: 'Nigeria',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString() 
     },
@@ -45,8 +43,8 @@ module.exports = {
     {
       id: 'cjee256gt0000ioxs69v4870x',
       name: 'Bootcamp Room',
-      centre: 'Nairobi',
-      country: 'Kenya',
+      centre: 'Kampala',
+      country: 'Uganda',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString() 
     },
