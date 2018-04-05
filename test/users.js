@@ -35,4 +35,37 @@ describe('/POST user', () => {
         done();
       });
   });
+
+  it('Should return all the users', function(done) {
+    let findAllStub = sinon.stub(user, 'findAll').resolves(Object({}, ''));
+    request(app)
+      .get('/api/users')
+      .expect(200)
+      .end((err, res) => {
+        if (err) throw err;
+        assert.deepEqual(res.body, {
+          data: {
+            users: {}
+          },
+          status: 'success'
+        });
+        findAllStub.restore();
+        done();
+      });
+  });
+
+  it('should retrieve one user by id', done => {
+    let findByIdStub = sinon
+      .stub(user, 'findById')
+      .resolves({ id: 'U7LEPG8LF' });
+    request(app)
+      .get('/api/users/U7LEPG8LF')
+      .expect(200)
+      .end((err, res) => {
+        if (err) throw err;
+        assert.deepEqual(res.body, { id: 'U7LEPG8LF' });
+        findByIdStub.restore();
+        done();
+      });
+  });
 });
