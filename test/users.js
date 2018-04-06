@@ -36,7 +36,7 @@ describe('/POST user', () => {
       });
   });
 
-  it('Should return all the users', function(done) {
+  it('Should return all the users', done => {
     let findAllStub = sinon.stub(user, 'findAll').resolves(Object({}, ''));
     request(app)
       .get('/api/users')

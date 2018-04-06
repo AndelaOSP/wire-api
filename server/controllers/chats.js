@@ -21,7 +21,7 @@ const findChatById = (id, res) => {
 };
 
 module.exports = {
-  // add a Chat
+  // add a chat
   create(req, res) {
     return Chat.create({
       chat: req.body.chat,
@@ -39,7 +39,7 @@ module.exports = {
       });
   },
 
-  // view all Chats of a Note
+  // view all chats of an incident
   list(req, res) {
     return Chat.findAll({
       where: {
@@ -57,7 +57,7 @@ module.exports = {
       });
   },
 
-  // retrieve a Chat by ID
+  // retrieve a chat by id
   findById(req, res) {
     return findChatById(req.params.id, res)
       .then(chat => {
@@ -68,7 +68,7 @@ module.exports = {
       });
   },
 
-  // update a Chat
+  // update a chat
   update(req, res) {
     return Chat.findById(req.params.id).then(Chat => {
       if (!Chat) {
@@ -92,7 +92,7 @@ module.exports = {
     });
   },
 
-  // delete a Chat
+  // delete a chat
   delete(req, res) {
     return Chat.findById(req.params.id).then(Chat => {
       if (!Chat) {

@@ -1,5 +1,12 @@
 const User = require('../models').Users;
 const Incident = require('../models').Incidents;
+const Role = require('../models').Roles;
+
+
+let role = {
+  model: Role,
+  attributes: ['name']
+};
 
 module.exports = {
   // add a user
@@ -33,9 +40,7 @@ module.exports = {
   // GET admins/super admins
   list(req, res) {
     return User.findAll({
-      where: {
-        roleId: 2 || 3
-      }
+      include: role
     })
       .then(user => {
         return res.status(200).send({ data: { users: user }, status: 'success' });
@@ -47,6 +52,7 @@ module.exports = {
   getUserById(req, res) {
     return User.findById(req.params.userId, {
       include: [
+        role,
         {
           model: Incident,
           as: 'reportedIncidents',
@@ -67,7 +73,7 @@ module.exports = {
           through: {
             attributes: []
           }
-        }
+        },
       ]
     })
       .then(user => {

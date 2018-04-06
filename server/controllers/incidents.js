@@ -56,7 +56,7 @@ const mapAssignees = incident => {
   });
 };
 
-function findOrCreateUser(userType) {
+const findOrCreateUser = userType => {
   let userObject = {
     where: {
       id: userType.userId,
@@ -69,9 +69,9 @@ function findOrCreateUser(userType) {
     },
   };
   return User.findOrCreate(userObject);
-}
+};
 
-function findIncidentById(id, res) {
+const findIncidentById = (id, res) => {
   return Incident.findById(id, { include: includes })
     .then(incident => {
       if (!incident) {
@@ -84,7 +84,7 @@ function findIncidentById(id, res) {
     .catch(error => {
       return error;
     });
-}
+};
 
 module.exports = {
   // create an incident
@@ -106,6 +106,7 @@ module.exports = {
           description: req.body.description,
           subject: req.body.subject,
           dateOccurred,
+          categoryId: req.body.categoryId,
           statusId: req.body.statusId || 1,
           locationId,
           levelId: req.body.levelId || 3
@@ -304,6 +305,23 @@ module.exports = {
         $or: [{ subject: { $ilike: `%${req.query.q}%` } }, { description: { $ilike: `%${req.query.q}%` } }],
       },
     })
+      .then(incident => {
+        res.status(200).send({ data: { incidents: incident }, status: 'success' });
+      })
+      .catch(error => {
+        res.status(400).send(error);
+      });
+  },
+
+  // filter incidents by category
+  listIncidents(req, res) {
+    return Incident
+      .findAll({
+        where: {
+          categoryId: req.params.id
+        },
+        include: includes,
+      })
       .then(incident => {
         res.status(200).send({ data: { incidents: incident }, status: 'success' });
       })
