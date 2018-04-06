@@ -21,7 +21,7 @@ const findNoteById = (id, res) => {
 };
 
 module.exports = {
-  // add a Note
+  // add a note
   create(req, res) {
     return Note.create({
       note: req.body.note,
@@ -39,7 +39,7 @@ module.exports = {
       });
   },
 
-  // view all Notes of an Incident
+  // view all notes of an incident
   list(req, res) {
     return Note.findAll({
       where: {
@@ -57,7 +57,7 @@ module.exports = {
       });
   },
 
-  // retrieve a Note by ID
+  // retrieve a note by id
   findById(req, res) {
     return findNoteById(req.params.id, res)
       .then(note => {
@@ -68,7 +68,7 @@ module.exports = {
       });
   },
 
-  // update a Note
+  // update a note
   update(req, res) {
     return Note.findById(req.params.id).then(Note => {
       if (!Note) {
@@ -91,7 +91,7 @@ module.exports = {
     });
   },
 
-  // delete a Note
+  // delete a note
   delete(req, res) {
     return Note.findById(req.params.id).then(Note => {
       if (!Note) {

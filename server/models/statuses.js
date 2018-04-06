@@ -1,5 +1,5 @@
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = (sequelize, DataTypes) => {
   const Statuses = sequelize.define('Statuses', {
     status: {
       type: DataTypes.STRING,
@@ -7,7 +7,7 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     classMethods: {
-      associate: function(models) {
+      associate: (models) => {
         Statuses.hasMany(models.Incidents, {
           foreignKey: 'statusId',
           as: 'incidents'
