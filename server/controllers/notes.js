@@ -9,14 +9,10 @@ let userAttributes = {
 const findNoteById = (id, res) => {
   return Note.findById(id, { include: userAttributes })
     .then(note => {
-      if (!note) {
-        return res.status(404)
-          .send({ message: 'Note not found', status: 'fail' });
-      }
       return note;
     })
     .catch(error => {
-      res.status(400).send(error);
+      throw(error);
     });
 };
 
@@ -61,10 +57,14 @@ module.exports = {
   findById(req, res) {
     return findNoteById(req.params.id, res)
       .then(note => {
+        if (!note) {
+          return res.status(404)
+            .send({ message: 'Note not found', status: 'fail' });
+        }
         return res.status(200).send({ data: note, status: 'success' });
       })
       .catch(error => {
-        res.status(400).send(error);
+        return res.status(400).send(error);
       });
   },
 

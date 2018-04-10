@@ -74,15 +74,10 @@ const findOrCreateUser = userType => {
 const findIncidentById = (id, res) => {
   return Incident.findById(id, { include: includes })
     .then(incident => {
-      if (!incident) {
-        return res.status(404).send({ message: 'Incident not found', status: 'fail' });
-      }
-      incident.assignees && mapAssignees(incident.assignees);
-      incident.dataValues.reporter = incident.dataValues.reporter[0];
       return incident;
     })
     .catch(error => {
-      return error;
+      throw(error);
     });
 };
 
@@ -176,10 +171,16 @@ module.exports = {
   findById(req, res) {
     return findIncidentById(req.params.id, res)
       .then(incident => {
-        res.status(200).send({ data: incident, status: 'success' });
+        if (!incident) {
+          return res.status(404)
+            .send({ message: 'Incident not found', status: 'fail' });
+        }
+        incident.assignees && mapAssignees(incident.assignees);
+        incident.dataValues.reporter = incident.dataValues.reporter[0];
+        return res.status(200).send({ data: incident, status: 'success' });
       })
       .catch(error => {
-        res.status(400).send(error);
+        return res.status(400).send(error);
       });
   },
 
