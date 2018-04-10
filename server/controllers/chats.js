@@ -9,14 +9,10 @@ let userAttributes = {
 const findChatById = (id, res) => {
   return Chat.findById(id, { include: userAttributes })
     .then(chat => {
-      if (!chat) {
-        return res.status(404)
-          .send({ message: 'Chat not found', status: 'fail' });
-      }
       return chat;
     })
     .catch(error => {
-      res.status(400).send(error);
+      throw(error);
     });
 };
 
@@ -61,10 +57,14 @@ module.exports = {
   findById(req, res) {
     return findChatById(req.params.id, res)
       .then(chat => {
+        if (!chat) {
+          return res.status(404)
+            .send({ message: 'Chat not found', status: 'fail' });
+        }
         return res.status(200).send({ data: chat, status: 'success' });
       })
       .catch(error => {
-        res.status(400).send(error);
+        return res.status(400).send(error);
       });
   },
 
