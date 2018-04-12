@@ -21,6 +21,7 @@ module.exports = app => {
   app.delete('/api/incidents/:id', incidentsService.delete);
 
   // locations endpoints
+  app.post('/api/locations', locationsService.create);
   app.get('/api/locations', locationsService.list);
 
   // notes endpoints
@@ -39,7 +40,7 @@ module.exports = app => {
   app.get('/api/chats/:id', chatsService.findById);
   app.put('/api/chats/:id', chatsService.update);
   app.delete('/api/chats/:id', chatsService.delete);
-  
+
   // filter incidents
   app.get('/api/categories/:id/incidents', incidentsService.listIncidents);
 

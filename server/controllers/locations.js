@@ -8,15 +8,15 @@ module.exports = {
     if (!name || !centre || !country) {
       return res.status(400).send({
         status: 'fail',
-        message: 'Provide the location name, centre and country',
+        message: 'Provide the location name, centre and country'
       });
     }
     return Location.findOrCreate({
       where: {
         name,
         centre,
-        country,
-      },
+        country
+      }
     })
       .spread((location, created) => {
         return location;
@@ -30,7 +30,9 @@ module.exports = {
   list(req, res) {
     return Location.findAll()
       .then(location => {
-        return res.status(200).send({ data: { locations: location }, status: 'success' });
+        return res
+          .status(200)
+          .send({ data: { locations: location }, status: 'success' });
       })
       .catch(error => {
         res.status(400).send(error);
