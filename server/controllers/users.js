@@ -1,3 +1,4 @@
+const errorLogs = require('./errorLogs');
 const User = require('../models').Users;
 const Incident = require('../models').Incidents;
 const Role = require('../models').Roles;
@@ -34,6 +35,7 @@ module.exports = {
         return res.status(201).send({ data: user, status: 'success' });
       })
       .catch(error => {
+        errorLogs.catchErrors(error);
         res.status(400).send(error);
       });
   },
@@ -46,6 +48,7 @@ module.exports = {
         return res.status(200).send({ data: { users: user }, status: 'success' });
       })
       .catch(error => {
+        errorLogs.catchErrors(error);
         res.status(400).send(error);
       });
   },
@@ -79,8 +82,9 @@ module.exports = {
       .then(user => {
         return res.status(200).send(user);
       })
-      .catch(err => {
-        res.status(400).send(err);
+      .catch(error => {
+        errorLogs.catchErrors(error);
+        res.status(400).send(error);
       });
   }
 };

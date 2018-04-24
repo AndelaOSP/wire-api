@@ -1,3 +1,4 @@
+const errorLogs = require('./errorLogs');
 const Chat = require('../models').Chats;
 const User = require('../models').Users;
 
@@ -31,6 +32,7 @@ module.exports = {
         return res.status(201).send({ data, status: 'success' });
       })
       .catch(error => {
+        errorLogs.catchErrors(error);
         res.status(400).send(error);
       });
   },
@@ -49,6 +51,7 @@ module.exports = {
           .send({ data: { chats: chat }, status: 'success' });
       })
       .catch(error => {
+        errorLogs.catchErrors(error);
         res.status(400).send(error);
       });
   },
@@ -64,6 +67,7 @@ module.exports = {
         return res.status(200).send({ data: chat, status: 'success' });
       })
       .catch(error => {
+        errorLogs.catchErrors(error);
         return res.status(400).send(error);
       });
   },
@@ -88,7 +92,10 @@ module.exports = {
         .then(data => {
           return res.status(200).send({ data, status: 'success' });
         })
-        .catch(error => res.status(400).send(error));
+        .catch(error => {
+          errorLogs.catchErrors(error);
+          res.status(400).send(error)
+        });
     });
   },
 
@@ -105,7 +112,10 @@ module.exports = {
         .then(() => {
           return res.status(204).send();
         })
-        .catch(error => res.status(400).send(error));
+        .catch(error => {
+          errorLogs.catchErrors(error);
+          res.status(400).send(error)
+        });
     });
   }
 };

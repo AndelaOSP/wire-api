@@ -1,3 +1,4 @@
+const errorLogs = require('./errorLogs');
 const Incident = require('../models').Incidents;
 const User = require('../models').Users;
 const Location = require('../models').Locations;
@@ -145,6 +146,7 @@ module.exports = {
         res.status(201).send({ data, status: 'success' });
       })
       .catch(error => {
+        errorLogs.catchErrors(error);
         res.status(400).send(error);
       });
   },
@@ -163,6 +165,7 @@ module.exports = {
         res.status(200).send({ data: { incidents: mappedIncidents }, status: 'success' });
       })
       .catch(error => {
+        errorLogs.catchErrors(error);
         res.status(400).send(error);
       });
   },
@@ -180,6 +183,7 @@ module.exports = {
         return res.status(200).send({ data: incident, status: 'success' });
       })
       .catch(error => {
+        errorLogs.catchErrors(error);
         return res.status(400).send(error);
       });
   },
@@ -229,6 +233,7 @@ module.exports = {
           });
         }
       }).catch(error => {
+        errorLogs.catchErrors(error);
         return res.status(400).send(error);
       });
     } else if(ccd) {
@@ -260,6 +265,7 @@ module.exports = {
           });  
         } 
       }).catch(error => {
+        errorLogs.catchErrors(error);
         return res.status(400).send(error);
       });
     } else {
@@ -274,6 +280,7 @@ module.exports = {
           return res.status(200).send({ data, status: 'success' });
         });
       }).catch(error => {
+        errorLogs.catchErrors(error);
         return res.status(400).send(error);
       });
     }
@@ -291,7 +298,10 @@ module.exports = {
       return incident
         .destroy()
         .then(() => res.status(204).send())
-        .catch(error => res.status(400).send(error));
+        .catch(error => {
+          errorLogs.catchErrors(error);
+          res.status(400).send(error);
+        });
     });
   },
 
@@ -310,6 +320,7 @@ module.exports = {
         res.status(200).send({ data: { incidents: incident }, status: 'success' });
       })
       .catch(error => {
+        errorLogs.catchErrors(error);
         res.status(400).send(error);
       });
   },
@@ -327,6 +338,7 @@ module.exports = {
         res.status(200).send({ data: { incidents: incident }, status: 'success' });
       })
       .catch(error => {
+        errorLogs.catchErrors(error);
         res.status(400).send(error);
       });
   },
