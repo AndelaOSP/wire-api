@@ -1,3 +1,4 @@
+const errorLogs = require('./errorLogs');
 const Location = require('../models').Locations;
 const Incident = require('../models').Incidents;
 
@@ -22,6 +23,7 @@ module.exports = {
         return location;
       })
       .catch(error => {
+        errorLogs.catchErrors(error);
         res.status(400).send(error);
       });
   },
@@ -35,6 +37,7 @@ module.exports = {
           .send({ data: { locations: location }, status: 'success' });
       })
       .catch(error => {
+        errorLogs.catchErrors(error);
         res.status(400).send(error);
       });
   }
