@@ -33,6 +33,16 @@ module.exports = {
           allowNull: false
         }
       },
+      locationId: {
+        type: Sequelize.STRING,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'Locations',
+          key: 'id',
+          as: 'locationId',
+          allowNull: false
+        }
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

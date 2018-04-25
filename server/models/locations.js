@@ -30,6 +30,10 @@ module.exports = (sequelize, DataTypes) => {
           foreignKey: 'locationId',
           as: 'incidents'
         });
+        Locations.hasMany(models.Users, {
+          foreignKey: 'locationId',
+          as: 'users'
+        });
       }
     }
   });

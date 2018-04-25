@@ -2,12 +2,18 @@ const errorLogs = require('./errorLogs');
 const User = require('../models').Users;
 const Incident = require('../models').Incidents;
 const Role = require('../models').Roles;
+const Location = require('../models').Locations;
+const LocationService = require('./locations');
 
 
-let role = {
+let includes = [{
   model: Role,
   attributes: ['name']
-};
+},
+{
+  model: Location,
+  attributes: ['name', 'centre', 'country']
+}];
 
 module.exports = {
   // add a user
@@ -17,20 +23,28 @@ module.exports = {
     let username = req.body.username;
     let imageUrl = req.body.imageUrl;
     let roleId = req.body.roleId;
+    let location = req.body;
     if (email) {
       return res
         .status(400)
         .send({ status: 'fail', message: 'User already exists' });
     }
-    return User.findOrCreate({
-      where: {
-        id,
-        email,
-        username,
-        imageUrl,
-        roleId
-      }
-    })
+    return LocationService.create(location, res)
+      .then(location => {
+        return location.dataValues.id;
+      })
+      .then(locationId => {
+        return User.findOrCreate({
+          where: {
+            id,
+            email,
+            username,
+            imageUrl,
+            roleId,
+            locationId
+          }
+        });
+      })
       .spread((user, created) => {
         return res.status(201).send({ data: user, status: 'success' });
       })
@@ -42,7 +56,7 @@ module.exports = {
   // GET admins/super admins
   list(req, res) {
     return User.findAll({
-      include: role
+      include: includes
     })
       .then(user => {
         return res.status(200).send({ data: { users: user }, status: 'success' });
@@ -55,7 +69,7 @@ module.exports = {
   getUserById(req, res) {
     return User.findById(req.params.userId, {
       include: [
-        role,
+        includes,
         {
           model: Incident,
           as: 'reportedIncidents',
