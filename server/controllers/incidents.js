@@ -57,19 +57,24 @@ const mapAssignees = incident => {
   });
 };
 
-const findOrCreateUser = userType => {
-  let userObject = {
-    where: {
-      id: userType.userId,
-    },
-    defaults: {
-      email: userType.email,
-      imageUrl: userType.imageUrl,
-      username: userType.username,
-      roleId: 1,
-    },
-  };
-  return User.findOrCreate(userObject);
+const findOrCreateUser = (userType, location) => {
+  return LocationService.create(location).then(location => {
+    return location.dataValues.id;
+  }).then(locationId => {
+    let userObject = {
+      where: {
+        id: userType.userId,
+      },
+      defaults: {
+        email: userType.email,
+        imageUrl: userType.imageUrl,
+        username: userType.username,
+        roleId: 1,
+        locationId
+      },
+    };
+    return User.findOrCreate(userObject);
+  });
 };
 
 const findIncidentById = (id, res) => {
@@ -87,12 +92,12 @@ module.exports = {
   create(req, res) {
     let location = req.body.location;
     let witnesses = req.body.witnesses;
+    let reporterLocation = req.body.incidentReporter.reporterLocation;
     let incidentReporter = req.body.incidentReporter;
     let { subject, description, dateOccurred, levelId } = req.body;
     let createdIncident;
     let [dd, mm, yy] = req.body.dateOccurred.split('-');
     dateOccurred = `${mm}-${dd}-${yy}`;
-
     return LocationService.create(location, res)
       .then(location => {
         return location.dataValues.id;
@@ -110,7 +115,7 @@ module.exports = {
       })
       .then(incident => {
         createdIncident = incident;
-        return findOrCreateUser(incidentReporter);
+        return findOrCreateUser(incidentReporter, reporterLocation);
       })
       .then(createdReporter => {
         let reporter = createdReporter[0];
@@ -120,8 +125,12 @@ module.exports = {
         let witnessCreationPromises = [];
         if (witnesses.length > 0) {
           for (let i = 0; i < witnesses.length; i++) {
+            let witnessLocation = req.body.witnesses[i].witnessLocation;
+            for (let k = 0; k < witnessLocation.length; k++) {
+              witnessLocation = witnessLocation[k];
+            }
             let witness = witnesses[i];
-            let witnessCreationPromise = findOrCreateUser(witness);
+            let witnessCreationPromise = findOrCreateUser(witness, witnessLocation);
             witnessCreationPromises.push(witnessCreationPromise);
           }
         }
