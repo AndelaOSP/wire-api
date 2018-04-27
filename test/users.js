@@ -12,12 +12,16 @@ const app = require('../index');
 chai.use(chaiHttp);
 
 const testUser = {
-  id: 'U7LEPG8LF',
+  userId: 'U7LEPG8LF',
   email: 'batian.muthoga@andela.com',
   username: 'Batian Muthoga',
   imageUrl:
     'https://avatars.slack-edge.com/2018-01-31/308111298950_b15a779680c4d2bb093c_48.png',
-  roleId: 2
+  location: {
+    name: 'Oculus',
+    centre: 'Nairobi',
+    country: 'Kenya'
+  }
 };
 
 describe('/POST user', () => {
