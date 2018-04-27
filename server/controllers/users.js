@@ -18,11 +18,11 @@ let includes = [{
 module.exports = {
   // add a user
   create(req, res) {
-    let id = req.body.id;
+    let id = req.body.userId;
     let email = req.body.email;
     let username = req.body.username;
     let imageUrl = req.body.imageUrl;
-    let roleId = req.body.roleId;
+    let roleId = 2;
     let location = req.body.location;
     return LocationService.create(location, res)
       .then(location => {
