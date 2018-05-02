@@ -1,10 +1,14 @@
 const controllers = require('../controllers/index');
+// const authentication = require('../middlewares/authentication');
 const incidentsService = controllers.incidents;
 const locationsService = controllers.locations;
 const notesService = controllers.notes;
 const categoriesService = controllers.categories;
 const chatsService = controllers.chats;
 const usersService = controllers.users;
+// const authenticationService = authentication.login;
+
+const { Auth, isAdmin } = require('../middlewares/authentication'); // authorise routes
 
 module.exports = app => {
   app.get('/api', (req, res) =>
@@ -14,11 +18,11 @@ module.exports = app => {
   );
   // incidents endpoints
   app.post('/api/incidents', incidentsService.create);
-  app.get('/api/incidents', incidentsService.list);
-  app.get('/api/incidents/:id', incidentsService.findById);
-  app.put('/api/incidents/:id', incidentsService.update);
-  app.get('/api/search/incidents', incidentsService.search);
-  app.delete('/api/incidents/:id', incidentsService.delete);
+  app.get('/api/incidents', [(Auth, isAdmin)], incidentsService.list);
+  app.get('/api/incidents/:id', [(Auth, isAdmin)], incidentsService.findById);
+  app.put('/api/incidents/:id', Auth, incidentsService.update);
+  app.get('/api/search/incidents', [(Auth, isAdmin)], incidentsService.search);
+  app.delete('/api/incidents/:id', [(Auth, isAdmin)], incidentsService.delete);
 
   // locations endpoints
   app.post('/api/locations', locationsService.create);
@@ -42,10 +46,16 @@ module.exports = app => {
   app.delete('/api/chats/:id', chatsService.delete);
 
   // filter incidents
-  app.get('/api/categories/:id/incidents', incidentsService.listIncidents);
+  app.get(
+    '/api/categories/:id/incidents',
+    Auth,
+    incidentsService.listIncidents
+  );
 
   // users endpoints
   app.post('/api/users', usersService.create);
+  app.post('/api/users/login', usersService.login);
+  // app.post('/api/login', authenticationService.login);
   app.get('/api/users', usersService.list);
   app.get('/api/users/:userId', usersService.getUserById);
 };
