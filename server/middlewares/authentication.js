@@ -35,6 +35,7 @@ const isAdmin = (req, res, next) => {
   }
   res.status(403).send({ message: 'You are not an Authorised user' });
 };
+
 const token = (id, roleId) => {
   return jwt.sign({ id, roleId }, secretKey, { expiresIn: '24h' });
 };
