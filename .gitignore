@@ -1,0 +1,11 @@
+/node_modules
+
+.env
+.DS_Store
+.vscode
+.idea
+package-lock.json
+yarn-error.log
+
+/coverage
+*.nyc_output

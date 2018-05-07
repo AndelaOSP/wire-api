@@ -1,0 +1,35 @@
+version: 2
+machine:
+  environment:
+    # Add the Postgres 9.6 binaries to the path.
+    PATH: /usr/lib/postgresql/9.6/bin/:$PATH
+
+  pre:
+    # Start Postgres 9.6.
+    - sudo service postgresql start 9.6
+
+    # Create a new test database.
+    - sudo -u postgres psql -p 5432 -c "create database wire_dev_test;"
+
+jobs:
+  build:
+    docker:
+    - image: circleci/node:9.8.0
+      environment:
+        NODE_ENV: test
+        PGUSER: root
+
+    - image: circleci/postgres:9.6
+      environment:
+        POSTGRES_DB: wire_dev_test
+        POSTGRES_USER: root
+
+    steps:
+    - checkout
+    - run:
+        name: Install packages 
+        command: npm install
+    - run: 
+        name: Run tests
+        command: npm test
+
