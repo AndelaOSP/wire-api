@@ -1,0 +1,1 @@
+CREATE DATABASE wire_dev;
