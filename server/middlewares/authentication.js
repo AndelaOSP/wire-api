@@ -5,7 +5,7 @@ const secretKey = process.env.SECRET_KEY;
 const User = require('../models').Users;
 
 const Auth = (req, res, next) => {
-  const token = req.query.token || req.headers['Authorization'];
+  const token = req.query.token || req.headers['authorization'];
   if (!token) {
     return res.status(401).send({
       success: false,
@@ -30,7 +30,7 @@ const Auth = (req, res, next) => {
 const isAdmin = (req, res, next) => {
   const Admin = 2;
   const SuperAdmin = 3;
-  if (req.roleId === Admin || req.roleId === SuperAdmin) {
+  if (res.locals.roleId === Admin || res.locals.roleId === SuperAdmin) {
     return next();
   }
   res.status(403).send({ message: 'You are not an Authorised user' });
