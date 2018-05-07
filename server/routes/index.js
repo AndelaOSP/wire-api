@@ -1,14 +1,10 @@
 const controllers = require('../controllers/index');
-// const authentication = require('../middlewares/authentication');
 const incidentsService = controllers.incidents;
 const locationsService = controllers.locations;
 const notesService = controllers.notes;
 const categoriesService = controllers.categories;
 const chatsService = controllers.chats;
 const usersService = controllers.users;
-// const authenticationService = authentication.login;
-
-const { Auth, isAdmin } = require('../middlewares/authentication'); // authorise routes
 
 const { Auth, isAdmin } = require('../middlewares/authentication'); // authorise routes
 
