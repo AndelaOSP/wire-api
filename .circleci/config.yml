@@ -14,22 +14,48 @@ machine:
 jobs:
   build:
     docker:
-    - image: circleci/node:9.8.0
-      environment:
-        NODE_ENV: test
-        PGUSER: root
+      - image: circleci/node:9.8.0
+        environment:
+          NODE_ENV: test
+          PGUSER: root
 
-    - image: circleci/postgres:9.6
-      environment:
-        POSTGRES_DB: wire_dev_test
-        POSTGRES_USER: root
-
+      - image: circleci/postgres:9.6
+        environment:
+          POSTGRES_DB: wire_dev_test
+          POSTGRES_USER: root
     steps:
-    - checkout
-    - run:
-        name: Install packages 
-        command: npm install
-    - run: 
-        name: Run tests
-        command: npm test
+      - checkout
+      - run:
+          name: Install packages
+          command: cd src && npm install
+      - run:
+          name: Migrate and seed
+          command: cd src && npm run migrate-seed
+      - run:
+          name: Run tests
+          command: cd src && npm test
+  deploy:
+    docker:
+      - image: circleci/node:9.8.0
+        environment:
+          GOOGLE_PROJECT_ID: bench-projects
+          GOOGLE_COMPUTE_ZONE: europe-west1-b
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build and deploy application
+          command: chmod +x scripts/deploy.sh && scripts/deploy.sh
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build
+      - deploy:
+          filters:
+            branches:
+              only:
+                - master
+                - staging
 
