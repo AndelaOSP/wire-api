@@ -13,7 +13,7 @@ const findNoteById = (id, res) => {
       return note;
     })
     .catch(error => {
-      throw(error);
+      throw error;
     });
 };
 
@@ -61,7 +61,8 @@ module.exports = {
     return findNoteById(req.params.id, res)
       .then(note => {
         if (!note) {
-          return res.status(404)
+          return res
+            .status(404)
             .send({ message: 'Note not found', status: 'fail' });
         }
         return res.status(200).send({ data: note, status: 'success' });

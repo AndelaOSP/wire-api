@@ -45,6 +45,23 @@ describe('/POST chat', () => {
       });
   });
 
+  it('should update fields sucessfully', done => {
+    let findByIdStub = sinon.stub(chat, 'findById').resolves({
+      update: () =>
+        new Promise((resolve, reject) => {
+          resolve({});
+        })
+    });
+    request(app)
+      .put('/api/chats/:id')
+      .expect(200)
+      .end((err, res) => {
+        if (err) throw err;
+        findByIdStub.restore();
+        done();
+      });
+  });
+
   it('Should return all the chats', done => {
     let findAllStub = sinon.stub(chat, 'findAll').resolves(Object({}, ''));
     request(app)
