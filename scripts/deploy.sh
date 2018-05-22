@@ -4,21 +4,22 @@ set -eo pipefail
 
 # Esablish important variables
 DOCKER_REGISTRY=gcr.io
-DEFAULT_GOOGLE_CLUSTER_NAME=wire
+DEFAULT_GOOGLE_CLUSTER_PREFIX=bench
 PROJECT_NAME=wire-backend
 
 COMMIT_HASH=$(git rev-parse --short HEAD)
 
 if [ "$CIRCLE_BRANCH" == 'master' ]; then
     IMAGE_TAG=$COMMIT_HASH
-    GOOGLE_CLUSTER_NAME=$DEFAULT_GOOGLE_CLUSTER_NAME
     ENVIRONMENT=production
+    GOOGLE_COMPUTE_ZONE=europe-west1-b
 else
     IMAGE_TAG="${CIRCLE_BRANCH}-${COMMIT_HASH}"
-    GOOGLE_CLUSTER_NAME="${DEFAULT_GOOGLE_CLUSTER_NAME}-staging"
     ENVIRONMENT=staging
+    GOOGLE_COMPUTE_ZONE=us-central1-b
 fi
 
+GOOGLE_CLUSTER_NAME="${DEFAULT_GOOGLE_CLUSTER_PREFIX}-${ENVIRONMENT}"
 DEPLOYMENT_NAME="${ENVIRONMENT}-${PROJECT_NAME}"
 IMAGE="${DOCKER_REGISTRY}/${GOOGLE_PROJECT_ID}/${PROJECT_NAME}:${IMAGE_TAG}"
 
@@ -63,7 +64,7 @@ deploy_to_kubernetes() {
     # gcr.io/bench-projects/wire-backend:
     echo "====> Prepare image for deployement"
     echo "====> Deploying ${IMAGE} to ${DEPLOYMENT_NAME} in ${ENVIRONMENT} environment"
-    kubectl set image deployment/${DEPLOYMENT_NAME} backend=${IMAGE}
+    kubectl set image deployment/${DEPLOYMENT_NAME} backend=${IMAGE} -n ${ENVIRONMENT}
 
     if [ "$?" == "0" ]; then
         echo "Deployment completed succesfully"
