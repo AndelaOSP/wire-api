@@ -1,7 +1,6 @@
 #!/bin/bash
-set -e
-set -o pipefail
-set -o errorexit
+
+set -eo pipefail
 
 # Esablish important variables
 DOCKER_REGISTRY=gcr.io
