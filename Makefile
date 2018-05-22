@@ -4,7 +4,7 @@ ORG_NAME ?= bench-projects
 REPO_NAME ?= wire-api
 
 # File names
-DOCKER_DEV_COMPOSE_FILE := docker/dev/docker-compose.yaml
+DOCKER_DEV_COMPOSE_FILE := docker/dev/docker-compose.yml
 
 DOCKER_REGISTRY ?= gcr.io
 
@@ -29,36 +29,23 @@ help:
 	{ lastLine = $$0 }' $(MAKEFILE_LIST)
 	@echo ''
 
-
-## Generate .env file from the provided sample
-env_file:
-	@ printenv > .env
-	@ echo " "
-
-
-
-## build the docker images
-build:env_file
-	${INFO} "Building docker images..."
-	@ echo " "
-	@ docker-compose -f $(DOCKER_DEV_COMPOSE_FILE) build
-	@ ${INFO} "Build Completed successfully"
-
-
-
 ## Start the development environment containers
-start:env_file
+start:
+	${INFO} "Creating postgres data volume"
+	@ docker volume create --name=data > /dev/null
 	${INFO} "Spinning up your development environment..."
 	@ echo " "
-	@ docker-compose -f $(DOCKER_DEV_COMPOSE_FILE) up -d
+	@ docker-compose -f $(DOCKER_DEV_COMPOSE_FILE) build
+	@ docker-compose -f $(DOCKER_DEV_COMPOSE_FILE) up
+	@ cd src && yarn install && npm run migrate-seed && npm run start:dev
 	@ ${INFO} "Your development environment is now ready"
 
 ## Stop development containers
 stop:
 	${INFO} "Stopping your development environment containers..."
 	@ docker-compose -f $(DOCKER_DEV_COMPOSE_FILE) down -v
+	@ docker images -q -f dangling=true | xargs -I ARGS docker rmi -f ARGS
 	${INFO} "All containers stopped successfully"
-
 
 # extract ssh arguments
 
@@ -91,15 +78,3 @@ RESET  := $(shell tput -Txterm sgr0)
 INFO := @bash -c 'printf $(YELLOW); echo "===> $$1"; printf $(NC)' SOME_VALUE
 SUCCESS := @bash -c 'printf $(GREEN); echo "===> $$1"; printf $(NC)' SOME_VALUE
 # check and inspect Logic
-
-INSPECT := $$(docker-compose -p $$1 -f $$2 ps -q $$3 | xargs -I ARGS docker inspect -f "{{ .State.ExitCode }}" ARGS)
-
-CHECK := @bash -c 'if [[ $(INSPECT) -ne 0 ]]; then exit $(INSPECT); fi' VALUE
-
-APP_CONTAINER_ID := $$(docker-compose -p $(DOCKER_REL_PROJECT) -f $(DOCKER_REL_COMPOSE_FILE) ps -q $(APP_SERVICE_NAME))
-
-IMAGE_ID := $$(docker inspect -f '{{ .Image }}' $(APP_CONTAINER_ID))
-
-
-# Introspect repository tags
-REPO_EXPR := $$(docker inspect -f '{{range .RepoTags}}{{.}} {{end}}' $(IMAGE_ID) | grep -oh "$(REPO_FILTER)" | xargs)
