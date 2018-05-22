@@ -1,6 +1,6 @@
-[![Coverage Status](https://coveralls.io/repos/github/AndelaOSP/wire-api/badge.svg?branch=staging)](https://coveralls.io/github/AndelaOSP/wire-api?branch=staging)
+[![Coverage Status](https://coveralls.io/repos/github/AndelaOSP/wire-api/badge.svg?branch=ch-intergrate_coverage)](https://coveralls.io/github/AndelaOSP/wire-api?branch=ch-intergrate_coverage)
 
-[![CircleCI](https://circleci.com/gh/AndelaOSP/wire-api/tree/staging.svg?style=svg)](https://circleci.com/gh/AndelaOSP/wire-api/tree/staging)
+[![CircleCI](https://circleci.com/gh/AndelaOSP/wire-api/tree/develop.svg?style=svg)](https://circleci.com/gh/AndelaOSP/wire-api/tree/develop)
 
 # wire-api
 
