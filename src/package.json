@@ -11,7 +11,7 @@
     "seed": "sequelize db:seed:undo:all && sequelize db:seed --seed levels && sequelize db:seed --seed categories && sequelize db:seed --seed status && sequelize db:seed --seed locations && sequelize db:seed --seed roles && sequelize db:seed --seed incidents && sequelize db:seed --seed users && sequelize db:seed --seed reporters && sequelize db:seed --seed witnesses",
     "migrate": "sequelize db:migrate:undo:all && sequelize db:migrate",
     "lint": "./node_modules/.bin/eslint --fix ./server ./test",
-    "postinstall": "npm run migrate && npm run seed",
+    "migrate-seed": "npm run migrate && npm run seed",
     "test": "NODE_ENV=test nyc --reporter=html --reporter=text mocha --recursive -t 10000"
   },
   "dependencies": {
