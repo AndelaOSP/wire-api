@@ -39,7 +39,7 @@ describe('/POST user', () => {
         done();
       });
   });
-
+  
   it('should not login in an unauthorised user', done => {
     let findOneStub = sinon.stub(user, 'findOne').rejects();
 

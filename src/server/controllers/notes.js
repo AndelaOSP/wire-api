@@ -13,7 +13,7 @@ const findNoteById = (id, res) => {
       return note;
     })
     .catch(error => {
-      throw error;
+      throw(error);
     });
 };
 
