@@ -39,6 +39,24 @@ describe('/POST user', () => {
         done();
       });
   });
+  
+  it('should not login in an unauthorised user', done => {
+    let findOneStub = sinon.stub(user, 'findOne').rejects();
+
+    request(app)
+      .post('/api/users/login')
+      .send({
+        email: 'john.doe@gmail.com',
+        password: 'astrongpassword'
+      })
+      .expect(401)
+      .end((err, res) => {
+        if (err) throw err;
+        assert.equal(res.body.message, 'You are not authorised');
+        findOneStub.restore();
+        done();
+      });
+  });
 
   it('Should return all the users', done => {
     let findAllStub = sinon.stub(user, 'findAll').resolves(Object({}, ''));

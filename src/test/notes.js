@@ -8,6 +8,7 @@ const sinon = require('sinon');
 
 const note = require('../server/models').Notes;
 const incident = require('../server/models').Incidents;
+const user = require('../server/controllers/users').Users;
 
 const app = require('../index');
 chai.use(chaiHttp);
@@ -94,6 +95,70 @@ describe('/GET note', () => {
       .end((err, res) => {
         if (err) throw err;
         findByIdStub.restore();
+        done();
+      });
+  });
+
+  describe('/PUT note', () => {
+    it('should fail to update when document id not found', done => {
+      let findByIdStub = sinon.stub(note, 'findById').resolves();
+      request(app)
+        .put('/api/notes/1')
+        .expect(404)
+        .end((err, res) => {
+          if (err) throw err;
+          findByIdStub.restore();
+          done();
+        });
+    });
+
+    it('should update fields sucessfully', done => {
+      let findByIdStub = sinon.stub(note, 'findById').resolves({
+        update: () =>
+          new Promise((resolve, reject) => {
+            resolve({});
+          })
+      });
+      request(app)
+        .put('/api/notes/:id')
+        .expect(200)
+        .end((err, res) => {
+          if (err) throw err;
+          findByIdStub.restore();
+          done();
+        });
+    });
+  });
+
+  describe('/DELETE note', () => {
+    it('should fail to delete when noteId is not found', done => {
+      let findByIdStub = sinon.stub(note, 'findById').resolves();
+      request(app)
+        .delete('/api/notes/:id')
+        .expect(404)
+        .end((err, res) => {
+          if (err) throw err;
+          findByIdStub.restore();
+          done();
+        });
+    });
+  });
+
+  it('should delete a note successfully ', done => {
+    let findByIdStub = sinon.stub(note, 'findById').resolves({
+      destroy: () =>
+        new Promise((resolve, reject) => {
+          resolve(true);
+        })
+    });
+    let destroyStub = sinon.stub(note, 'destroy').resolves({});
+    request(app)
+      .delete('/api/notes/:id')
+      .expect(204)
+      .end((err, res) => {
+        if (err) throw err;
+        findByIdStub.restore();
+        destroyStub.restore();
         done();
       });
   });
