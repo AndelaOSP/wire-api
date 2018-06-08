@@ -8,12 +8,12 @@
   "license": "MIT",
   "scripts": {
     "start:dev": "nodemon ./bin/www",
-    "seed": "sequelize db:seed:undo:all && sequelize db:seed --seed levels && sequelize db:seed --seed categories && sequelize db:seed --seed status && sequelize db:seed --seed locations && sequelize db:seed --seed roles && sequelize db:seed --seed incidents && sequelize db:seed --seed users && sequelize db:seed --seed reporters && sequelize db:seed --seed witnesses",
+    "seed":
+      "sequelize db:seed:undo:all && sequelize db:seed --seed levels && sequelize db:seed --seed categories && sequelize db:seed --seed status && sequelize db:seed --seed locations && sequelize db:seed --seed roles && sequelize db:seed --seed incidents && sequelize db:seed --seed users && sequelize db:seed --seed reporters && sequelize db:seed --seed witnesses",
     "migrate": "sequelize db:migrate:undo:all && sequelize db:migrate",
     "lint": "./node_modules/.bin/eslint --fix ./server ./test",
     "migrate-seed": "npm run migrate && npm run seed",
-    "test": "NODE_ENV=test nyc --reporter=html --reporter=text mocha --recursive -t 10000",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "test": "NODE_ENV=test nyc --reporter=lcov mocha --recursive -t 10000"
   },
   "dependencies": {
     "body-parser": "^1.18.2",

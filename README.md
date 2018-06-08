@@ -1,4 +1,4 @@
-[![Coverage Status](https://coveralls.io/repos/github/AndelaOSP/wire-api/badge.svg?branch=ch-intergrate_coverage)](https://coveralls.io/github/AndelaOSP/wire-api?branch=ch-intergrate_coverage)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/6013b6f650e56cf3d0d1/test_coverage)](https://codeclimate.com/github/AndelaOSP/wire-api/test_coverage)
 
 [![CircleCI](https://circleci.com/gh/AndelaOSP/wire-api/tree/develop.svg?style=svg)](https://circleci.com/gh/AndelaOSP/wire-api/tree/develop)
 
@@ -10,9 +10,9 @@ WIRE-API powers [WIRE](https://github.com/AndelaOSP/wire)
 
 Ensure you have the following installed locally:
 
-* [Postgres](https://www.postgresql.org/)
+- [Postgres](https://www.postgresql.org/)
 
-* [Node](https://nodejs.org/en/)
+- [Node](https://nodejs.org/en/)
 
 ```
 cd src

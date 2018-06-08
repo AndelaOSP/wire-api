@@ -13,6 +13,7 @@ machine:
 
 jobs:
   build:
+    working_directory: ~/wire-api
     docker:
       - image: circleci/node:9.8.0
         environment:
@@ -32,8 +33,21 @@ jobs:
           name: Migrate and seed
           command: cd src && npm run migrate-seed
       - run:
+          name: Setup Code Climate test-reporter
+          command: |
+            cd src && curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter;
+            chmod +x ./cc-test-reporter
+      - run:
+          name: Notify Code Climate of current test
+          command: cd src && ./cc-test-reporter before-build
+      - run:
           name: Run tests
-          command: cd src && npm test
+          command: cd src && npm test && ./cc-test-reporter format-coverage -t lcov 
+      - run:
+          name: Send coverage to Code Climate
+          command: cd src && ./cc-test-reporter upload-coverage 
+          when: always
+
   deploy:
     docker:
       - image: circleci/node:9.8.0
@@ -58,4 +72,3 @@ workflows:
               only:
                 - master
                 - staging
-
