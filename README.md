@@ -14,6 +14,10 @@ Ensure you have the following installed locally:
 
 * [Node](https://nodejs.org/en/)
 
+```
+cd src
+```
+
 Install all dependencies:
 
 ```
