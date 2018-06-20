@@ -13,4 +13,5 @@ RUN yarn install
 
 COPY src /app
 
+RUN chmod +x bin/www
 CMD [ "bin/www" ]
