@@ -12,69 +12,72 @@ let userAttributes = ['username', 'imageUrl', 'email'];
 let includes = [
   {
     model: Level,
-    attributes: ['name'],
+    attributes: ['name']
   },
   {
     model: Status,
-    attributes: ['status'],
+    attributes: ['status']
   },
   {
     model: Location,
-    attributes: ['name', 'centre', 'country'],
+    attributes: ['name', 'centre', 'country']
   },
   {
     model: User,
     as: 'assignees',
     userAttributes,
     through: {
-      attributes: ['assignedRole'],
-    },
+      attributes: ['assignedRole']
+    }
   },
   {
     model: User,
     as: 'reporter',
     userAttributes,
     through: {
-      attributes: [],
-    },
+      attributes: []
+    }
   },
   {
     model: User,
     as: 'witnesses',
     userAttributes,
     through: {
-      attributes: [],
-    },
-  },
+      attributes: []
+    }
+  }
 ];
 
 // mapping Assignees
 const mapAssignees = incident => {
   return incident.map(oneIncident => {
-    oneIncident.dataValues.assignedRole = oneIncident.dataValues.assigneeIncidents.assignedRole;
+    oneIncident.dataValues.assignedRole =
+      oneIncident.dataValues.assigneeIncidents.assignedRole;
     delete oneIncident.dataValues.assigneeIncidents;
     return oneIncident;
   });
 };
 
-const findOrCreateUser = (userType, location) => {
-  return LocationService.create(location).then(location => {
-    return location.dataValues.id;
-  }).then(locationId => {
-    let userObject = {
-      where: {
-        id: userType.userId,
-      },
-      defaults: {
-        email: userType.email,
-        imageUrl: userType.imageUrl,
-        username: userType.username,
-        roleId: 1,
-        locationId
-      },
-    };
-    return User.findOrCreate(userObject);
-  });
+const findOrCreateUser = (userType, location, res) => {
+  return LocationService.create(location, res)
+    .then(location => {
+      return location.dataValues.id;
+    })
+    .then(locationId => {
+      let userObject = {
+        where: {
+          id: userType.userId
+        },
+        defaults: {
+          email: userType.email,
+          imageUrl: userType.imageUrl,
+          username: userType.username,
+          roleId: 1,
+          locationId
+        }
+      };
+      return User.findOrCreate(userObject);
+    });
 };
 
 const findIncidentById = (id, res) => {
@@ -83,7 +86,7 @@ const findIncidentById = (id, res) => {
       return incident;
     })
     .catch(error => {
-      throw(error);
+      throw error;
     });
 };
 
@@ -115,7 +118,7 @@ module.exports = {
       })
       .then(incident => {
         createdIncident = incident;
-        return findOrCreateUser(incidentReporter, reporterLocation);
+        return findOrCreateUser(incidentReporter, reporterLocation, res);
       })
       .then(createdReporter => {
         let reporter = createdReporter[0];
@@ -130,7 +133,10 @@ module.exports = {
               witnessLocation = witnessLocation[k];
             }
             let witness = witnesses[i];
-            let witnessCreationPromise = findOrCreateUser(witness, witnessLocation);
+            let witnessCreationPromise = findOrCreateUser(
+              witness,
+              witnessLocation
+            );
             witnessCreationPromises.push(witnessCreationPromise);
           }
         }
@@ -143,7 +149,9 @@ module.exports = {
             return witness[0];
           });
           for (let i = 0; i < mappedWitnesses.length; i++) {
-            addedWitnessesPromises.push(createdIncident.addWitness(mappedWitnesses[i]));
+            addedWitnessesPromises.push(
+              createdIncident.addWitness(mappedWitnesses[i])
+            );
           }
         }
         return Promise.all(addedWitnessesPromises);
@@ -163,7 +171,7 @@ module.exports = {
   // get all incidents
   list(req, res) {
     return Incident.findAll({
-      include: includes,
+      include: includes
     })
       .then(incidents => {
         let mappedIncidents = incidents.map(incident => {
@@ -171,7 +179,9 @@ module.exports = {
           incident.dataValues.reporter = incident.dataValues.reporter[0];
           return incident;
         });
-        res.status(200).send({ data: { incidents: mappedIncidents }, status: 'success' });
+        res
+          .status(200)
+          .send({ data: { incidents: mappedIncidents }, status: 'success' });
       })
       .catch(error => {
         errorLogs.catchErrors(error);
@@ -184,7 +194,8 @@ module.exports = {
     return findIncidentById(req.params.id, res)
       .then(incident => {
         if (!incident) {
-          return res.status(404)
+          return res
+            .status(404)
             .send({ message: 'Incident not found', status: 'fail' });
         }
         incident.assignees && mapAssignees(incident.assignees);
@@ -204,94 +215,116 @@ module.exports = {
     let destroyCcdPromise;
     let addCcdPromises = [];
 
-    let findIncidentPromise = Incident.findById(
-      req.params.id,
-      {
-        include: includes
-      }
-    ).then(incident=> {
-      return incident ? Promise.resolve(incident): Promise.reject({
-        message: 'Incident not found',
-        status: 'fail',
-      });
+    let findIncidentPromise = Incident.findById(req.params.id, {
+      include: includes
+    }).then(incident => {
+      return incident
+        ? Promise.resolve(incident)
+        : Promise.reject({
+            message: 'Incident not found',
+            status: 'fail'
+          });
     });
 
-    if(assignee) {
-      return findIncidentPromise.then(incident=> {
-        if (incident.dataValues.assignees.length === 0) {
-          return User.findById(assignee.userId).then(assignee => {
-            return incident.addAssignee(assignee, { assignedRole: 'assignee' });
-          }).then(() => {
-            return findIncidentById(incident.id, res);
-          }).then(data => {
-            return res.status(200).send({ data, status: 'success' });
-          });
-        } else {
-          return AssigneeModel.destroy({
-            where: {
-              assignedRole: 'assignee'
-            }
-          }).then(() => {
-            return User.findById(assignee.userId);
-          }).then((assignee) => {
-            return incident.addAssignee(assignee, { assignedRole: 'assignee' });
-          }).then(() => {
-            return findIncidentById(incident.id, res);
-          }).then(data => {
-            return res.status(200).send({ data, status: 'success' });
-          });
-        }
-      }).catch(error => {
-        errorLogs.catchErrors(error);
-        return res.status(400).send(error);
-      });
-    } else if(ccd) {
-      return findIncidentPromise.then(incident=> {
-        if (incident.dataValues.assignees.length === 0) {
-          for (let i = 0; i < ccd.length; i++) {
-            let addCcdPromise = User.findById(ccd[i].userId).then((ccd) => {
-              return incident.addAssignee(ccd, { assignedRole: 'ccd' });
-            });
-            addCcdPromises.push(addCcdPromise);
-          }  
-        } else {
-          return AssigneeModel.destroy({
-            where: {
-              assignedRole: 'ccd'
-            }
-          }).then(()=> {
+    if (assignee) {
+      return findIncidentPromise
+        .then(incident => {
+          if (incident.dataValues.assignees.length === 0) {
+            return User.findById(assignee.userId)
+              .then(assignee => {
+                return incident.addAssignee(assignee, {
+                  assignedRole: 'assignee'
+                });
+              })
+              .then(() => {
+                return findIncidentById(incident.id, res);
+              })
+              .then(data => {
+                return res.status(200).send({ data, status: 'success' });
+              });
+          } else {
+            return AssigneeModel.destroy({
+              where: {
+                assignedRole: 'assignee'
+              }
+            })
+              .then(() => {
+                return User.findById(assignee.userId);
+              })
+              .then(assignee => {
+                return incident.addAssignee(assignee, {
+                  assignedRole: 'assignee'
+                });
+              })
+              .then(() => {
+                return findIncidentById(incident.id, res);
+              })
+              .then(data => {
+                return res.status(200).send({ data, status: 'success' });
+              });
+          }
+        })
+        .catch(error => {
+          errorLogs.catchErrors(error);
+          return res.status(400).send(error);
+        });
+    } else if (ccd) {
+      return findIncidentPromise
+        .then(incident => {
+          if (incident.dataValues.assignees.length === 0) {
             for (let i = 0; i < ccd.length; i++) {
-              let addCcdPromise = User.findById(ccd[i].userId).then((ccd) => {
+              let addCcdPromise = User.findById(ccd[i].userId).then(ccd => {
                 return incident.addAssignee(ccd, { assignedRole: 'ccd' });
               });
               addCcdPromises.push(addCcdPromise);
-            } 
-            return Promise.all(addCcdPromises);
-          }).then(() => {
-            return findIncidentById(incident.id, res);
-          }).then(data => {
-            return res.status(200).send({ data, status: 'success' });
-          });  
-        } 
-      }).catch(error => {
-        errorLogs.catchErrors(error);
-        return res.status(400).send(error);
-      });
-    } else {
-      return findIncidentPromise.then(incident=> {
-        return incident.update({
-          statusId: req.body.statusId || incident.statusId,
-          categoryId: req.body.categoryId || incident.categoryId,
-          levelId: req.body.levelId || incident.levelId
-        }).then(() => {
-          return findIncidentById(incident.id, res);
-        }).then(data => {
-          return res.status(200).send({ data, status: 'success' });
+            }
+          } else {
+            return AssigneeModel.destroy({
+              where: {
+                assignedRole: 'ccd'
+              }
+            })
+              .then(() => {
+                for (let i = 0; i < ccd.length; i++) {
+                  let addCcdPromise = User.findById(ccd[i].userId).then(ccd => {
+                    return incident.addAssignee(ccd, { assignedRole: 'ccd' });
+                  });
+                  addCcdPromises.push(addCcdPromise);
+                }
+                return Promise.all(addCcdPromises);
+              })
+              .then(() => {
+                return findIncidentById(incident.id, res);
+              })
+              .then(data => {
+                return res.status(200).send({ data, status: 'success' });
+              });
+          }
+        })
+        .catch(error => {
+          errorLogs.catchErrors(error);
+          return res.status(400).send(error);
         });
-      }).catch(error => {
-        errorLogs.catchErrors(error);
-        return res.status(400).send(error);
-      });
+    } else {
+      return findIncidentPromise
+        .then(incident => {
+          return incident
+            .update({
+              statusId: req.body.statusId || incident.statusId,
+              categoryId: req.body.categoryId || incident.categoryId,
+              levelId: req.body.levelId || incident.levelId
+            })
+            .then(() => {
+              return findIncidentById(incident.id, res);
+            })
+            .then(data => {
+              return res.status(200).send({ data, status: 'success' });
+            });
+        })
+        .catch(error => {
+          errorLogs.catchErrors(error);
+          return res.status(400).send(error);
+        });
     }
   },
 
@@ -301,7 +334,7 @@ module.exports = {
       if (!incident) {
         return res.status(404).send({
           message: 'Incident not found',
-          status: 'fail',
+          status: 'fail'
         });
       }
       return incident
@@ -322,11 +355,16 @@ module.exports = {
     return Incident.findAll({
       include: includes,
       where: {
-        $or: [{ subject: { $ilike: `%${req.query.q}%` } }, { description: { $ilike: `%${req.query.q}%` } }],
-      },
+        $or: [
+          { subject: { $ilike: `%${req.query.q}%` } },
+          { description: { $ilike: `%${req.query.q}%` } }
+        ]
+      }
     })
       .then(incident => {
-        res.status(200).send({ data: { incidents: incident }, status: 'success' });
+        res
+          .status(200)
+          .send({ data: { incidents: incident }, status: 'success' });
       })
       .catch(error => {
         errorLogs.catchErrors(error);
@@ -336,19 +374,20 @@ module.exports = {
 
   // filter incidents by category
   listIncidents(req, res) {
-    return Incident
-      .findAll({
-        where: {
-          categoryId: req.params.id
-        },
-        include: includes,
-      })
+    return Incident.findAll({
+      where: {
+        categoryId: req.params.id
+      },
+      include: includes
+    })
       .then(incident => {
-        res.status(200).send({ data: { incidents: incident }, status: 'success' });
+        res
+          .status(200)
+          .send({ data: { incidents: incident }, status: 'success' });
       })
       .catch(error => {
         errorLogs.catchErrors(error);
         res.status(400).send(error);
       });
-  },
+  }
 };
