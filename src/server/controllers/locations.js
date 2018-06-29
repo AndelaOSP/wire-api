@@ -3,7 +3,13 @@ const Location = require('../models').Locations;
 const Incident = require('../models').Incidents;
 
 module.exports = {
-  // add a location
+  /**
+   * Represents a method to create a location.
+   * @function
+   * @param {Object} location- Location centre.
+   * @param {Object} res response body after a successfull of unsuccesful user creation.
+   * @returns {Object}
+   */
   create(location, res) {
     let { name, centre, country } = location;
     if (!name || !centre || !country) {
@@ -28,7 +34,12 @@ module.exports = {
       });
   },
 
-  // view all locations
+  /**
+   * Represents a method to view all locations.
+   * @function
+   * @param {Object} res response body after a successfull of unsuccesfull locations retrieval.
+   * @returns {Object}
+   */
   list(req, res) {
     return Location.findAll()
       .then(location => {

@@ -20,6 +20,11 @@ let includes = [
     attributes: ['name', 'centre', 'country']
   }
 ];
+/**
+ * Represents a method to create a user.
+ * @module user
+ * @function
+ */
 
 module.exports = {
   // add a user
@@ -55,7 +60,11 @@ module.exports = {
       });
   },
 
-  // login a user
+  /**
+   * Represents a method to login in a user.
+   * @function
+   * @returns an response object with userToken,message,user
+   */
   login(req, res) {
     return User.findOne({ where: { email: req.body.email } })
       .then(user => {
@@ -79,7 +88,11 @@ module.exports = {
       });
   },
 
-  // GET admins/super admins
+  /**
+   * Represents a method to list all available users in accordance to their role.
+   * @function
+   * @returns {object} returns an object with users.
+   */
   list(req, res) {
     return User.findAll({
       include: includes
@@ -94,6 +107,12 @@ module.exports = {
         res.status(400).send(error);
       });
   },
+
+  /**
+   * Represents a method to retrieve a user by id.
+   * @function
+   * @returns {object} returns a user object.
+   */
   getUserById(req, res) {
     return User.findById(req.params.userId, {
       include: [

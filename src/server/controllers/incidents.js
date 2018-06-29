@@ -7,7 +7,15 @@ const Status = require('../models').Statuses;
 const AssigneeModel = require('../models').assigneeIncidents;
 const LocationService = require('../controllers/locations');
 
+/**
+ * Represents the user attributes.
+ */
+
 let userAttributes = ['username', 'imageUrl', 'email'];
+
+/**
+ * Represents includes attached to an incident after a succesfull post.
+ */
 
 let includes = [
   {
@@ -58,6 +66,16 @@ const mapAssignees = incident => {
   });
 };
 
+/**
+ * Represents a method to create a user.
+ * @function
+ * @param {Object} userType- Takes in the user Type ie the Reporter.
+ * @param {Object} location- Takes in the user's/Reporters location.
+ * @param {Object} res- The response body after a successfull of unsuccesful user creation.
+ * @defaultvalue
+ * @returns {Object}
+ */
+
 const findOrCreateUser = (userType, location, res) => {
   return LocationService.create(location, res)
     .then(location => {
@@ -80,6 +98,14 @@ const findOrCreateUser = (userType, location, res) => {
     });
 };
 
+/**
+ * Represents a method to find an incident by Id.
+ * Takes in the incident Id as a parameter to the requst body
+ * @function
+ * @param {string} id - chat Id
+ * @returns an incident
+ */
+
 const findIncidentById = (id, res) => {
   return Incident.findById(id, { include: includes })
     .then(incident => {
@@ -89,6 +115,13 @@ const findIncidentById = (id, res) => {
       throw error;
     });
 };
+
+/**
+ * Represents a method post/create an incident.
+ * includes the users model to get user type info ie role and location
+ * @function
+ * @returns {Object}
+ */
 
 module.exports = {
   // create an incident
@@ -168,8 +201,12 @@ module.exports = {
       });
   },
 
-  // get all incidents
-  list(req, res) {
+  /**
+   * Represents a method to list all available incidents.
+   * @function
+   * @returns {object} returns an object with incidents objects
+   */
+  list(res) {
     return Incident.findAll({
       include: includes
     })
@@ -189,7 +226,13 @@ module.exports = {
       });
   },
 
-  // retrieve an incident by ID
+  /**
+   * Represents a method to find an incident by Id.
+   * Takes in the incident Id as a parameter to the reqeust body
+   * @function
+   * @param {string} id - incident Id
+   * @returns {object}
+   */
   findById(req, res) {
     return findIncidentById(req.params.id, res)
       .then(incident => {
@@ -208,7 +251,15 @@ module.exports = {
       });
   },
 
-  // update an incident
+  /**
+   * Represents a method to update an incident by Id.
+   * Takes in the incident Id as a parameter to the request body.
+   * Only update the incident with adding a ccd user or an assignee.
+   * @function
+   * @param {string} req- incindent Id.
+   * @param {object} res - response body.
+   * @returns {object}
+   */
   update(req, res) {
     let assignee = req.body.assignee;
     let ccd = req.body.ccd;
@@ -220,10 +271,7 @@ module.exports = {
     }).then(incident => {
       return incident
         ? Promise.resolve(incident)
-        : Promise.reject({
-            message: 'Incident not found',
-            status: 'fail'
-          });
+        : Promise.reject({ message: 'Incident not found', status: 'fail' });
     });
 
     if (assignee) {
@@ -328,6 +376,12 @@ module.exports = {
     }
   },
 
+  /**
+   * Represents a method to delete an incident by Id.
+   * Takes in the incident Id as a parameter to the reqeust body
+   * @function
+   */
+
   // delete an incident by ID. To be refactored into archive incidents that are old and resolved.
   delete(req, res) {
     return Incident.findById(req.params.id).then(incident => {
@@ -347,7 +401,11 @@ module.exports = {
     });
   },
 
-  //search an incident by subject or description.
+  /**
+   * Represents a method to search an incident by subject or description.
+   * @function
+   * @returns {object}
+   */
   search(req, res) {
     if (!req.query.q) {
       return res.status(400).send({ message: 'please provide query' });
@@ -372,7 +430,11 @@ module.exports = {
       });
   },
 
-  // filter incidents by category
+  /**
+   * Represents a method to filter incidents according to categories.
+   * @function
+   * @returns {object}
+   */
   listIncidents(req, res) {
     return Incident.findAll({
       where: {

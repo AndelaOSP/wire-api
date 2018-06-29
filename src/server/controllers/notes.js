@@ -6,19 +6,30 @@ let userAttributes = {
   model: User,
   attributes: ['id', 'imageUrl', 'username']
 };
-
-const findNoteById = (id, res) => {
+/**
+ * Represents a method to find a note by id.
+ * @function
+ * @param {string} id - Takes in the note id as a parameter
+ * @returns a chat object.
+ */
+const findNoteById = id => {
   return Note.findById(id, { include: userAttributes })
     .then(note => {
       return note;
     })
     .catch(error => {
-      throw(error);
+      throw error;
     });
 };
 
+/**
+ * Represents a method create a note.
+ * @function
+ * @param {object} req - request body, ie note, userEmail,incidentId.
+ * @param {object} res - response body  after succesfull or unsuccessfull note creation.
+ * @returns a chat object.
+ */
 module.exports = {
-  // add a note
   create(req, res) {
     return Note.create({
       note: req.body.note,
@@ -37,7 +48,13 @@ module.exports = {
       });
   },
 
-  // view all notes of an incident
+  /**
+   * Represents a method to list all available notes on an incident.
+   * @function
+   * @param {object} req - request body, ie note, userEmail,incidentId.
+   * @param {object} res - response body  after succesfull or unsuccessfull note creation.
+   * @returns a note object.
+   */
   list(req, res) {
     return Note.findAll({
       where: {
@@ -56,7 +73,13 @@ module.exports = {
       });
   },
 
-  // retrieve a note by id
+  /**
+   * Represents a method to retrieve a note by id.
+   * @function
+   * @param {object} req - request body, ie noteId.
+   * @param {object} res - response body  after succesfull or unsuccessfull note retrieval.
+   * @returns a note object.
+   */
   findById(req, res) {
     return findNoteById(req.params.id, res)
       .then(note => {
@@ -73,7 +96,13 @@ module.exports = {
       });
   },
 
-  // update a note
+  /**
+   * Represents a method to update a note by id.
+   * @function
+   * @param {object} req - request body, ie noteId.
+   * @param {object} res - response body  after succesfull or unsuccessfull note retrieval.
+   * @returns a note object.
+   */
   update(req, res) {
     return Note.findById(req.params.id).then(Note => {
       if (!Note) {
@@ -99,7 +128,13 @@ module.exports = {
     });
   },
 
-  // delete a note
+  /**
+   * Represents a method to delete a note by id.
+   * @function
+   * @param {object} req - request body, ie noteId.
+   * @param {object} res - response body  after succesfull or unsuccessfull note deletion.
+   * @returns a note object.
+   */
   delete(req, res) {
     return Note.findById(req.params.id).then(Note => {
       if (!Note) {
