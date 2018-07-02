@@ -126,7 +126,7 @@ module.exports = {
       })
       .then(() => {
         let witnessCreationPromises = [];
-        if (witnesses.length > 0) {
+        if (witnesses && witnesses.length > 0) {
           for (let i = 0; i < witnesses.length; i++) {
             let witnessLocation = req.body.witnesses[i].witnessLocation;
             for (let k = 0; k < witnessLocation.length; k++) {
