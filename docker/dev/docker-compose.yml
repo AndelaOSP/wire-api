@@ -1,0 +1,40 @@
+version: '2.1'
+volumes:
+    data:
+      external: true
+services:
+  app:
+    build:
+      context: ../../
+      dockerfile: docker/dev/Dockerfile
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://wire:wire@database:5432/wire_dev
+      SECRET_KEY: dd0caf8705b32857d19b80ae626c1757c57742df18b2f62adcfe48307730ec6e
+      JWT_KEY: ZGQwY2FmODcwNWIzMjg1N2QxOWI4MGFlNjI2YzE3NTdjNTc3NDJkZjE4YjJmNjJhZGNmZTQ4MzA3NzMwZWM2ZQ
+    entrypoint: ["dev.sh"]
+    command: npm run start:dev
+    ports:
+      - "8000:8000"
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - ../../src:/app
+      - /app/node_modules
+  database:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: wire
+      POSTGRES_PASSWORD: wire
+      POSTGRES_DB: wire_dev
+    volumes:
+      - data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
