@@ -4,7 +4,10 @@ const Incident = require('../models').Incidents;
 const Role = require('../models').Roles;
 const Location = require('../models').Locations;
 const LocationService = require('./locations');
+const emailHelper = require('../helpers/emailHelper');
+const generateEmailBody = require('../helpers/generateEmailBody');
 const { token } = require('../middlewares/authentication');
+const getUsernameFromEmail = require('../helpers/getUsernameFromEmail');
 require('dotenv').config();
 
 const jwt = require('jsonwebtoken');
@@ -122,6 +125,34 @@ module.exports = {
       ]
     })
       .then(user => {
+        return res.status(200).send(user);
+      })
+      .catch(error => {
+        errorLogs.catchErrors(error);
+        res.status(400).send(error);
+      });
+  },
+  inviteUser(req, res) {
+    const name = getUsernameFromEmail(req.body.email);
+    req.body.username = name.first + ' ' + name.last;
+    return User.findOrCreate({
+      where: {
+        email: req.body.email
+      },
+      defaults: req.body
+    })
+      .spread( async (user, created) => {
+        if(!created) {
+          return res.status(409).send({ message: 'User already exists' });
+        }
+        const emailBody = await generateEmailBody(req.body.email, req.body.roleId);
+        const callback = (error) => {
+          if (error) {
+            return error;
+          }
+          return {message: 'The email was sent successfully'};
+        };
+        emailHelper.sendMail(emailBody, callback);
         return res.status(200).send(user);
       })
       .catch(error => {
