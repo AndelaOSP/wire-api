@@ -21,7 +21,7 @@ module.exports = {
       },
       imageUrl: {
         type: Sequelize.TEXT,
-        allowNull: false
+        allowNull: true
       },
       roleId: {
         type: Sequelize.INTEGER,
