@@ -1,11 +1,11 @@
-
+let cuid = require('cuid');
 
 module.exports = (sequelize, DataTypes) => {
   const Users = sequelize.define('Users', {
     id: {
       primaryKey: true,
       type: DataTypes.STRING,
-      allowNull: false
+      defaultValue: () => cuid()
     },
     email: {
       type: DataTypes.STRING,
