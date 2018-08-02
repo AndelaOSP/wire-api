@@ -55,5 +55,7 @@ module.exports = app => {
   app.post('/api/users/login', usersService.login);
   app.get('/api/users', usersService.list);
   app.get('/api/users/:userId', usersService.getUserById);
+  app.put('/api/users/:userId', usersService.editUser);
+  app.delete('/api/users/:userId', usersService.deleteUser);
   app.post('/api/users/invite', usersService.inviteUser);
 };
