@@ -6,6 +6,7 @@ const Level = require('../models').Levels;
 const Status = require('../models').Statuses;
 const AssigneeModel = require('../models').assigneeIncidents;
 const LocationService = require('../controllers/locations');
+const findOrCreateUser = require('../helpers/findOrCreateUser');
 
 let userAttributes = ['username', 'imageUrl', 'email'];
 
@@ -56,28 +57,6 @@ const mapAssignees = incident => {
     delete oneIncident.dataValues.assigneeIncidents;
     return oneIncident;
   });
-};
-
-const findOrCreateUser = (userType, location, res) => {
-  return LocationService.create(location, res)
-    .then(location => {
-      return location.dataValues.id;
-    })
-    .then(locationId => {
-      let userObject = {
-        where: {
-          id: userType.userId
-        },
-        defaults: {
-          email: userType.email,
-          imageUrl: userType.imageUrl,
-          username: userType.username,
-          roleId: 1,
-          locationId
-        }
-      };
-      return User.findOrCreate(userObject);
-    });
 };
 
 const findIncidentById = (id, res) => {
@@ -221,9 +200,9 @@ module.exports = {
       return incident
         ? Promise.resolve(incident)
         : Promise.reject({
-            message: 'Incident not found',
-            status: 'fail'
-          });
+          message: 'Incident not found',
+          status: 'fail'
+        });
     });
 
     if (assignee) {
