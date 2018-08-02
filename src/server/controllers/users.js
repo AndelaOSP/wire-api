@@ -8,6 +8,7 @@ const emailHelper = require('../helpers/emailHelper');
 const generateEmailBody = require('../helpers/generateEmailBody');
 const { token } = require('../middlewares/authentication');
 const getUsernameFromEmail = require('../helpers/getUsernameFromEmail');
+const findOrCreateUser = require('../helpers/findOrCreateUser');
 require('dotenv').config();
 
 const jwt = require('jsonwebtoken');
@@ -135,12 +136,14 @@ module.exports = {
   inviteUser(req, res) {
     const name = getUsernameFromEmail(req.body.email);
     req.body.username = name.first + ' ' + name.last;
-    return User.findOrCreate({
-      where: {
-        email: req.body.email
-      },
-      defaults: req.body
-    })
+    const userObject = {
+      email: req.body.email,
+      imageUrl: req.body.imageUrl,
+      username: req.body.username,
+      roleId: req.body.roleId,
+    };
+    const userLocation = req.body.location;
+    findOrCreateUser(userObject, userLocation, res)
       .spread( async (user, created) => {
         if(!created) {
           return res.status(409).send({ message: 'User already exists' });
@@ -159,5 +162,35 @@ module.exports = {
         errorLogs.catchErrors(error);
         res.status(400).send(error);
       });
+  },
+
+  async editUser(req, res) {
+    try {
+      const updatedUser =  await User.update(req.body,{
+        where: {
+          id: req.params.userId
+        },
+      });
+      return res.status(200).send(updatedUser);
+    } catch (error) {
+      errorLogs.catchErrors(error);
+      res.status(400).send(error); 
+    }
+  },
+
+  async deleteUser(req, res) {
+    try {
+      await User.destroy({
+        where: {
+          id: req.params.userId
+        },
+      });
+      const message = 'User deleted Successfully';
+      return res.status(200).send(message);
+    } catch (error) {
+      errorLogs.catchErrors(error);
+      res.status(400).send(error); 
+    }
   }
 };
+
