@@ -99,7 +99,8 @@ module.exports = {
         res.status(400).send(error);
       });
   },
-  getUserById(req, res) {
+  getUserById(req, res, next) {
+    if (req.params.userId === 'search') return next('route');
     return User.findById(req.params.userId, {
       include: [
         includes,
@@ -196,9 +197,9 @@ module.exports = {
 
   async searchUser(req, res) {
     try {
-      const searchQuery = { $ilike: Sequelize.fn('lower', `${req.query.q.toLowerCase()}%`)};
+      const searchQuery = { $ilike: Sequelize.fn('lower', `%${req.query.q.toLowerCase()}%`)};
       const users = await User.findAll({
-        where: { $or: [{'username': searchQuery}, {'email': searchQuery}]}
+        where: { $or: {'username': searchQuery, 'email': searchQuery}}
       });
       return res.status(200).send(users);
     } catch (error) {
