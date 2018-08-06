@@ -59,7 +59,7 @@ module.exports = app => {
   app.put('/api/users/:userId', usersService.editUser);
   app.delete('/api/users/:userId', usersService.deleteUser);
   app.post('/api/users/invite', usersService.inviteUser);
-  app.get('/api/user/search', usersService.searchUser);
+  app.get('/api/users/search', usersService.searchUser);
 
   // roles endpoints
   app.get('/api/roles', rolesService.list);
