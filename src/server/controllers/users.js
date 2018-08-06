@@ -9,6 +9,7 @@ const generateEmailBody = require('../helpers/generateEmailBody');
 const { token } = require('../middlewares/authentication');
 const getUsernameFromEmail = require('../helpers/getUsernameFromEmail');
 const findOrCreateUser = require('../helpers/findOrCreateUser');
+const Sequelize = require('sequelize');
 require('dotenv').config();
 
 const jwt = require('jsonwebtoken');
@@ -187,6 +188,19 @@ module.exports = {
       });
       const message = 'User deleted Successfully';
       return res.status(200).send(message);
+    } catch (error) {
+      errorLogs.catchErrors(error);
+      res.status(400).send(error); 
+    }
+  },
+
+  async searchUser(req, res) {
+    try {
+      const searchQuery = { $ilike: Sequelize.fn('lower', `${req.query.q.toLowerCase()}%`)};
+      const users = await User.findAll({
+        where: { $or: [{'username': searchQuery}, {'email': searchQuery}]}
+      });
+      return res.status(200).send(users);
     } catch (error) {
       errorLogs.catchErrors(error);
       res.status(400).send(error); 
