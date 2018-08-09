@@ -7,7 +7,7 @@
   "staging": {
     "use_env_variable": "DATABASE_URL",
     "dialect": "postgres",
-    "WIRE_BASE_URL": "staging-wire.andela.com"
+    "WIRE_BASE_URL": "https://staging-wire.andela.com"
   },
   "test": {
     "username": "chuchu",
@@ -20,6 +20,6 @@
   "production": {
     "use_env_variable": "DATABASE_URL",
     "dialect": "postgres",
-    "WIRE_BASE_URL": "https://wire.andela.com"
+    "WIRE_BASE_URL": "http://wire.andela.com"
   }
 }

@@ -203,13 +203,13 @@ module.exports = {
     try {
       const searchQuery = { $ilike: Sequelize.fn('lower', `%${req.query.q.toLowerCase()}%`)};
       const users = await User.findAll({
-        where: { $or: {'username': searchQuery, 'email': searchQuery}}
+        where: { $or: {'username': searchQuery, 'email': searchQuery}},
+        include: includes
       });
-      return res.status(200).send({ data: users, status: 'success' });
+      return res.status(200).send({data: {users: users}, status: 'success'});
     } catch (error) {
       errorLogs.catchErrors(error);
       res.status(400).send(error); 
     }
   }
 };
-
