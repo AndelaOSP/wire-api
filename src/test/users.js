@@ -90,4 +90,51 @@ describe('/POST user', () => {
         done();
       });
   });
+
+  it('Should return all the users', done => {
+    const users = [
+      {
+        'id': '23hgvunervjjn',
+        'email': 'oliver.munala@andela.com',
+        'username': 'Oliver Munala',
+        'imageUrl': null,
+        'createdAt': '2018-07-25T16:03:27.893Z',
+        'updatedAt': '2018-07-25T16:03:27.893Z',
+        'locationId': null,
+        'roleId': 3
+      },
+      {
+        'id': 'cjkib5qa20000ssyxe7sdtqrc',
+        'email': 'eugene.omar@andela.com',
+        'username': 'Eugene Omar',
+        'imageUrl': null,
+        'createdAt': '2018-08-06T13:24:58.827Z',
+        'updatedAt': '2018-08-06T13:24:58.827Z',
+        'locationId': 'cjkbgs8cz0000cmyxytfbkksu',
+        'roleId': 3
+      },
+      {
+        'id': 'cjkieik4d0000k5yxci2eycpr',
+        'email': 'brian.kimokoti@andela.com',
+        'username': 'Brian Kimokoti',
+        'imageUrl': null,
+        'createdAt': '2018-08-06T14:58:56.222Z',
+        'updatedAt': '2018-08-06T14:58:56.222Z',
+        'locationId': 'cjkbgs8cz0000cmyxytfbkksu',
+        'roleId': 3
+      }
+    ];
+    let findAllStub = sinon.stub(user, 'findAll').resolves(Object({users}, ''));
+    request(app)
+      .get('/api/users/search?q=Brian')
+      .expect(200)
+      .end((err, res) => {
+        if (err) throw err;
+        assert.deepEqual(res.body, {
+          users
+        });
+        findAllStub.restore();
+        done();
+      });
+  });
 });
