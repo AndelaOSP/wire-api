@@ -140,13 +140,13 @@ module.exports = {
     req.body.username = name.first + ' ' + name.last;
     const userObject = {
       email: req.body.email,
-      imageUrl: req.body.imageUrl,
       username: req.body.username,
       roleId: req.body.roleId,
+      locationId: req.body.locationId
     };
-    const userLocation = req.body.location;
-    findOrCreateUser(userObject, userLocation, res)
-      .spread( async (user, created) => {
+    return User.findOrCreate({where: { email: userObject.email},
+      defaults: userObject})
+      .spread( async (createdUser, created) => {
         if(!created) {
           return res.status(409).send({ message: 'User already exists' });
         }
@@ -158,7 +158,8 @@ module.exports = {
           return {message: 'The email was sent successfully'};
         };
         emailHelper.sendMail(emailBody, callback);
-        return res.status(200).send(user);
+        const user = await User.findById(createdUser.id, { include: includes});
+        return res.status(200).send({ data: user, status: 'success' });
       })
       .catch(error => {
         errorLogs.catchErrors(error);
@@ -167,13 +168,16 @@ module.exports = {
   },
 
   async editUser(req, res) {
+    
     try {
-      const updatedUser =  await User.update(req.body,{
+      const [_,[updatedUser]] = await User.update(req.body,{
         where: {
           id: req.params.userId
         },
+        returning: true
       });
-      return res.status(200).send(updatedUser);
+      const user = await User.findById(updatedUser.id, {include: includes});
+      return res.status(200).send({ data: user, status: 'success' });
     } catch (error) {
       errorLogs.catchErrors(error);
       res.status(400).send(error); 
