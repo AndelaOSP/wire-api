@@ -2,7 +2,7 @@
   "development": {
     "use_env_variable": "DATABASE_URL",
     "dialect": "postgres",
-    "WIRE_BASE_URL": "https://wire.andela.com:8080/"
+    "WIRE_BASE_URL": "http://wire.andela.com:8080/"
   },
   "staging": {
     "use_env_variable": "DATABASE_URL",
@@ -15,11 +15,11 @@
     "database": "wire_dev_test",
     "host": "localhost",
     "dialect": "postgres",
-    "WIRE_BASE_URL": "https://wire.andela.com:8080/"
+    "WIRE_BASE_URL": "http://wire.andela.com:8080/"
   },
   "production": {
     "use_env_variable": "DATABASE_URL",
     "dialect": "postgres",
-    "WIRE_BASE_URL": "http://wire.andela.com"
+    "WIRE_BASE_URL": "https://wire.andela.com"
   }
 }
