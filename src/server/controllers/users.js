@@ -205,7 +205,7 @@ module.exports = {
       const users = await User.findAll({
         where: { $or: {'username': searchQuery, 'email': searchQuery}}
       });
-      return res.status(200).send(users);
+      return res.status(200).send({ data: users, status: 'success' });
     } catch (error) {
       errorLogs.catchErrors(error);
       res.status(400).send(error); 
