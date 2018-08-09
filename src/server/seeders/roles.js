@@ -7,12 +7,12 @@ module.exports = {
         updatedAt: new Date().toISOString()
       },
       {
-        name: 'Admin',
+        name: 'Assignee',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       },
       {
-        name: 'SuperAdmin',
+        name: 'Admin',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       }
