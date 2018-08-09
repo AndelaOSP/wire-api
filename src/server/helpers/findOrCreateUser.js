@@ -13,13 +13,14 @@ const findOrCreateUser = (userType, userLocation, res) => {
         },
         defaults: {
           email: userType.email,
-          imageUrl: userType.imageUrl,
           username: userType.username,
           roleId: userType.roleId,
           locationId
         }
       };
       return User.findOrCreate(userObject);
+    }).catch(error => {
+      return error;
     });
 };
 module.exports = findOrCreateUser;
