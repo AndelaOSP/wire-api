@@ -1,24 +1,22 @@
 const nodemailer = require('nodemailer');
 const smtpTransport = require('nodemailer-smtp-transport');
 
-
-const transporter = nodemailer.createTransport(smtpTransport({
-  service: 'gmail',
-  host: 'smtp.gmail.com',
-  auth: {
-    user: process.env.EMAIL_SENDER,
-    pass: process.env.EMAIL_PASSWORD,
-  },
-  logger: true,
-  debug: false
-}));
-
 /**
  * @function sendMail
  * @param Object
  * @param function
  */
 const sendMail = (emailBody, callback) => {
+  const transporter = nodemailer.createTransport(smtpTransport({
+    service: 'gmail',
+    host: 'smtp.gmail.com',
+    auth: {
+      user: process.env.EMAIL_SENDER,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+    logger: true,
+    debug: false
+  }));
   const mailOptions = {
     from: process.env.EMAIL_SENDER,
     to: emailBody.to,
@@ -37,4 +35,4 @@ const sendMail = (emailBody, callback) => {
   });
 };
 
-module.exports = {sendMail};
+module.exports = { sendMail };
