@@ -21,6 +21,16 @@ module.exports = {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString() 
       },
+      {
+        id: 'U7LHY6T4B',
+        email: 'eugene.omar@andela.com',
+        username: 'Eugene Omar',
+        imageUrl: 'https://ca.slack-edge.com/T02R3LKBA-U4GHQF7BQ-89b22f3000e2-48',
+        roleId: 3,
+        locationId: 'cjee24xnn0000i2xsh9qauyn5',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString() 
+      },
     ]);
   },
 
