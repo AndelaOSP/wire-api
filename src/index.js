@@ -15,16 +15,15 @@ const app = express();
 app.use(cors());
 
 let allowedOrigins = [
-  'https://wire-front-staging.herokuapp.com',
-  'https://wireapi-develop.herokuapp.com',
+  'https://staging-wire.andela.com/',
+  'https://api-staging-wire.andela.com/',
   'wire.andela.com:8080',
-  'https://wirebot-testing.herokuapp.com',
-  'https://wire-bot.herokuapp.com/'
+  'https://bot-staging-wire.andela.com/'
 ];
 
 app.use((req, res, next) => {
   let origin = req.headers.origin;
-  if(allowedOrigins.indexOf(origin) >= 0){
+  if (allowedOrigins.indexOf(origin) >= 0) {
     res.setHeader('Access-Control-Allow-Origin', origin);
   }
   res.header(
