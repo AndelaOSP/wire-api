@@ -141,9 +141,8 @@ describe('/POST user', () => {
 
   it('Should edit the given user if they exist', (done) => {
     request(app)
-      .put('/api/users/U7LHY6T4B')
+      .put('/api/users/U7LEPG8LF')
       .send({
-        'email': 'eugene.omar@andela.com',
         'roleId': '1'
       })
       .expect(200)
@@ -159,7 +158,7 @@ describe('/POST user', () => {
       .post('/api/users/invite')
       .send({
         'email': 'eugene.omar@andela.com',
-        'roleId': '1',
+        'roleId': 1,
         'locationId': 'cjee24cz40000guxs6bdner6l'
       })
       .expect(409)
@@ -179,7 +178,7 @@ describe('/POST user', () => {
       .post('/api/users/invite')
       .send({
         'email': 'oliver.munala@me.com',
-        'roleId': '3',
+        'roleId': 3,
         'locationId': 'cjee24cz40000guxs6bdner6l'
       })
       .expect(200)
