@@ -10,7 +10,7 @@
     "WIRE_BASE_URL": "https://staging-wire.andela.com"
   },
   "test": {
-    "username": "chuchu",
+    "username": "",
     "password": null,
     "database": "wire_dev_test",
     "host": "localhost",
