@@ -1,10 +1,9 @@
 const chaiHttp = require('chai-http');
 const chai = require('chai');
 const request = require('supertest');
-const should = require('chai').should;
-const expect = require('chai').expect;
 const assert = chai.assert;
 const sinon = require('sinon');
+const nodemailer = require('nodemailer');
 
 const user = require('../server/models').Users;
 const app = require('../index');
@@ -91,7 +90,7 @@ describe('/POST user', () => {
       });
   });
 
-  it('Should return all the users', done => {
+  it('Should return all the users', () => {
     const users = [
       {
         'id': '23hgvunervjjn',
@@ -131,9 +130,73 @@ describe('/POST user', () => {
       .end((err, res) => {
         if (err) throw err;
         assert.deepEqual(res.body, {
-          users
+          data: {
+            users: {users}
+          },
+          status: 'success'
         });
         findAllStub.restore();
+      });
+  });
+
+  it('Should edit the given user if they exist', (done) => {
+    request(app)
+      .put('/api/users/U7LHY6T4B')
+      .send({
+        'email': 'eugene.omar@andela.com',
+        'roleId': '1'
+      })
+      .expect(200)
+      .end((err, res) => {
+        if (err) throw err;
+        assert.deepEqual(res.body.data.roleId, 1);
+        done();
+      });
+  });
+
+  it('InviteUser: Should fail if the user exists', (done) => {
+    request(app)
+      .post('/api/users/invite')
+      .send({
+        'email': 'eugene.omar@andela.com',
+        'roleId': '1',
+        'locationId': 'cjee24cz40000guxs6bdner6l'
+      })
+      .expect(409)
+      .end((err, res) => {
+        if (err) throw err;
+        assert.equal(res.body.message, 'User already exists');
+        done();
+      });
+  });
+
+  it('InviteUser: Should create a user if they dont already exist', (done) => {
+    sinon.stub(nodemailer, 'createTransport').callsFake(()=> ({
+      sendMail: (options, call) => {
+        call();
+      }}));
+    request(app)
+      .post('/api/users/invite')
+      .send({
+        'email': 'oliver.munala@me.com',
+        'roleId': '3',
+        'locationId': 'cjee24cz40000guxs6bdner6l'
+      })
+      .expect(200)
+      .end((err, res) => {
+        if (err) throw err;
+        assert.equal(res.body.data.username, 'Oliver Munala');
+        done();
+      });
+  });
+
+  it('Should delete a user successfully', (done) => {
+    request(app)
+      .delete('/api/users/U7LHY6T4B')
+      .expect(200)
+      .end((err, res) => {
+        if (err) throw err;
+        assert.equal(res.body.message, 'User deleted Successfully');
         done();
       });
   });
