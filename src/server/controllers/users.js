@@ -192,7 +192,7 @@ module.exports = {
         },
       });
       const message = 'User deleted Successfully';
-      return res.status(200).send(message);
+      return res.status(200).send({message});
     } catch (error) {
       errorLogs.catchErrors(error);
       res.status(400).send(error); 
