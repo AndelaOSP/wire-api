@@ -173,6 +173,12 @@ module.exports = {
       });
   },
 
+  /**
+ * @function editUser
+ * @param Object req
+ * @param Object res
+ * @return Status Code & Object
+ */
   async editUser(req, res) {
     try {
       const [_,[updatedUser]] = await User.update(req.body,{
@@ -189,6 +195,12 @@ module.exports = {
     }
   },
 
+  /**
+ * @function deleteUser
+ * @param Object req
+ * @param Object res
+ * @return Status Code & Object
+ */
   async deleteUser(req, res) {
     try {
       await User.destroy({
@@ -204,6 +216,12 @@ module.exports = {
     }
   },
 
+  /**
+ * @function searchUser
+ * @param Object req
+ * @param Object res
+ * @return Status Code & Object with array of users
+ */
   async searchUser(req, res) {
     try {
       const searchQuery = { $ilike: Sequelize.fn('lower', `%${req.query.q.toLowerCase()}%`)};
