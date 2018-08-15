@@ -28,9 +28,8 @@ const Auth = (req, res, next) => {
 };
 
 const isAdmin = (req, res, next) => {
-  const Admin = 2;
-  const SuperAdmin = 3;
-  if (res.locals.roleId === Admin || res.locals.roleId === SuperAdmin) {
+  const Admin = 3;
+  if (res.locals.roleId === Admin) {
     return next();
   }
   res.status(403).send({ message: 'You are not an Authorised user' });
