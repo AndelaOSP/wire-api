@@ -137,10 +137,10 @@ module.exports = {
   },
   inviteUser(req, res) {
     const name = getUsernameFromEmail(req.body.email);
-    req.body.username = name.first + ' ' + name.last;
+    res.locals.username = name.first + ' ' + name.last;
     const userObject = {
       email: req.body.email,
-      username: req.body.username,
+      username: res.locals.username,
       roleId: req.body.roleId,
       locationId: req.body.locationId
     };
@@ -148,7 +148,13 @@ module.exports = {
       defaults: userObject})
       .spread( async (createdUser, created) => {
         if(!created) {
-          return res.status(409).send({ message: 'User already exists' });
+          await User.update(req.body,{
+            where: {
+              email: userObject.email
+            },
+            returning: true
+          });
+          return res.status(200).send({ message: 'the user role has been updated' });
         }
         const emailBody = await generateEmailBody(req.body.email, req.body.roleId);
         const callback = (error) => {
@@ -168,7 +174,6 @@ module.exports = {
   },
 
   async editUser(req, res) {
-    
     try {
       const [_,[updatedUser]] = await User.update(req.body,{
         where: {
@@ -206,7 +211,7 @@ module.exports = {
         where: { $or: {'username': searchQuery, 'email': searchQuery}},
         include: includes
       });
-      return res.status(200).send({data: {users: users}, status: 'success'});
+      return res.status(200).send({data: {users}, status: 'success'});
     } catch (error) {
       errorLogs.catchErrors(error);
       res.status(400).send(error); 
