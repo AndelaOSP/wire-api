@@ -26,8 +26,7 @@ const sendMail = (emailBody, callback) => {
     to: emailBody.to,
     subject: emailBody.subject,
     html: util.format(emailTemplate,
-      logo,
-      emailBody.message)
+      logo, emailBody.message)
   };
 
   transporter.sendMail(mailOptions, (error) => {
