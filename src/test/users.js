@@ -153,7 +153,7 @@ describe('/POST user', () => {
       });
   });
 
-  it('InviteUser: Should fail if the user exists', (done) => {
+  it('InviteUser: Should update the user role if the user exists', (done) => {
     request(app)
       .post('/api/users/invite')
       .send({
@@ -161,10 +161,10 @@ describe('/POST user', () => {
         'roleId': 1,
         'locationId': 'cjee24cz40000guxs6bdner6l'
       })
-      .expect(409)
+      .expect(200)
       .end((err, res) => {
         if (err) throw err;
-        assert.equal(res.body.message, 'User already exists');
+        assert.equal(res.body.message, 'the user role has been updated');
         done();
       });
   });
