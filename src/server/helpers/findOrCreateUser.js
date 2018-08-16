@@ -9,7 +9,7 @@ const findOrCreateUser = (userType, userLocation, res) => {
     .then(locationId => {
       let userObject = {
         where: {
-          id: userType.userId
+          email: userType.email
         },
         defaults: {
           email: userType.email,
