@@ -1,5 +1,3 @@
-let cuid = require('cuid');
-
 module.exports = {
   up(queryInterface, Sequelize) {
     return queryInterface.bulkInsert('Users', [
