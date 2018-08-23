@@ -141,7 +141,7 @@ describe('/POST user', () => {
 
   it('Should edit the given user if they exist', (done) => {
     request(app)
-      .put('/api/users/U7LEPG8LF')
+      .put('/api/users/cjl6efcka00004tny9ilz7b61')
       .send({
         'roleId': '1'
       })
