@@ -1,3 +1,4 @@
+const cuid = require('cuid');
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -5,7 +6,11 @@ module.exports = {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+      },
+      slackId: {
+        type: Sequelize.STRING,
+        allowNull: true
       },
       email: {
         type: Sequelize.STRING,
