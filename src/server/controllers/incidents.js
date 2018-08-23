@@ -8,7 +8,7 @@ const AssigneeModel = require('../models').assigneeIncidents;
 const LocationService = require('../controllers/locations');
 const findOrCreateUser = require('../helpers/findOrCreateUser');
 
-let userAttributes = ['username', 'imageUrl', 'email'];
+let userAttributes = ['username', 'slackId', 'imageUrl', 'email'];
 
 let includes = [
   {
