@@ -2,19 +2,19 @@ module.exports = {
   up(queryInterface, Sequelize) {
     return queryInterface.bulkInsert('userIncidents', [{
       incidentId: 'cjfkubrlv0001tgxs3mre',
-      userId: 'U7LHY6W4B',
+      userId: 'cjl6ege6e000053nyv67otq7a',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString() 
     },
     {
       incidentId: 'cjfkubrlv0001tgxs3',
-      userId: 'U7LEPG8LF',
+      userId: 'cjl6efcka00004tny9ilz7b61',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     },
     {
       incidentId: 'cjfkubrlv0001tsjksuis3',
-      userId: 'U7LEPG8LF',
+      userId: 'cjl6efcka00004tny9ilz7b61',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     }
