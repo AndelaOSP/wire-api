@@ -12,6 +12,7 @@ const findOrCreateUser = (userType, userLocation, res) => {
           email: userType.email
         },
         defaults: {
+          slackId: userType.slackId,
           email: userType.email,
           username: userType.username,
           roleId: userType.roleId,
