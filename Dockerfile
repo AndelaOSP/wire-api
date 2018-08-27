@@ -13,6 +13,9 @@ RUN yarn install
 
 COPY src /app
 
+COPY scripts/migration.sh scripts/migration.sh
+RUN chmod +x scripts/migration.sh
+
 RUN chmod +x bin/www
 
 CMD [ "bin/www" ]
