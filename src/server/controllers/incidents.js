@@ -76,7 +76,7 @@ module.exports = {
     let witnesses = req.body.witnesses;
     let reporterLocation = req.body.incidentReporter.reporterLocation;
     let incidentReporter = req.body.incidentReporter;
-    let { subject, description, dateOccurred, levelId } = req.body;
+    let { dateOccurred } = req.body;
     let createdIncident;
     let [dd, mm, yy] = req.body.dateOccurred.split('-');
     dateOccurred = `${mm}-${dd}-${yy}`;
