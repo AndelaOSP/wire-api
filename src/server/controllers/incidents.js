@@ -97,11 +97,21 @@ module.exports = {
       })
       .then(incident => {
         createdIncident = incident;
-        return findOrCreateUser(incidentReporter, reporterLocation, res);
+        return User.findOne({
+          where: { 
+            email: incidentReporter.email 
+          }
+        }).then(user => {
+          if (user) {
+            return user.update({ slackId: incidentReporter.slackId });
+          }
+          return findOrCreateUser(incidentReporter, reporterLocation, res);
+        }).catch(error => {
+          return error;
+        });
       })
       .then(createdReporter => {
-        let reporter = createdReporter[0];
-        createdIncident.addReporter(reporter);
+        createdIncident.addReporter(createdReporter);
       })
       .then(() => {
         let witnessCreationPromises = [];

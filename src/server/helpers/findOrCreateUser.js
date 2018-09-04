@@ -17,7 +17,8 @@ const findOrCreateUser = (userType, userLocation, res) => {
           username: userType.username,
           roleId: userType.roleId,
           locationId
-        }
+        },
+        plain: true
       };
       return User.findOrCreate(userObject);
     }).catch(error => {

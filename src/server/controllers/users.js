@@ -8,7 +8,6 @@ const emailHelper = require('../helpers/emailHelper');
 const generateEmailBody = require('../helpers/generateEmailBody');
 const { token } = require('../middlewares/authentication');
 const getUsernameFromEmail = require('../helpers/getUsernameFromEmail');
-const findOrCreateUser = require('../helpers/findOrCreateUser');
 const Sequelize = require('sequelize');
 require('dotenv').config();
 
