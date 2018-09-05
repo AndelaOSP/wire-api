@@ -1,11 +1,15 @@
-
+let cuid = require('cuid');
 
 module.exports = (sequelize, DataTypes) => {
   const Users = sequelize.define('Users', {
     id: {
       primaryKey: true,
       type: DataTypes.STRING,
-      allowNull: false
+      defaultValue: () => cuid()
+    },
+    slackId: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
     email: {
       type: DataTypes.STRING,
@@ -21,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     imageUrl: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: true
     }
   },
   {

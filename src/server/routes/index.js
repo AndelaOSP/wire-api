@@ -5,6 +5,7 @@ const notesService = controllers.notes;
 const categoriesService = controllers.categories;
 const chatsService = controllers.chats;
 const usersService = controllers.users;
+const rolesService = controllers.roles;
 
 const { Auth, isAdmin } = require('../middlewares/authentication'); // authorise routes
 
@@ -55,4 +56,11 @@ module.exports = app => {
   app.post('/api/users/login', usersService.login);
   app.get('/api/users', usersService.list);
   app.get('/api/users/:userId', usersService.getUserById);
+  app.put('/api/users/:userId', usersService.editUser);
+  app.delete('/api/users/:userId', usersService.deleteUser);
+  app.post('/api/users/invite', usersService.inviteUser);
+  app.get('/api/users/search', usersService.searchUser);
+
+  // roles endpoints
+  app.get('/api/roles', rolesService.list);
 };

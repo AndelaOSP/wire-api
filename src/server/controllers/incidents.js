@@ -6,8 +6,9 @@ const Level = require('../models').Levels;
 const Status = require('../models').Statuses;
 const AssigneeModel = require('../models').assigneeIncidents;
 const LocationService = require('../controllers/locations');
+const findOrCreateUser = require('../helpers/findOrCreateUser');
 
-let userAttributes = ['username', 'imageUrl', 'email'];
+let userAttributes = ['username', 'slackId', 'imageUrl', 'email'];
 
 let includes = [
   {
@@ -58,28 +59,6 @@ const mapAssignees = incident => {
   });
 };
 
-const findOrCreateUser = (userType, location, res) => {
-  return LocationService.create(location, res)
-    .then(location => {
-      return location.dataValues.id;
-    })
-    .then(locationId => {
-      let userObject = {
-        where: {
-          id: userType.userId
-        },
-        defaults: {
-          email: userType.email,
-          imageUrl: userType.imageUrl,
-          username: userType.username,
-          roleId: 1,
-          locationId
-        }
-      };
-      return User.findOrCreate(userObject);
-    });
-};
-
 const findIncidentById = (id, res) => {
   return Incident.findById(id, { include: includes })
     .then(incident => {
@@ -118,11 +97,21 @@ module.exports = {
       })
       .then(incident => {
         createdIncident = incident;
-        return findOrCreateUser(incidentReporter, reporterLocation, res);
+        return User.findOne({
+          where: { 
+            email: incidentReporter.email 
+          }
+        }).then(user => {
+          if (user) {
+            return user.update({ slackId: incidentReporter.slackId });
+          }
+          return findOrCreateUser(incidentReporter, reporterLocation, res);
+        }).catch(error => {
+          return error;
+        });
       })
       .then(createdReporter => {
-        let reporter = createdReporter[0];
-        createdIncident.addReporter(reporter);
+        createdIncident.addReporter(createdReporter);
       })
       .then(() => {
         let witnessCreationPromises = [];
@@ -221,9 +210,9 @@ module.exports = {
       return incident
         ? Promise.resolve(incident)
         : Promise.reject({
-            message: 'Incident not found',
-            status: 'fail'
-          });
+          message: 'Incident not found',
+          status: 'fail'
+        });
     });
 
     if (assignee) {

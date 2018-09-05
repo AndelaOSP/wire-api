@@ -12,6 +12,7 @@
     "migrate": "sequelize db:migrate:undo:all && sequelize db:migrate",
     "lint": "./node_modules/.bin/eslint --fix ./server ./test",
     "migrate-seed": "npm run migrate && npm run seed",
+    "pretest": "NODE_ENV=test sequelize db:migrate:undo:all && NODE_ENV=test sequelize db:migrate && NODE_ENV=test yarn run seed",
     "test": "NODE_ENV=test nyc --reporter=html --reporter=text mocha --recursive -t 10000",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
@@ -25,11 +26,14 @@
     "knex": "^0.13.0",
     "lodash": "^4.17.4",
     "morgan": "^1.9.0",
+    "mysql": "2.15.0",
+    "nodemailer": "4.6.7",
+    "nodemailer-smtp-transport": "2.7.4",
     "nodemon": "^1.14.11",
     "pg": "^6.2.3",
     "pg-hstore": "^2.3.2",
     "sequelize": "^3.30.4",
-    "sequelize-cli": "^2.7.0",
+    "sequelize-cli": "^4.1.1",
     "slack-error-notify": "^1.0.4"
   },
   "devDependencies": {

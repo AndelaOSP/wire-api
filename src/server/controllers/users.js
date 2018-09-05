@@ -4,7 +4,11 @@ const Incident = require('../models').Incidents;
 const Role = require('../models').Roles;
 const Location = require('../models').Locations;
 const LocationService = require('./locations');
+const emailHelper = require('../helpers/emailHelper');
+const generateEmailBody = require('../helpers/generateEmailBody');
 const { token } = require('../middlewares/authentication');
+const getUsernameFromEmail = require('../helpers/getUsernameFromEmail');
+const Sequelize = require('sequelize');
 require('dotenv').config();
 
 const jwt = require('jsonwebtoken');
@@ -94,7 +98,8 @@ module.exports = {
         res.status(400).send(error);
       });
   },
-  getUserById(req, res) {
+  getUserById(req, res, next) {
+    if (req.params.userId === 'search') return next('route');
     return User.findById(req.params.userId, {
       include: [
         includes,
@@ -128,5 +133,105 @@ module.exports = {
         errorLogs.catchErrors(error);
         res.status(400).send(error);
       });
+  },
+  inviteUser(req, res) {
+    const name = getUsernameFromEmail(req.body.email);
+    res.locals.username = name.first + ' ' + name.last;
+    const userObject = {
+      email: req.body.email,
+      username: res.locals.username,
+      roleId: req.body.roleId,
+      locationId: req.body.locationId
+    };
+    return User.findOrCreate({where: { email: userObject.email},
+      defaults: userObject})
+      .spread( async (createdUser, created) => {
+        if(!created) {
+          await User.update(req.body,{
+            where: {
+              email: userObject.email
+            },
+            returning: true
+          });
+          return res.status(200).send({ message: 'the user role has been updated' });
+        }
+        const emailBody = await generateEmailBody(req.body.email, req.body.roleId);
+        const callback = (error) => {
+          if (error) {
+            return error;
+          }
+          return {message: 'The email was sent successfully'};
+        };
+        emailHelper.sendMail(emailBody, callback);
+        const user = await User.findById(createdUser.id, { include: includes});
+        return res.status(200).send({ data: user, status: 'success' });
+      })
+      .catch(error => {
+        errorLogs.catchErrors(error);
+        res.status(400).send(error);
+      });
+  },
+
+  /**
+ * @function editUser
+ * @param Object req
+ * @param Object res
+ * @return Status Code & Object
+ */
+  async editUser(req, res) {
+    try {
+      const [_,[updatedUser]] = await User.update(req.body,{
+        where: {
+          id: req.params.userId
+        },
+        returning: true
+      });
+      const user = await User.findById(updatedUser.id, {include: includes});
+      return res.status(200).send({ data: user, status: 'success' });
+    } catch (error) {
+      errorLogs.catchErrors(error);
+      res.status(400).send(error); 
+    }
+  },
+
+  /**
+ * @function deleteUser
+ * @param Object req
+ * @param Object res
+ * @return Status Code & Object
+ */
+  async deleteUser(req, res) {
+    try {
+      await User.destroy({
+        where: {
+          id: req.params.userId
+        },
+      });
+      const message = 'User deleted Successfully';
+      return res.status(200).send({message});
+    } catch (error) {
+      errorLogs.catchErrors(error);
+      res.status(400).send(error); 
+    }
+  },
+
+  /**
+ * @function searchUser
+ * @param Object req
+ * @param Object res
+ * @return Status Code & Object with array of users
+ */
+  async searchUser(req, res) {
+    try {
+      const searchQuery = { $ilike: Sequelize.fn('lower', `%${req.query.q.toLowerCase()}%`)};
+      const users = await User.findAll({
+        where: { $or: {'username': searchQuery, 'email': searchQuery}},
+        include: includes
+      });
+      return res.status(200).send({data: {users}, status: 'success'});
+    } catch (error) {
+      errorLogs.catchErrors(error);
+      res.status(400).send(error); 
+    }
   }
 };

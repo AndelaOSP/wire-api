@@ -1,11 +1,14 @@
-
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Users', {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+      },
+      slackId: {
+        type: Sequelize.STRING,
+        allowNull: true
       },
       email: {
         type: Sequelize.STRING,
@@ -21,7 +24,7 @@ module.exports = {
       },
       imageUrl: {
         type: Sequelize.TEXT,
-        allowNull: false
+        allowNull: true
       },
       roleId: {
         type: Sequelize.INTEGER,
