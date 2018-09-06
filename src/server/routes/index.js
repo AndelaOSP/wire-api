@@ -7,7 +7,7 @@ const chatsService = controllers.chats;
 const usersService = controllers.users;
 const rolesService = controllers.roles;
 
-const { Auth, isAdmin } = require('../middlewares/authentication'); // authorise routes
+const { Auth, isAdmin, isAssignee } = require('../middlewares/authentication'); // authorise routes
 
 module.exports = app => {
   app.get('/api', (req, res) =>
@@ -17,7 +17,7 @@ module.exports = app => {
   );
   // incidents endpoints
   app.post('/api/incidents', incidentsService.create);
-  app.get('/api/incidents', [Auth, isAdmin], incidentsService.list);
+  app.get('/api/incidents', [Auth, isAdmin, isAssignee], incidentsService.list);
   app.get('/api/incidents/:id', [Auth, isAdmin], incidentsService.findById);
   app.put('/api/incidents/:id', Auth, incidentsService.update);
   app.get('/api/search/incidents', [Auth, isAdmin], incidentsService.search);
