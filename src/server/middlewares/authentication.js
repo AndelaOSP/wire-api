@@ -34,8 +34,17 @@ const isAdmin = (req, res, next) => {
   }
   res.status(403).send({ message: 'You are not an Authorised user' });
 };
+
+const isAssignee = (req, res, next) => {
+  const Assignee = 2;
+  if (res.locals.roleId === Assignee) {
+    return next();
+  }
+  res.status(403).send({ message: 'You are not an Authorised user' });
+};
+
 const token = (id, roleId) => {
   return jwt.sign({ id, roleId }, secretKey, { expiresIn: '24h' });
 };
 
-module.exports = { isAdmin, Auth, token };
+module.exports = { isAdmin, isAssignee, Auth, token };
