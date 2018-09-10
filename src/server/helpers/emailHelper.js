@@ -31,7 +31,6 @@ const sendMail = (emailBody, callback) => {
 
   transporter.sendMail(mailOptions, (error) => {
     if (error) {
-      console.log('ERROR', error);
       callback(error);
       return;
     }

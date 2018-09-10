@@ -5,7 +5,6 @@
  */
 
 module.exports = email => {
-  console.log('THIS IS THE EMAIL: ', email)
   let name = {};
   const [firstName, lastName] = email.split('@')[0].split('.');
   const first = firstName[0].toUpperCase() + firstName.substr(1, firstName.length);

@@ -77,7 +77,6 @@ const findIncidentById = (id, res) => {
  * @return userDetails object
 */
 const getUserDetails = async payload => {
-  console.log('PAYLOAD: ', payload)
   let userDetails;
   if (Array.isArray(payload)) {
     payload.map(async ccdUser => {
@@ -249,7 +248,6 @@ module.exports = {
   update(req, res) {
     let assignedUser = req.body.assignee;
     let ccdUser = req.body.ccd;
-    console.log('ccdUser: ', ccdUser)
     let destroyCcdPromise;
     let addCcdPromises = [];
 
@@ -311,7 +309,6 @@ module.exports = {
           }
         })
         .catch(error => {
-          console.log('Error 305: ', error);
           errorLogs.catchErrors(error);
           return res.status(400).send(error);
         });
@@ -322,7 +319,6 @@ module.exports = {
             for (let i = 0; i < ccdUser.length; i++) {
               let addCcdPromise = User.findById(ccdUser[i].userId).then(async ccd => {
                 let currentCcd = {...ccdUser[i], assignedRole: 'ccd'};
-                console.log('currentCCD 322: ', currentCcd)
                 await sendAssigneeOrCcdEmail(currentCcd);
                 ccd.assigneeIncidents = {
                   assignedRole: 'ccd'
@@ -341,7 +337,6 @@ module.exports = {
                 for (let i = 0; i < ccdUser.length; i++) {
                   let addCcdPromise = User.findById(ccdUser[i].userId).then(async ccd => {
                     let currentCcd = {...ccdUser[i], assignedRole: 'ccd'};
-                    console.log('currentCCD 340: ', currentCcd)
                     await sendAssigneeOrCcdEmail(currentCcd);
                     ccd.assigneeIncidents = {
                       assignedRole: 'ccd'
@@ -361,7 +356,6 @@ module.exports = {
           }
         })
         .catch(error => {
-          console.log('Error 343: ', error);
           errorLogs.catchErrors(error);
           return res.status(400).send(error);
         });
@@ -382,7 +376,6 @@ module.exports = {
             });
         })
         .catch(error => {
-          console.log('Error 364: ', error);
           errorLogs.catchErrors(error);
           return res.status(400).send(error);
         });
