@@ -7,6 +7,8 @@ const Status = require('../models').Statuses;
 const AssigneeModel = require('../models').assigneeIncidents;
 const LocationService = require('../controllers/locations');
 const findOrCreateUser = require('../helpers/findOrCreateUser');
+const generateAssigneeOrCcdEmailBody = require('../helpers/generateAssigneeOrCcdEmailBody');
+const emailHelper = require('../helpers/emailHelper');
 
 let userAttributes = ['username', 'slackId', 'imageUrl', 'email'];
 
@@ -68,6 +70,53 @@ const findIncidentById = (id, res) => {
       throw error;
     });
 };
+
+/**
+ * @function getUserDetails
+ * @param payload object
+ * @return userDetails object
+*/
+const getUserDetails = async payload => {
+  let userDetails;
+  if (Array.isArray(payload)) {
+    payload.map(async ccdUser => {
+      userDetails = await User.findById(ccdUser.userId);
+      userDetails.dataValues.incidentId = ccdUser.incidentId;
+      console.log('1st USERDETAILS: ', userDetails)
+      return userDetails;
+    });
+    return userDetails;
+  }
+  userDetails = await User.findById(payload.userId);
+  userDetails.dataValues.incidentId  = payload.incidentId;
+  return userDetails;
+};
+
+/**
+ * @function sendAssigneeOrCcdEmail
+ * @param payload object
+ * @return error or success message
+*/
+
+const assinedUser = { userId: 'cjl6ft6eb0004zwyxjrmta40d',
+  incidentId: 'cjlmh9yzz00019ayxw7aumlb2' };
+const ccdUser = [ { incidentId: 'cjlmh9yzz00019ayxw7aumlb2',
+  userId: 'cjl6fnkts0000zwyxzt5x0v7r' } ];
+const sendAssigneeOrCcdEmail = async payload => {
+  console.log('payload: ', payload);
+  const userDetails = await getUserDetails(payload);
+  console.log('2nd USERDETAILS: ', userDetails)
+  const emailBody = await generateAssigneeOrCcdEmailBody(userDetails.dataValues);
+  console.log('EMAIL BODY: ', emailBody)
+  emailHelper.sendMail(emailBody,(error) => {
+    if (error) {
+      console.log('ERROR', error);
+      return error;
+    }
+    return {message: 'The email was sent successfully'};
+  });
+};
+
 
 module.exports = {
   // create an incident
@@ -199,7 +248,7 @@ module.exports = {
 
   // update an incident
   update(req, res) {
-    let assignee = req.body.assignee;
+    let assignedUser = req.body.assignee;
     let ccd = req.body.ccd;
     let destroyCcdPromise;
     let addCcdPromises = [];
@@ -215,12 +264,16 @@ module.exports = {
         });
     });
 
-    if (assignee) {
+    if (assignedUser) {
+      console.log('ITS THE ASSIGNEE', assignedUser);
       return findIncidentPromise
         .then(incident => {
           if (incident.dataValues.assignees.length === 0) {
-            return User.findById(assignee.userId)
-              .then(assignee => {
+            return User.findById(assignedUser.userId)
+            // new assignee
+              .then(async assignee => {
+                console.log('ASSIGNEE: ', assignee);
+                // await sendAssigneeOrCcdEmail(assignee);
                 return incident.addAssignee(assignee, {
                   assignedRole: 'assignee'
                 });
@@ -238,9 +291,12 @@ module.exports = {
               }
             })
               .then(() => {
-                return User.findById(assignee.userId);
+                return User.findById(assignedUser.userId);
               })
-              .then(assignee => {
+              // replacing an assignee
+              .then(async assignee => {
+                console.log('THE ASSIGNEE PEOPLE!!!!!: ', assignee);
+                await sendAssigneeOrCcdEmail(assignedUser);
                 return incident.addAssignee(assignee, {
                   assignedRole: 'assignee'
                 });
@@ -254,15 +310,18 @@ module.exports = {
           }
         })
         .catch(error => {
+          console.log('ERROR: ', error);
           errorLogs.catchErrors(error);
           return res.status(400).send(error);
         });
     } else if (ccd) {
+      console.log('ITS THE CCD USER', ccd);
       return findIncidentPromise
         .then(incident => {
           if (incident.dataValues.assignees.length === 0) {
             for (let i = 0; i < ccd.length; i++) {
               let addCcdPromise = User.findById(ccd[i].userId).then(ccd => {
+                console.log('CCD A: ', ccd);
                 return incident.addAssignee(ccd, { assignedRole: 'ccd' });
               });
               addCcdPromises.push(addCcdPromise);
@@ -276,6 +335,7 @@ module.exports = {
               .then(() => {
                 for (let i = 0; i < ccd.length; i++) {
                   let addCcdPromise = User.findById(ccd[i].userId).then(ccd => {
+                    console.log('CCD B: ', ccd);
                     return incident.addAssignee(ccd, { assignedRole: 'ccd' });
                   });
                   addCcdPromises.push(addCcdPromise);
