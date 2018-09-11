@@ -97,10 +97,6 @@ const getUserDetails = async payload => {
  * @return error or success message
 */
 
-const assinedUser = { userId: 'cjl6ft6eb0004zwyxjrmta40d',
-  incidentId: 'cjlmh9yzz00019ayxw7aumlb2' };
-const ccdUser = [ { incidentId: 'cjlmh9yzz00019ayxw7aumlb2',
-  userId: 'cjl6fnkts0000zwyxzt5x0v7r' } ];
 const sendAssigneeOrCcdEmail = async payload => {
   const userDetails = await getUserDetails(payload);
   const emailBody = await generateAssigneeOrCcdEmailBody({ 
