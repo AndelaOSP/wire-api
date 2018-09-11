@@ -158,7 +158,13 @@ module.exports = {
   },
 
   // get all incidents
-  list(req, res) {
+  async list(req, res) {
+    if (res.locals.roleId === 2) {
+      const userAssignedIncidents = await User.findOne({ 
+        where: { id: res.locals.id}, 
+        include: [{model: Incident, as:'assignedIncidents'}]});
+      return userAssignedIncidents;
+    }
     return Incident.findAll({
       include: includes
     })
