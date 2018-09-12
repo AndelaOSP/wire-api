@@ -6,8 +6,8 @@ const emailTemplate = fs.readFileSync('templates/emailTemplate.html', 'utf8');
 
 /**
  * @function sendMail
- * @param emailBody Object
- * @param callback Function
+ * @param Object
+ * @param function
  */
 const sendMail = (emailBody, callback) => {
   const transporter = nodemailer.createTransport(smtpTransport({
