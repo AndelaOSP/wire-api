@@ -160,10 +160,16 @@ module.exports = {
   // get all incidents
   async list(req, res) {
     if (res.locals.roleId === 2) {
-      const userAssignedIncidents = await User.findOne({ 
+      const findIncidents = await User.findOne({ 
         where: { id: res.locals.id}, 
-        include: [{model: Incident, as:'assignedIncidents'}]});
-      return userAssignedIncidents;
+        include: [{model: Incident, as:'assignedIncidents'}]
+      });
+      const userAssignedIncidents = findIncidents.assignedIncidents.map(oneIncident => {
+        return oneIncident;
+      });
+      return res
+        .status(200)
+        .send({ data: { incidents: userAssignedIncidents }, status: 'success' });
     }
     return Incident.findAll({
       include: includes
