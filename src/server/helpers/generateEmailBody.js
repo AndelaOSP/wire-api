@@ -6,8 +6,7 @@ const config = require('../config/config.json')[env];
 
 /**
  * @function generateEmailBody
- * @param email
- * @param roleId
+ * @param
  * @returns email body
 */
 
