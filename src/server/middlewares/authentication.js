@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const secretKey = process.env.SECRET_KEY;
-const models = require('../models');
+
+const User = require('../models').Users;
 
 const Auth = (req, res, next) => {
   const token = req.query.token || req.headers['authorization'];
@@ -41,11 +42,9 @@ const isAdmin = (req, res, next) => {
 * @param Response Object
 * @param function next()
 **/
-const canViewIncidents = async (req, res, next) => {
-  const isAssingee = await models.assigneeIncidents.findOne({ where: { assignedRole: 'assignee', incidentId: req.incidentId } });
+const canViewIncidents = (req, res, next) => {
   const roleId = res.locals.roleId;
-  const check = roleId === 2 && isAssingee;
-  if (check || roleId === 3) {
+  if (roleId === 2 || roleId === 3) {
     return next();
   }
   res.status(403).send({ message: 'You are not an Authorised user' });
@@ -55,4 +54,4 @@ const token = (id, roleId) => {
   return jwt.sign({ id, roleId }, secretKey, { expiresIn: '24h' });
 };
 
-module.exports = { isAdmin, Auth, token };
+module.exports = { isAdmin, canViewIncidents, Auth, token };
