@@ -34,10 +34,11 @@ const isAdmin = (req, res, next) => {
 };
 
 /**
-@param request Object
-@param response Object
-@param next() function
-@return next() || error message
+* Checks if user viewing incidents is an assignee or admin
+* @function canViewIncidents
+* @param Request Object
+* @param Response Object
+* @param function next()
 **/
 const canViewIncidents = (req, res, next) => {
   const roleId = res.locals.roleId;
@@ -51,4 +52,4 @@ const token = (id, roleId) => {
   return jwt.sign({ id, roleId }, secretKey, { expiresIn: '24h' });
 };
 
-module.exports = { isAdmin, Auth, token, canViewIncidents };
+module.exports = { isAdmin, canViewIncidents, Auth, token };
