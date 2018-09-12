@@ -34,6 +34,6 @@ module.exports = async userDetails => {
     };
     return body;
   } catch (error) {
-    return error;
+    throw error;
   }
 };
