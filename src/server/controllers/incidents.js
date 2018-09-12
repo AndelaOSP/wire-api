@@ -281,7 +281,8 @@ module.exports = {
           } else {
             return AssigneeModel.destroy({
               where: {
-                assignedRole: 'assignee'
+                assignedRole: 'assignee',
+                incidentId: incident.id
               }
             })
               .then(() => {
@@ -326,7 +327,8 @@ module.exports = {
           } else {
             return AssigneeModel.destroy({
               where: {
-                assignedRole: 'ccd'
+                assignedRole: 'ccd',
+                incidentId: incident.id
               }
             })
               .then(() => {
