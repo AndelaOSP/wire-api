@@ -20,7 +20,7 @@ const Auth = (req, res, next) => {
     }
 
     res.locals.roleId = decoded.roleId;
-    res.locals.id = decoded.userId;
+    res.locals.id = decoded.id;
     return next();
   });
 };
