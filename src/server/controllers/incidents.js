@@ -7,6 +7,7 @@ const Status = require('../models').Statuses;
 const AssigneeModel = require('../models').assigneeIncidents;
 const LocationService = require('../controllers/locations');
 const findOrCreateUser = require('../helpers/findOrCreateUser');
+const listAssigneeIncidentsIncludes = require('../helpers/listAssigneeIncidentsIncludes');
 
 let userAttributes = ['username', 'slackId', 'imageUrl', 'email'];
 
@@ -160,7 +161,8 @@ module.exports = {
   // get all incidents
   async list(req, res) {
     if (res.locals.roleId === 2) {
-      const findIncidents = await User.findOne({ where: { id: res.locals.id}, include: [{model: Incident, as:'assignedIncidents'}]});
+      const includeForAssignee = listAssigneeIncidentsIncludes();
+      const findIncidents = await User.findOne({ where: { id: res.locals.id}, include: includeForAssignee});
       const userAssignedIncidents = findIncidents.assignedIncidents.map(oneIncident => oneIncident);
       return res
         .status(200)
