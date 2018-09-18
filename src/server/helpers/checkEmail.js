@@ -4,12 +4,5 @@
 * @param Email
 * @return Boolean
 **/
-const checkEmail = emailAddress => {
-
-  if (emailAddress.endsWith('@andela.com')) {
-    return true;
-  }
-  return false;
-};
-
+const checkEmail = emailAddress => emailAddress.endsWith('@andela.com');
 module.exports = checkEmail;
