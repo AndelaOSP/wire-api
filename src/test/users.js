@@ -177,7 +177,7 @@ describe('/POST user', () => {
     request(app)
       .post('/api/users/invite')
       .send({
-        'email': 'oliver.munala@me.com',
+        'email': 'oliver.munala@andela.com',
         'roleId': 3,
         'locationId': 'cjee24cz40000guxs6bdner6l'
       })
