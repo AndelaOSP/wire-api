@@ -206,7 +206,7 @@ module.exports = {
     if (res.locals.roleId === 2) {
       const includeForAssignee = listAssigneeIncidentsIncludes();
       const findIncidents = await User.findOne({ where: { id: res.locals.id}, include: includeForAssignee});
-      const userAssignedIncidents = findIncidents.assignedIncidents.map(oneIncident => oneIncident);
+      const userAssignedIncidents = findIncidents.assignedIncidents;
       return res
         .status(200)
         .send({ data: { incidents: userAssignedIncidents }, status: 'success' });
