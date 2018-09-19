@@ -2,8 +2,6 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const secretKey = process.env.SECRET_KEY;
 
-const User = require('../models').Users;
-
 const Auth = (req, res, next) => {
   const token = req.query.token || req.headers['authorization'];
   if (!token) {
@@ -22,7 +20,7 @@ const Auth = (req, res, next) => {
     }
 
     res.locals.roleId = decoded.roleId;
-    res.locals.id = decoded.userId;
+    res.locals.id = decoded.id;
     return next();
   });
 };
