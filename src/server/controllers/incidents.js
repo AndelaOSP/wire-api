@@ -207,9 +207,12 @@ module.exports = {
       const includeForAssignee = listAssigneeIncidentsIncludes();
       const findIncidents = await User.findOne({ where: { id: res.locals.id}, include: includeForAssignee});
       const userAssignedIncidents = findIncidents.assignedIncidents;
+      const mappedUserAssignedIncidents =  userAssignedIncidents.map(incident => {
+        return {...incident.dataValues, reporter: incident.dataValues.reporter.length > 0 ? incident.dataValues.reporter[0] : {} };
+      });
       return res
         .status(200)
-        .send({ data: { incidents: userAssignedIncidents }, status: 'success' });
+        .send({ data: { incidents: mappedUserAssignedIncidents }, status: 'success' });
     }
     return Incident.findAll({
       include: includes

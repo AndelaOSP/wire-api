@@ -31,17 +31,11 @@ const listAssigneeIncidentsIncludes = () => {
       model: User,
       as: 'reporter',
       userAttributes,
-      through: {
-        attributes: []
-      }
     },
     {
       model: User,
       as: 'witnesses',
       userAttributes,
-      through: {
-        attributes: []
-      }
     }]
   }];
   return include;
