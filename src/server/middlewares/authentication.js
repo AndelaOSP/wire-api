@@ -34,8 +34,24 @@ const isAdmin = (req, res, next) => {
   }
   res.status(403).send({ message: 'You are not an Authorised user' });
 };
+
+/**
+* Checks if user viewing incidents is an assignee or admin
+* @function canViewIncidents
+* @param Request Object
+* @param Response Object
+* @param function next()
+**/
+const canViewIncidents = (req, res, next) => {
+  const roleId = res.locals.roleId;
+  if (roleId === 2 || roleId === 3) {
+    return next();
+  }
+  res.status(403).send({ message: 'You are not an Authorised user' });
+};
+
 const token = (id, roleId) => {
   return jwt.sign({ id, roleId }, secretKey, { expiresIn: '24h' });
 };
 
-module.exports = { isAdmin, Auth, token };
+module.exports = { isAdmin, canViewIncidents, Auth, token };
