@@ -135,44 +135,49 @@ module.exports = {
         res.status(400).send(error);
       });
   },
-  inviteUser(req, res) {
+  async inviteUser(req, res) {
     const validEmail = checkEmail(req.body.email);
     if (validEmail) {
-      const name = getUsernameFromEmail(req.body.email);
-      res.locals.username = name.first + ' ' + name.last;
-      const userObject = {
-        email: req.body.email,
-        username: res.locals.username,
-        roleId: req.body.roleId,
-        locationId: req.body.locationId
-      };
-      return User.findOrCreate({where: { email: userObject.email},
-        defaults: userObject})
-        .spread( async (createdUser, created) => {
-          if(!created) {
-            await User.update(req.body,{
-              where: {
-                email: userObject.email
-              },
-              returning: true
-            });
-            return res.status(200).send({ message: 'the user role has been updated' });
-          }
-          const emailBody = await generateEmailBody(req.body.email, req.body.roleId);
-          const callback = (error) => {
-            if (error) {
-              return error;
+      const userExists = await User.findOne( {where: {email: req.body.email}} );
+      if (userExists) {
+        return res.status(400).send({ message: 'The user with that email address already exists' });
+      } else {
+        const name = getUsernameFromEmail(req.body.email);
+        res.locals.username = name.first + ' ' + name.last;
+        const userObject = {
+          email: req.body.email,
+          username: res.locals.username,
+          roleId: req.body.roleId,
+          locationId: req.body.locationId
+        };
+        return User.findOrCreate({where: { email: userObject.email},
+          defaults: userObject})
+          .spread( async (createdUser, created) => {
+            if(!created) {
+              await User.update(req.body,{
+                where: {
+                  email: userObject.email
+                },
+                returning: true
+              });
+              return res.status(200).send({ message: 'the user role has been updated' });
             }
-            return {message: 'The email was sent successfully'};
-          };
-          emailHelper.sendMail(emailBody, callback);
-          const user = await User.findById(createdUser.id, { include: includes});
-          return res.status(200).send({ data: user, status: 'success' });
-        })
-        .catch(error => {
-          errorLogs.catchErrors(error);
-          res.status(400).send(error);
-        });
+            const emailBody = await generateEmailBody(req.body.email, req.body.roleId);
+            const callback = (error) => {
+              if (error) {
+                return error;
+              }
+              return {message: 'The email was sent successfully'};
+            };
+            emailHelper.sendMail(emailBody, callback);
+            const user = await User.findById(createdUser.id, { include: includes});
+            return res.status(200).send({ data: user, status: 'success' });
+          })
+          .catch(error => {
+            errorLogs.catchErrors(error);
+            res.status(400).send(error);
+          });
+      }
     }
     res.status(400).send('You can only invite Andela users through their Andela emails');
   },
