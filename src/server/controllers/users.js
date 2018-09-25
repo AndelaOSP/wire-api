@@ -10,6 +10,8 @@ const { token } = require('../middlewares/authentication');
 const getUsernameFromEmail = require('../helpers/getUsernameFromEmail');
 const Sequelize = require('sequelize');
 const checkEmail = require('../helpers/checkEmail');
+const updateUserAndSendMail = require('../helpers/updateUserAndSendMail');
+
 require('dotenv').config();
 
 const jwt = require('jsonwebtoken');
@@ -154,13 +156,7 @@ module.exports = {
             if(userExists.roleId === req.body.roleId) {
               return res.status(400).send({ message: 'The user with that email address already exists as an {assignee/admin}. Try updating their role' });
             } else {
-              await User.update(req.body,{
-                where: {
-                  email: userObject.email
-                },
-                returning: true
-              });
-              return res.status(200).send({ message: 'the user role has been updated' });
+              await updateUserAndSendMail(userObject, res);
             }
           }
           const emailBody = await generateEmailBody(req.body.email, req.body.roleId);
