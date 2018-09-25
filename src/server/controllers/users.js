@@ -149,8 +149,19 @@ module.exports = {
       return User.findOrCreate({where: { email: userObject.email},
         defaults: userObject})
         .spread( async (createdUser, created) => {
+          const userExists = await User.findOne({where: {email: req.body.email}});
           if(!created) {
-            return res.status(400).send({ message: 'The user with that email address already exists' });
+            if(userExists.roleId === req.body.roleId) {
+              return res.status(400).send({ message: 'The user with that email address already exists as an {assignee/admin}. Try updating their role' });
+            } else {
+              await User.update(req.body,{
+                where: {
+                  email: userObject.email
+                },
+                returning: true
+              });
+              return res.status(200).send({ message: 'the user role has been updated' });
+            }
           }
           const emailBody = await generateEmailBody(req.body.email, req.body.roleId);
           const callback = (error) => {

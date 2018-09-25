@@ -18,7 +18,7 @@ module.exports = app => {
   // incidents endpoints
   app.post('/api/incidents', incidentsService.create);
   app.get('/api/incidents', [Auth, canViewIncidents], incidentsService.list);
-  app.get('/api/incidents/:id', [Auth, isAdmin], incidentsService.findById);
+  app.get('/api/incidents/:id', [Auth, canViewIncidents], incidentsService.findById);
   app.put('/api/incidents/:id', [Auth, canViewIncidents], incidentsService.update);
   app.get('/api/search/incidents', [Auth, isAdmin], incidentsService.search);
   app.delete('/api/incidents/:id', [Auth, isAdmin], incidentsService.delete);
