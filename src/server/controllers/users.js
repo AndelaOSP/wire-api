@@ -11,6 +11,7 @@ const getUsernameFromEmail = require('../helpers/getUsernameFromEmail');
 const Sequelize = require('sequelize');
 const checkEmail = require('../helpers/checkEmail');
 const updateUserAndSendMail = require('../helpers/updateUserAndSendMail');
+const matchRoleIdToRoleName = require('../helpers/matchRoleIdToRoleName');
 
 require('dotenv').config();
 
@@ -154,7 +155,8 @@ module.exports = {
           const userExists = await User.findOne({where: {email: req.body.email}});
           if(!created) {
             if(userExists.roleId === req.body.roleId) {
-              return res.status(400).send({ message: 'The user with that email address already exists as an {assignee/admin}. Try updating their role' });
+              const roleName = await matchRoleIdToRoleName(req.body.roleId);
+              return res.status(400).send({ message: `The user with that email address already exists as an ${roleName} . Try updating their role` });
             } else {
               await updateUserAndSendMail(userObject, res);
             }
