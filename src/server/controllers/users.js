@@ -155,7 +155,7 @@ module.exports = {
           const userExists = await User.findOne({where: {email: req.body.email}});
           if(!created) {
             if(userExists.roleId === req.body.roleId) {
-              const roleName = await matchRoleIdToRoleName(req.body.roleId);
+              const roleName = await matchRoleIdToRoleName(userExists.roleId);
               return res.status(400).send({ message: `The user with that email address already exists as an ${roleName} . Try updating their role` });
             } else {
               await updateUserAndSendMail(userObject, res);
