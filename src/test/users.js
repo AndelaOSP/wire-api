@@ -164,7 +164,7 @@ describe('/POST user', () => {
       .expect(400)
       .end((err, res) => {
         if (err) throw err;
-        assert.equal(res.body.message, 'The user with that email address already exists as an {assignee/admin}. Try updating their role');
+        assert.equal(res.body.message, 'The user with that email address already exists as an Admin . Try updating their role');
         done();
       });
   });
