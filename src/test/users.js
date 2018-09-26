@@ -153,18 +153,18 @@ describe('/POST user', () => {
       });
   });
 
-  it('InviteUser: Should update the user role if the user exists', (done) => {
+  it('InviteUser: Should not reinvite an existing user', (done) => {
     request(app)
       .post('/api/users/invite')
       .send({
         'email': 'eugene.omar@andela.com',
-        'roleId': 1,
-        'locationId': 'cjee24cz40000guxs6bdner6l'
+        'roleId': 3,
+        'locationId': 'cjkbgs8cz0000cmyxytfbkksu'
       })
-      .expect(200)
+      .expect(400)
       .end((err, res) => {
         if (err) throw err;
-        assert.equal(res.body.message, 'the user role has been updated');
+        assert.equal(res.body.message, 'The user with that email address already exists as an {assignee/admin}. Try updating their role');
         done();
       });
   });
@@ -177,7 +177,7 @@ describe('/POST user', () => {
     request(app)
       .post('/api/users/invite')
       .send({
-        'email': 'oliver.munala@me.com',
+        'email': 'oliver.munala@andela.com',
         'roleId': 3,
         'locationId': 'cjee24cz40000guxs6bdner6l'
       })

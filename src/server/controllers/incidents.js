@@ -7,6 +7,7 @@ const Status = require('../models').Statuses;
 const AssigneeModel = require('../models').assigneeIncidents;
 const LocationService = require('../controllers/locations');
 const findOrCreateUser = require('../helpers/findOrCreateUser');
+const listAssigneeIncidentsIncludes = require('../helpers/listAssigneeIncidentsIncludes');
 const generateAssigneeOrCcdEmailBody = require('../helpers/generateAssigneeOrCcdEmailBody');
 const emailHelper = require('../helpers/emailHelper');
 
@@ -201,7 +202,18 @@ module.exports = {
   },
 
   // get all incidents
-  list(req, res) {
+  async list(req, res) {
+    if (res.locals.roleId === 2) {
+      const includeForAssignee = listAssigneeIncidentsIncludes();
+      const findIncidents = await User.findOne({ where: { id: res.locals.id}, include: includeForAssignee});
+      const userAssignedIncidents = findIncidents.assignedIncidents;
+      const mappedUserAssignedIncidents =  userAssignedIncidents.map(incident => {
+        return {...incident.dataValues, reporter: incident.dataValues.reporter.length > 0 ? incident.dataValues.reporter[0] : {} };
+      });
+      return res
+        .status(200)
+        .send({ data: { incidents: mappedUserAssignedIncidents }, status: 'success' });
+    }
     return Incident.findAll({
       include: includes
     })

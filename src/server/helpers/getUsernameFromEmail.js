@@ -6,8 +6,23 @@
 
 module.exports = email => {
   let name = {};
-  const [firstName, lastName] = email.split('@')[0].split('.');
-  const first = firstName[0].toUpperCase() + firstName.substr(1, firstName.length);
-  const last = lastName ? lastName[0].toUpperCase() + lastName.substr(1, lastName.length): '';
-  return name = {first, last};
+  let first, last = '';
+  const email_username = email.split('@')[0].split('.');
+  if (email_username.length > 1) {
+    // email has '.'
+    first =
+      email_username[0].charAt(0).toUpperCase() + email_username[0].slice(1);
+
+    last =
+      email_username[1].charAt(0).toUpperCase() + email_username[1].slice(1);
+
+    name = { first, last };
+  } else {
+    // email doesn't have '.'
+    first =
+      email_username[0].charAt(0).toUpperCase() + email_username[0].slice(1);
+
+    name = { first, last };
+  }
+  return name;
 };

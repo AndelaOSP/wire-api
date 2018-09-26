@@ -9,16 +9,21 @@ const generateEmailBody = require('../helpers/generateEmailBody');
 const { token } = require('../middlewares/authentication');
 const getUsernameFromEmail = require('../helpers/getUsernameFromEmail');
 const Sequelize = require('sequelize');
+const checkEmail = require('../helpers/checkEmail');
+const updateUserAndSendMail = require('../helpers/updateUserAndSendMail');
+
 require('dotenv').config();
 
 const jwt = require('jsonwebtoken');
 const secretKey = process.env.SECRET_KEY;
 
+const includeRole = {
+  model: Role,
+  attributes: ['name', 'id']
+};
+
 let includes = [
-  {
-    model: Role,
-    attributes: ['name']
-  },
+  includeRole,
   {
     model: Location,
     attributes: ['name', 'centre', 'country']
@@ -134,42 +139,58 @@ module.exports = {
         res.status(400).send(error);
       });
   },
-  inviteUser(req, res) {
-    const name = getUsernameFromEmail(req.body.email);
-    res.locals.username = name.first + ' ' + name.last;
-    const userObject = {
-      email: req.body.email,
-      username: res.locals.username,
-      roleId: req.body.roleId,
-      locationId: req.body.locationId
+  async inviteUser(req, res) {
+    const validEmail = checkEmail(req.body.email);
+    const userExists = await User.findOne({ where: { email: req.body.email }, include: includeRole });
+    const callback = (error) => {
+      if (error) {
+        return error;
+      }
+      return {message: 'The email was sent successfully'};
     };
-    return User.findOrCreate({where: { email: userObject.email},
-      defaults: userObject})
-      .spread( async (createdUser, created) => {
-        if(!created) {
-          await User.update(req.body,{
-            where: {
-              email: userObject.email
-            },
-            returning: true
-          });
-          return res.status(200).send({ message: 'the user role has been updated' });
+    const emailBody = await generateEmailBody(req.body.email, req.body.roleId);
+    if(userExists && userExists.Role) {
+      // If user was created through reporting an incident, update the user with provided role
+      if(userExists.Role.id === 1) {
+        try {
+          await User.update({ roleId: req.body.roleId }, { where: { email: req.body.email }});
+          const emailBody = await generateEmailBody(req.body.email, req.body.roleId);
+          emailHelper.sendMail(emailBody, callback);
+          const user = await User.findOne({ where: { email: req.body.email }, include: includes });
+          return res.status(200).send({ data: user, status: 'success' });        
+        } catch(err){
+          res.status(400).send('An error occurred inviting the user');
         }
-        const emailBody = await generateEmailBody(req.body.email, req.body.roleId);
-        const callback = (error) => {
-          if (error) {
-            return error;
-          }
-          return {message: 'The email was sent successfully'};
+      } else {
+        return res.status(400).json({ message: `The user with that email address already exists as an ${userExists.Role.name} . Try updating their role` });
+      }
+    } else {
+      if (validEmail && !userExists) {
+        const name = getUsernameFromEmail(req.body.email);
+        res.locals.username = name.first + ' ' + name.last;
+        const userObject = {
+          email: req.body.email,
+          username: res.locals.username,
+          roleId: req.body.roleId,
+          locationId: req.body.locationId
         };
-        emailHelper.sendMail(emailBody, callback);
-        const user = await User.findById(createdUser.id, { include: includes});
-        return res.status(200).send({ data: user, status: 'success' });
-      })
-      .catch(error => {
-        errorLogs.catchErrors(error);
-        res.status(400).send(error);
-      });
+        return User.findOrCreate({where: { email: userObject.email},
+          defaults: userObject})
+          .spread( async (createdUser, created) => {
+            if(!created) {
+              await updateUserAndSendMail(userObject, res);
+            }
+            emailHelper.sendMail(emailBody, callback);
+            const user = await User.findById(createdUser.id, { include: includes});
+            return res.status(200).send({ data: user, status: 'success' });
+          })
+          .catch(error => {
+            errorLogs.catchErrors(error);
+            return res.status(400).send(error);
+          });
+      }
+      res.status(400).json({ message: 'You can only invite Andela users through their Andela emails' });
+    }
   },
 
   /**
