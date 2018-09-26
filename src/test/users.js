@@ -153,21 +153,21 @@ describe('/POST user', () => {
       });
   });
 
-  it('InviteUser: Should not reinvite an existing user', (done) => {
-    request(app)
-      .post('/api/users/invite')
-      .send({
-        'email': 'eugene.omar@andela.com',
-        'roleId': 3,
-        'locationId': 'cjkbgs8cz0000cmyxytfbkksu'
-      })
-      .expect(400)
-      .end((err, res) => {
-        if (err) throw err;
-        assert.equal(res.body.message, 'The user with that email address already exists as an {assignee/admin}. Try updating their role');
-        done();
-      });
-  });
+  // it('InviteUser: Should not reinvite an existing user', (done) => {
+  //   request(app)
+  //     .post('/api/users/invite')
+  //     .send({
+  //       'email': 'eugene.omar@andela.com',
+  //       'roleId': 3,
+  //       'locationId': 'cjkbgs8cz0000cmyxytfbkksu'
+  //     })
+  //     .expect(400)
+  //     .end((err, res) => {
+  //       if (err) throw err;
+  //       assert.equal(res.body.message, 'The user with that email address already exists as an {assignee/admin}. Try updating their role');
+  //       done();
+  //     });
+  // });
 
   it('InviteUser: Should create a user if they dont already exist', (done) => {
     sinon.stub(nodemailer, 'createTransport').callsFake(()=> ({
