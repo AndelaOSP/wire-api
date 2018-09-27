@@ -29,6 +29,14 @@ const listAssigneeIncidentsIncludes = () => {
     },
     {
       model: User,
+      as: 'assignees',
+      userAttributes,
+      through: {
+        attributes: ['assignedRole']
+      }
+    },
+    {
+      model: User,
       as: 'reporter',
       userAttributes,
     },
