@@ -207,12 +207,17 @@ module.exports = {
       const includeForAssignee = listAssigneeIncidentsIncludes();
       const findIncidents = await User.findOne({ where: { id: res.locals.id}, include: includeForAssignee});
       const userAssignedIncidents = findIncidents.assignedIncidents;
-      const mappedUserAssignedIncidents =  userAssignedIncidents.map(incident => {
-        return {...incident.dataValues, reporter: incident.dataValues.reporter.length > 0 ? incident.dataValues.reporter[0] : {} };
+      // const mappedUserAssignedIncidents =  userAssignedIncidents.map(incident => {
+      //   return {...incident.dataValues, reporter: incident.dataValues.reporter.length > 0 ? incident.dataValues.reporter[0] : {} };
+      // });
+      let mappedIncidents = userAssignedIncidents.map(incident => {
+        incident.assignees && mapAssignees(incident.assignees);
+        incident.dataValues.reporter = incident.dataValues.reporter[0];
+        return incident;
       });
       return res
         .status(200)
-        .send({ data: { incidents: mappedUserAssignedIncidents }, status: 'success' });
+        .send({ data: { incidents: mappedIncidents }, status: 'success' });
     }
     return Incident.findAll({
       include: includes
@@ -223,13 +228,13 @@ module.exports = {
           incident.dataValues.reporter = incident.dataValues.reporter[0];
           return incident;
         });
-        res
+        return res
           .status(200)
           .send({ data: { incidents: mappedIncidents }, status: 'success' });
       })
       .catch(error => {
         errorLogs.catchErrors(error);
-        res.status(400).send(error);
+        return res.status(400).send(error);
       });
   },
 
