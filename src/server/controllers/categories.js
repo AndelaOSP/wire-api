@@ -1,6 +1,5 @@
 const errorLogs = require('./errorLogs');
 const Category = require('../models').Categories;
-const Incident = require('../models').Incidents;
 
 module.exports = {
   // view all categories
