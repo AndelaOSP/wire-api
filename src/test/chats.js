@@ -5,6 +5,7 @@ const should = require('chai').should;
 const expect = require('chai').expect;
 const assert = chai.assert;
 const sinon = require('sinon');
+const { token } = require('../server/middlewares/authentication');
 
 const chat = require('../server/models').Chats;
 const incident = require('../server/models').Incidents;
@@ -18,6 +19,8 @@ const testChat = {
   chat: 'smapleChat'
 };
 
+const userToken = token(3453, 3);
+
 describe('/POST chat', () => {
   const chatsEndpoint = '/api/incidents/:id/chats';
 
@@ -25,6 +28,7 @@ describe('/POST chat', () => {
     let createStub = sinon.stub(chat, 'create').rejects();
     request(app)
       .post(chatsEndpoint)
+      .set('Authorization', userToken)
       .expect(400)
       .end((err, res) => {
         if (err) throw err;
@@ -37,6 +41,7 @@ describe('/POST chat', () => {
     let findByIdStub = sinon.stub(chat, 'findById').resolves();
     request(app)
       .put('/api/chats/:id')
+      .set('Authorization', userToken)
       .expect(404)
       .end((err, res) => {
         if (err) throw err;
@@ -54,6 +59,7 @@ describe('/POST chat', () => {
     });
     request(app)
       .put('/api/chats/:id')
+      .set('Authorization', userToken)
       .expect(200)
       .end((err, res) => {
         if (err) throw err;
@@ -66,6 +72,7 @@ describe('/POST chat', () => {
     let findAllStub = sinon.stub(chat, 'findAll').resolves(Object({}, ''));
     request(app)
       .get('/api/incidents/:id/chats')
+      .set('Authorization', userToken)
       .expect(200)
       .end((err, res) => {
         if (err) throw err;
@@ -84,6 +91,7 @@ describe('/POST chat', () => {
     let findAllStub = sinon.stub(chat, 'findAll').rejects(Object({}, ''));
     request(app)
       .get('/api/incidents/:id/chats')
+      .set('Authorization', userToken)
       .expect(400)
       .end((err, res) => {
         if (err) throw err;
@@ -97,6 +105,7 @@ describe('/POST chat', () => {
     let findByIdStub = sinon.stub(chat, 'findById').resolves();
     request(app)
       .get('/api/chats/:id')
+      .set('Authorization', userToken)
       .expect(404)
       .end((err, res) => {
         if (err) throw err;
@@ -109,6 +118,7 @@ describe('/POST chat', () => {
     let findByIdStub = sinon.stub(chat, 'findById').rejects();
     request(app)
       .get('/api/chats/:id')
+      .set('Authorization', userToken)
       .expect(400)
       .end((err, res) => {
         if (err) throw err;
@@ -121,6 +131,7 @@ describe('/POST chat', () => {
     let findByIdStub = sinon.stub(chat, 'findById').resolves(Object({}, ''));
     request(app)
       .delete('/api/chat/:id')
+      .set('Authorization', userToken)
       .expect(404)
       .end((err, res) => {
         if (err) throw err;
@@ -139,6 +150,7 @@ describe('/POST chat', () => {
     let destroyStub = sinon.stub(chat, 'destroy').resolves({});
     request(app)
       .delete('/api/chats/:id')
+      .set('Authorization', userToken)
       .expect(204)
       .end((err, res) => {
         if (err) throw err;

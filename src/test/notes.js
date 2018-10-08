@@ -5,6 +5,7 @@ const should = require('chai').should;
 const expect = require('chai').expect;
 const assert = chai.assert;
 const sinon = require('sinon');
+const { token } = require('../server/middlewares/authentication');
 
 const note = require('../server/models').Notes;
 const incident = require('../server/models').Incidents;
@@ -12,6 +13,7 @@ const user = require('../server/controllers/users').Users;
 
 const app = require('../index');
 chai.use(chaiHttp);
+const userToken = token(3453, 3);
 
 describe('/POST note', () => {
   const notesEndpoint = '/api/incidents/:id/notes';
@@ -20,6 +22,7 @@ describe('/POST note', () => {
     let createStub = sinon.stub(note, 'create').rejects();
     request(app)
       .post(notesEndpoint)
+      .set('Authorization', userToken)
       .expect(400)
       .end((err, res) => {
         if (err) throw err;
@@ -34,6 +37,7 @@ describe('/PUT note', () => {
     let findByIdStub = sinon.stub(note, 'findById').resolves();
     request(app)
       .put('/api/notes/cjfm86c2r0001ris1w0or7g59')
+      .set('Authorization', userToken)
       .expect(404)
       .end((err, res) => {
         if (err) throw err;
@@ -48,6 +52,7 @@ describe('/GET note', () => {
     let findAllStub = sinon.stub(note, 'findAll').resolves(Object({}, ''));
     request(app)
       .get('/api/incidents/:id/notes')
+      .set('Authorization', userToken)
       .expect(200)
       .end((err, res) => {
         if (err) throw err;
@@ -66,6 +71,7 @@ describe('/GET note', () => {
     let findAllStub = sinon.stub(note, 'findAll').rejects(Object({}, ''));
     request(app)
       .get('/api/incidents/:id/notes')
+      .set('Authorization', userToken)
       .expect(400)
       .end((err, res) => {
         if (err) throw err;
@@ -79,6 +85,7 @@ describe('/GET note', () => {
     let findByIdStub = sinon.stub(note, 'findById').resolves();
     request(app)
       .get('/api/notes/:id')
+      .set('Authorization', userToken)
       .expect(404)
       .end((err, res) => {
         if (err) throw err;
@@ -91,6 +98,7 @@ describe('/GET note', () => {
     let findByIdStub = sinon.stub(note, 'findById').rejects();
     request(app)
       .get('/api/notes/:id')
+      .set('Authorization', userToken)
       .expect(400)
       .end((err, res) => {
         if (err) throw err;
@@ -104,6 +112,7 @@ describe('/GET note', () => {
       let findByIdStub = sinon.stub(note, 'findById').resolves();
       request(app)
         .put('/api/notes/1')
+        .set('Authorization', userToken)
         .expect(404)
         .end((err, res) => {
           if (err) throw err;
@@ -121,6 +130,7 @@ describe('/GET note', () => {
       });
       request(app)
         .put('/api/notes/:id')
+        .set('Authorization', userToken)
         .expect(200)
         .end((err, res) => {
           if (err) throw err;
@@ -135,6 +145,7 @@ describe('/GET note', () => {
       let findByIdStub = sinon.stub(note, 'findById').resolves();
       request(app)
         .delete('/api/notes/:id')
+        .set('Authorization', userToken)
         .expect(404)
         .end((err, res) => {
           if (err) throw err;
@@ -154,6 +165,7 @@ describe('/GET note', () => {
     let destroyStub = sinon.stub(note, 'destroy').resolves({});
     request(app)
       .delete('/api/notes/:id')
+      .set('Authorization', userToken)
       .expect(204)
       .end((err, res) => {
         if (err) throw err;

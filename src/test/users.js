@@ -4,6 +4,7 @@ const request = require('supertest');
 const assert = chai.assert;
 const sinon = require('sinon');
 const nodemailer = require('nodemailer');
+const { token } = require('../server/middlewares/authentication');
 
 const user = require('../server/models').Users;
 const app = require('../index');
@@ -23,6 +24,8 @@ const testUser = {
   }
 };
 
+const userToken = token(3453, 3);
+
 describe('/POST user', () => {
   const usersEndpoint = '/api/users';
 
@@ -30,6 +33,7 @@ describe('/POST user', () => {
     let createStub = sinon.stub(user, 'findOrCreate').rejects({});
     request(app)
       .post(usersEndpoint)
+      .set('Authorization', userToken)
       .send(testUser)
       .expect(400)
       .end((err, res) => {
@@ -61,6 +65,7 @@ describe('/POST user', () => {
     let findAllStub = sinon.stub(user, 'findAll').resolves(Object({}, ''));
     request(app)
       .get('/api/users')
+      .set('Authorization', userToken)
       .expect(200)
       .end((err, res) => {
         if (err) throw err;
@@ -81,6 +86,7 @@ describe('/POST user', () => {
       .resolves({ id: 'U7LEPG8LF' });
     request(app)
       .get('/api/users/U7LEPG8LF')
+      .set('Authorization', userToken)
       .expect(200)
       .end((err, res) => {
         if (err) throw err;
@@ -126,12 +132,13 @@ describe('/POST user', () => {
     let findAllStub = sinon.stub(user, 'findAll').resolves(Object({users}, ''));
     request(app)
       .get('/api/users/search?q=Brian')
+      .set('Authorization', userToken)
       .expect(200)
       .end((err, res) => {
         if (err) throw err;
         assert.deepEqual(res.body, {
           data: {
-            users: {users}
+            users: { users }
           },
           status: 'success'
         });
@@ -142,9 +149,8 @@ describe('/POST user', () => {
   it('Should edit the given user if they exist', (done) => {
     request(app)
       .put('/api/users/cjl6efcka00004tny9ilz7b61')
-      .send({
-        'roleId': '1'
-      })
+      .set('Authorization', userToken)
+      .send({ roleId: '1' })
       .expect(200)
       .end((err, res) => {
         if (err) throw err;
@@ -153,22 +159,6 @@ describe('/POST user', () => {
       });
   });
 
-  // it('InviteUser: Should not reinvite an existing user', (done) => {
-  //   request(app)
-  //     .post('/api/users/invite')
-  //     .send({
-  //       'email': 'eugene.omar@andela.com',
-  //       'roleId': 3,
-  //       'locationId': 'cjkbgs8cz0000cmyxytfbkksu'
-  //     })
-  //     .expect(400)
-  //     .end((err, res) => {
-  //       if (err) throw err;
-  //       assert.equal(res.body.message, 'The user with that email address already exists as an {assignee/admin}. Try updating their role');
-  //       done();
-  //     });
-  // });
-
   it('InviteUser: Should create a user if they dont already exist', (done) => {
     sinon.stub(nodemailer, 'createTransport').callsFake(()=> ({
       sendMail: (options, call) => {
@@ -176,10 +166,11 @@ describe('/POST user', () => {
       }}));
     request(app)
       .post('/api/users/invite')
+      .set('Authorization', userToken)
       .send({
-        'email': 'oliver.munala@andela.com',
-        'roleId': 3,
-        'locationId': 'cjee24cz40000guxs6bdner6l'
+        email: 'oliver.munala@andela.com',
+        roleId: 3,
+        locationId: 'cjee24cz40000guxs6bdner6l'
       })
       .expect(200)
       .end((err, res) => {
@@ -192,6 +183,7 @@ describe('/POST user', () => {
   it('Should delete a user successfully', (done) => {
     request(app)
       .delete('/api/users/U7LHY6T4B')
+      .set('Authorization', userToken)
       .expect(200)
       .end((err, res) => {
         if (err) throw err;

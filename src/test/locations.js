@@ -5,6 +5,7 @@ const should = require('chai').should;
 const expect = require('chai').expect;
 const assert = chai.assert;
 const sinon = require('sinon');
+const { token } = require('../server/middlewares/authentication');
 
 const location = require('../server/models').Locations;
 const app = require('../index');
@@ -16,6 +17,7 @@ const testLocation = {
   centre: 'Nairobi',
   country: 'Kenya'
 };
+const userToken = token(3453, 3);
 
 describe('/POST locations', () => {
   const locationsEndpoint = '/api/locations';
@@ -24,6 +26,7 @@ describe('/POST locations', () => {
     let createStub = sinon.stub(location, 'create').rejects();
     request(app)
       .post(locationsEndpoint)
+      .set('Authorization', userToken)
       .expect(400)
       .end((err, res) => {
         if (err) throw err;
@@ -36,6 +39,7 @@ describe('/POST locations', () => {
     let createStub = sinon.stub(location, 'findOrCreate').rejects({});
     request(app)
       .post(locationsEndpoint)
+      .set('Authorization', userToken)
       .send(testLocation)
       .expect(400)
       .end((err, res) => {
@@ -51,6 +55,7 @@ describe('/GET locations', () => {
     let findAllStub = sinon.stub(location, 'findAll').resolves(Object({}, ''));
     request(app)
       .get('/api/locations')
+      .set('Authorization', userToken)
       .expect(200)
       .end((err, res) => {
         if (err) throw err;
@@ -69,6 +74,7 @@ describe('/GET locations', () => {
     let findAllStub = sinon.stub(location, 'findAll').rejects(Object({}, ''));
     request(app)
       .get('/api/locations')
+      .set('Authorization', userToken)
       .expect(400)
       .end((err, res) => {
         if (err) throw err;
