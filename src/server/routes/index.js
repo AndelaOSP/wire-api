@@ -19,7 +19,7 @@ module.exports = app => {
   app.post('/api/incidents', incidentsService.create);
   app.post('/api/users/login', usersService.login);
 
-  app.use([Auth]);
+  app.use(Auth);
   // locations endpoints
   app.post('/api/locations', locationsService.create);
   app.get('/api/locations', locationsService.list);
