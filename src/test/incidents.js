@@ -1,10 +1,10 @@
 const chaiHttp = require('chai-http');
 const chai = require('chai');
 const request = require('supertest');
-const assert = chai.assert;
 const sinon = require('sinon');
 const { token } = require('../server/middlewares/authentication');
 const incidents = require('../server/models').Incidents;
+const User = require('../server/models').Users;
 const nodemailer = require('nodemailer');
 
 // const incident = require('../server/models').Incidents;
@@ -73,6 +73,7 @@ const ccdRequestBody = {
 let nodemailerStub;
 
 const userToken = token(3453, 3);
+const assigneeUserToken = token('cjl6ege6e000053nyv67otq7a', 2);
 describe('Incident Tests', () => {
   beforeEach(() => {
     const transport = {
@@ -113,6 +114,29 @@ describe('Incident Tests', () => {
         listStub.restore();
         done();
       });
+  });
+
+  it('should list all incidents for an Assignee', done => {
+    const incidentId = 'cjfkubrlv0001tgxs3mre';
+    let listStub = sinon.stub(incident, 'list').resolves(Object({}, ''));
+    incidents.findById(incidentId).then(incident => {
+      const assingedUserId = 'cjl6ege6e000053nyv67otq7a';
+      User.findById(assingedUserId).then(user => {
+        incident.addAssignee(user).then(() => {
+          request(app)
+            .get(incidentsEndpoint)
+            .set('Authorization', assigneeUserToken)
+            .expect(200)
+            .end(err => {
+              if (err) {
+                done();
+                throw err;
+              }
+              listStub.restore();
+              done();
+            });});
+      });
+    });
   });
 
   it('should find an incident provided an existing incident ID', done => {

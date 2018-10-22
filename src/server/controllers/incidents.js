@@ -5,7 +5,12 @@ const AssigneeModel = require('../models').assigneeIncidents;
 const LocationService = require('../controllers/locations');
 const findOrCreateUser = require('../helpers/findOrCreateUser');
 const listAssigneeIncidentsIncludes = require('../helpers/listAssigneeIncidentsIncludes');
-const { addAssignee, addCcdUser, findIncidentById, returnIncidentsIncludes } = require('../helpers/incidentHelper');
+const {
+  addAssignee,
+  addCcdUser,
+  findIncidentById,
+  returnIncidentsIncludes
+} = require('../helpers/incidentHelper');
 
 const include = returnIncidentsIncludes();
 // mapping Assignees
@@ -111,6 +116,7 @@ module.exports = {
   // get all incidents
   async list(req, res) {
     if (res.locals.roleId === 2) {
+    
       const includeForAssignee = listAssigneeIncidentsIncludes();
       const findIncidents = await User.findOne({
         where: { id: res.locals.id },
@@ -169,7 +175,7 @@ module.exports = {
 
   // update an incident
   update(req, res) {
-    let { assignee: assignedUser, ccd: ccdUser } = req.body; 
+    let { assignee: assignedUser, ccd: ccdUser } = req.body;
 
     let findIncidentPromise = Incident.findById(req.params.id, {
       include
@@ -188,21 +194,18 @@ module.exports = {
           if (incident.dataValues.assignees.length === 0) {
             return addAssignee({ assignedUser, incident, res });
           } else {
-            return (
-              AssigneeModel.destroy({
-                where: {
-                  assignedRole: 'assignee',
-                  incidentId: incident.id
-                }
-              })
-                .then(() => {
-                  return addAssignee({
-                    assignedUser,
-                    incident,
-                    res
-                  });
-                })                
-            );
+            return AssigneeModel.destroy({
+              where: {
+                assignedRole: 'assignee',
+                incidentId: incident.id
+              }
+            }).then(() => {
+              return addAssignee({
+                assignedUser,
+                incident,
+                res
+              });
+            });
           }
         })
         .catch(error => {
@@ -220,10 +223,9 @@ module.exports = {
                 assignedRole: 'ccd',
                 incidentId: incident.id
               }
-            })
-              .then(() => {
-                return addCcdUser({ ccdUser, res, incident });
-              });
+            }).then(() => {
+              return addCcdUser({ ccdUser, res, incident });
+            });
           }
         })
         .catch(error => {
