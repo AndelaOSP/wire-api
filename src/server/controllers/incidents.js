@@ -76,7 +76,7 @@ const findIncidentById = (id, res) => {
  * @function getUserDetails
  * @param payload object
  * @return userDetails object
-*/
+ */
 const getUserDetails = async payload => {
   let userDetails;
   if (Array.isArray(payload)) {
@@ -88,7 +88,7 @@ const getUserDetails = async payload => {
     return userDetails;
   }
   userDetails = await User.findById(payload.userId);
-  userDetails.dataValues.incidentId  = payload.incidentId;
+  userDetails.dataValues.incidentId = payload.incidentId;
   return userDetails;
 };
 
@@ -96,22 +96,21 @@ const getUserDetails = async payload => {
  * @function sendAssigneeOrCcdEmail
  * @param payload object
  * @return error or success message
-*/
+ */
 
 const sendAssigneeOrCcdEmail = async payload => {
   const userDetails = await getUserDetails(payload);
-  const emailBody = await generateAssigneeOrCcdEmailBody({ 
-    ...userDetails.dataValues, 
+  const emailBody = await generateAssigneeOrCcdEmailBody({
+    ...userDetails.dataValues,
     assignedRole: payload.assignedRole // add assigned role
   });
-  emailHelper.sendMail(emailBody,(error) => {
+  emailHelper.sendMail(emailBody, error => {
     if (error) {
       return error;
     }
-    return {message: 'The email was sent successfully'};
+    return { message: 'The email was sent successfully' };
   });
 };
-
 
 module.exports = {
   // create an incident
@@ -142,17 +141,19 @@ module.exports = {
       .then(incident => {
         createdIncident = incident;
         return User.findOne({
-          where: { 
-            email: incidentReporter.email 
+          where: {
+            email: incidentReporter.email
           }
-        }).then(user => {
-          if (user) {
-            return user.update({ slackId: incidentReporter.slackId });
-          }
-          return findOrCreateUser(incidentReporter, reporterLocation, res);
-        }).catch(error => {
-          return error;
-        });
+        })
+          .then(user => {
+            if (user) {
+              return user.update({ slackId: incidentReporter.slackId });
+            }
+            return findOrCreateUser(incidentReporter, reporterLocation, res);
+          })
+          .catch(error => {
+            return error;
+          });
       })
       .then(createdReporter => {
         createdIncident.addReporter(createdReporter);
@@ -205,7 +206,10 @@ module.exports = {
   async list(req, res) {
     if (res.locals.roleId === 2) {
       const includeForAssignee = listAssigneeIncidentsIncludes();
-      const findIncidents = await User.findOne({ where: { id: res.locals.id}, include: includeForAssignee});
+      const findIncidents = await User.findOne({
+        where: { id: res.locals.id },
+        include: includeForAssignee
+      });
       const userAssignedIncidents = findIncidents.assignedIncidents;
       // const mappedUserAssignedIncidents =  userAssignedIncidents.map(incident => {
       //   return {...incident.dataValues, reporter: incident.dataValues.reporter.length > 0 ? incident.dataValues.reporter[0] : {} };
@@ -270,56 +274,60 @@ module.exports = {
       return incident
         ? Promise.resolve(incident)
         : Promise.reject({
-          message: 'Incident not found',
-          status: 'fail'
-        });
+            message: 'Incident not found',
+            status: 'fail'
+          });
     });
 
     if (assignedUser) {
       return findIncidentPromise
         .then(incident => {
           if (incident.dataValues.assignees.length === 0) {
-            return User.findById(assignedUser.userId)
-            // new assignee
-              .then(async assignee => {
-                assignedUser.assignedRole = 'assignee';
-                await sendAssigneeOrCcdEmail(assignedUser);
-                assignee.assigneeIncidents = {
-                  assignedRole: 'assignee'
-                };
-                return incident.addAssignee(assignee);
-              })
-              .then(() => {
-                return findIncidentById(incident.id, res);
-              })
-              .then(data => {
-                return res.status(200).send({ data, status: 'success' });
-              });
+            return (
+              User.findById(assignedUser.userId)
+                // new assignee
+                .then(async assignee => {
+                  assignedUser.assignedRole = 'assignee';
+                  await sendAssigneeOrCcdEmail(assignedUser);
+                  assignee.assigneeIncidents = {
+                    assignedRole: 'assignee'
+                  };
+                  return incident.addAssignee(assignee);
+                })
+                .then(() => {
+                  return findIncidentById(incident.id, res);
+                })
+                .then(data => {
+                  return res.status(200).send({ data, status: 'success' });
+                })
+            );
           } else {
-            return AssigneeModel.destroy({
-              where: {
-                assignedRole: 'assignee',
-                incidentId: incident.id
-              }
-            })
-              .then(() => {
-                return User.findById(assignedUser.userId);
+            return (
+              AssigneeModel.destroy({
+                where: {
+                  assignedRole: 'assignee',
+                  incidentId: incident.id
+                }
               })
-              // replacing an assignee
-              .then(async assignee => {
-                assignedUser.assignedRole = 'assignee';
-                await sendAssigneeOrCcdEmail(assignedUser);
-                assignee.assigneeIncidents = {
-                  assignedRole: 'assignee'
-                };
-                return incident.addAssignee(assignee);
-              })
-              .then(() => {
-                return findIncidentById(incident.id, res);
-              })
-              .then(data => {
-                return res.status(200).send({ data, status: 'success' });
-              });
+                .then(() => {
+                  return User.findById(assignedUser.userId);
+                })
+                // replacing an assignee
+                .then(async assignee => {
+                  assignedUser.assignedRole = 'assignee';
+                  await sendAssigneeOrCcdEmail(assignedUser);
+                  assignee.assigneeIncidents = {
+                    assignedRole: 'assignee'
+                  };
+                  return incident.addAssignee(assignee);
+                })
+                .then(() => {
+                  return findIncidentById(incident.id, res);
+                })
+                .then(data => {
+                  return res.status(200).send({ data, status: 'success' });
+                })
+            );
           }
         })
         .catch(error => {
@@ -330,17 +338,22 @@ module.exports = {
       return findIncidentPromise
         .then(incident => {
           if (incident.dataValues.assignees.length === 0) {
-            for (let i = 0; i < ccdUser.length; i++) {
-              let addCcdPromise = User.findById(ccdUser[i].userId).then(async ccd => {
-                let currentCcd = {...ccdUser[i], assignedRole: 'ccd'};
-                await sendAssigneeOrCcdEmail(currentCcd);
-                ccd.assigneeIncidents = {
-                  assignedRole: 'ccd'
-                };
-                return incident.addAssignee(ccd);
+            const ccdPromises = ccdUser.map(async user => {
+              const ccd = User.findById(user.userId);
+              let currentCcd = { ...user, assignedRole: 'ccd' };
+              await sendAssigneeOrCcdEmail(currentCcd);
+              ccd.assigneeIncidents = {
+                assignedRole: 'ccd'
+              };
+              return incident.addAssignee(ccd);
+            });
+            return Promise.all(ccdPromises)
+              .then(() => {
+                return findIncidentById(incident.id, res);
+              })
+              .then(data => {
+                return res.status(200).send({ data, status: 'success' });
               });
-              addCcdPromises.push(addCcdPromise);
-            }
           } else {
             return AssigneeModel.destroy({
               where: {
@@ -349,18 +362,16 @@ module.exports = {
               }
             })
               .then(() => {
-                for (let i = 0; i < ccdUser.length; i++) {
-                  let addCcdPromise = User.findById(ccdUser[i].userId).then(async ccd => {
-                    let currentCcd = {...ccdUser[i], assignedRole: 'ccd'};
-                    await sendAssigneeOrCcdEmail(currentCcd);
-                    ccd.assigneeIncidents = {
-                      assignedRole: 'ccd'
-                    };
-                    return incident.addAssignee(ccd);
-                  });
-                  addCcdPromises.push(addCcdPromise);
-                }
-                return Promise.all(addCcdPromises);
+                const ccdPromises = ccdUser.map(async user => {
+                  const ccd = User.findById(user.userId);
+                  let currentCcd = { ...user, assignedRole: 'ccd' };
+                  await sendAssigneeOrCcdEmail(currentCcd);
+                  ccd.assigneeIncidents = {
+                    assignedRole: 'ccd'
+                  };
+                  return incident.addAssignee(ccd);
+                });
+                return Promise.all(ccdPromises);
               })
               .then(() => {
                 return findIncidentById(incident.id, res);
@@ -371,6 +382,7 @@ module.exports = {
           }
         })
         .catch(error => {
+          console.log({ error });
           errorLogs.catchErrors(error);
           return res.status(400).send(error);
         });
