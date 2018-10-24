@@ -71,6 +71,7 @@ const ccdRequestBody = {
   ]
 };
 let nodemailerStub;
+const incidentsEndpoint = '/api/incidents';
 
 const userToken = token(3453, 3);
 const assigneeUserToken = token('cjl6ege6e000053nyv67otq7a', 2);
@@ -89,8 +90,27 @@ describe('Incident Tests', () => {
     nodemailerStub.restore();
   });
 
-  const incidentsEndpoint = '/api/incidents';
   let createStub = sinon.stub(incident, 'create').resolves(Object({}, ''));
+  let updateIncidentStub = sinon.stub(incident, 'update').resolves(Object({}, ''));
+
+  const makeServerCall = (userToken, requestBody, done) => {
+    request(app)
+      .post(incidentsEndpoint)
+      .send(testIncident)
+      .then(res => {
+        request(app)
+          .put('/api/incidents/' + res.body.data.id)
+          .send(requestBody)
+          .set('Authorization', userToken)
+          .expect(200)
+          .end(err => {
+            // if (err) throw err;
+            createStub.restore();
+            updateIncidentStub.restore();
+            done();
+          });
+      });
+  };
   it('should create an incident given the correct payload', done => {
     request(app)
       .post(incidentsEndpoint)
@@ -174,31 +194,10 @@ describe('Incident Tests', () => {
   });
 
   it('should update an incident when someone gets assigned to it', done => {
-    let updateIncidentStub = sinon
-      .stub(incident, 'update')
-      .resolves(Object({}, ''));
-    request(app)
-      .post(incidentsEndpoint)
-      .send(testIncident)
-      .then(res => {
-        request(app)
-          .put('/api/incidents/' + res.body.data.id)
-          .send(assigneeRequestBody)
-          .set('Authorization', userToken)
-          .expect(200)
-          .end(err => {
-            if (err) throw err;
-            createStub.restore();
-            updateIncidentStub.restore();
-            done();
-          });
-      });
+    return makeServerCall(userToken, assigneeRequestBody, done);
   });
 
   it('should update an incident provided an existing incident ID', done => {
-    let updateIncidentStub = sinon
-      .stub(incident, 'update')
-      .resolves(Object({}, ''));
     request(app)
       .post(incidentsEndpoint)
       .send(testIncident)
@@ -218,25 +217,7 @@ describe('Incident Tests', () => {
   });
 
   it('should update an incident when someone gets ccd to it', done => {
-    let updateIncidentStub = sinon
-      .stub(incident, 'update')
-      .resolves(Object({}, ''));
-    request(app)
-      .post(incidentsEndpoint)
-      .send(testIncident)
-      .then(res => {
-        request(app)
-          .put('/api/incidents/' + res.body.data.id)
-          .send(ccdRequestBody)
-          .set('Authorization', userToken)
-          .expect(200)
-          .end(err => {
-            // if (err) throw err;
-            createStub.restore();
-            updateIncidentStub.restore();
-            done();
-          });
-      });
+    return makeServerCall(userToken, ccdRequestBody, done);
   });
 
   it('should delete an incident provided an existing incident ID', done => {
