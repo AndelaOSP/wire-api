@@ -14,6 +14,7 @@
     "lint": "./node_modules/.bin/eslint --fix ./server ./test",
     "migrate-seed": "npm run migrate && npm run seed",
     "pretest": "NODE_ENV=test sequelize db:migrate:undo:all && NODE_ENV=test sequelize db:migrate && NODE_ENV=test yarn run seed",
+    "posttest": "NODE_ENV=test sequelize db:migrate:undo:all",
     "test": "NODE_ENV=test nyc --reporter=html --reporter=text mocha --recursive -t 10000",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
