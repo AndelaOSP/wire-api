@@ -10,42 +10,12 @@ let userAttributes = ['username', 'slackId', 'imageUrl', 'email'];
 
 const returnIncidentsIncludes = () => {
   return [
-    {
-      model: Level,
-      attributes: ['name']
-    },
-    {
-      model: Status,
-      attributes: ['status']
-    },
-    {
-      model: Location,
-      attributes: ['name', 'centre', 'country']
-    },
-    {
-      model: User,
-      as: 'assignees',
-      userAttributes,
-      through: {
-        attributes: ['assignedRole']
-      }
-    },
-    {
-      model: User,
-      as: 'reporter',
-      userAttributes,
-      through: {
-        attributes: []
-      }
-    },
-    {
-      model: User,
-      as: 'witnesses',
-      userAttributes,
-      through: {
-        attributes: []
-      }
-    }
+    { model: Level, attributes: ['name'] },
+    { model: Status, attributes: ['status'] },
+    { model: Location, attributes: ['name', 'centre', 'country'] },
+    { model: User, as: 'assignees', userAttributes, through: { attributes: ['assignedRole'] } },
+    { model: User, as: 'reporter', userAttributes, through: { attributes: [] } },
+    { model: User, as: 'witnesses', userAttributes, through: { attributes: [] } }
   ];
 };
 const findIncidentById = id => {
