@@ -188,20 +188,45 @@ module.exports = {
         });
     });
 
-    if (assignedUser) {
+    if (assignedUser || ccdUser) {
+      const userKey = assignedUser ? 'assignedUser' : 'ccdUser';
+      
+      const users = { 
+        assignedUser: { 
+          assingedRole: 'assignee', 
+          action: addAssignee, 
+          arguments: { 
+            assignedUser, 
+          } 
+        }, 
+        ccdUser: { 
+          assingedRole: 'ccd', 
+          action: addCcdUser, 
+          arguments: { 
+            ccdUser, 
+          } 
+        } 
+      };
+
+      const selectedUser = users[userKey];
+
       return findIncidentPromise
         .then(incident => {
           if (incident.dataValues.assignees.length === 0) {
-            return addAssignee({ assignedUser, incident, res });
+            return selectedUser.action({ 
+              ...selectedUser.arguments,
+              incident,
+              res
+            });
           } else {
             return AssigneeModel.destroy({
               where: {
-                assignedRole: 'assignee',
+                assignedRole: selectedUser.assignedRole,
                 incidentId: incident.id
               }
             }).then(() => {
-              return addAssignee({
-                assignedUser,
+              return selectedUser.action({ 
+                ...selectedUser.arguments,
                 incident,
                 res
               });
@@ -212,26 +237,7 @@ module.exports = {
           errorLogs.catchErrors(error);
           return res.status(400).send(error);
         });
-    } else if (ccdUser) {
-      return findIncidentPromise
-        .then(incident => {
-          if (incident.dataValues.assignees.length === 0) {
-            return addCcdUser({ ccdUser, res, incident });
-          } else {
-            return AssigneeModel.destroy({
-              where: {
-                assignedRole: 'ccd',
-                incidentId: incident.id
-              }
-            }).then(() => {
-              return addCcdUser({ ccdUser, res, incident });
-            });
-          }
-        })
-        .catch(error => {
-          errorLogs.catchErrors(error);
-          return res.status(400).send(error);
-        });
+    
     } else {
       return findIncidentPromise
         .then(incident => {
