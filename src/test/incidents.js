@@ -94,7 +94,7 @@ describe('Incident Tests', () => {
   const createStub = testStub('create');
   const updateIncidentStub = testStub('update');
 
-  const makeServerCall = (userToken, requestBody, done) => {
+  const makeServerCall = (userToken, requestBody, done, stub) => {
     request(app)
       .post(incidentsEndpoint)
       .send(testIncident)
@@ -107,7 +107,7 @@ describe('Incident Tests', () => {
           .end(err => {
             // if (err) throw err;
             createStub.restore();
-            updateIncidentStub.restore();
+            stub.restore();
             done();
           });
       });
@@ -195,7 +195,7 @@ describe('Incident Tests', () => {
   });
 
   it('should update an incident when someone gets assigned to it', done => {
-    return makeServerCall(userToken, assigneeRequestBody, done);
+    return makeServerCall(userToken, assigneeRequestBody, done, updateIncidentStub);
   });
 
   it('should update an incident provided an existing incident ID', done => {
@@ -218,44 +218,16 @@ describe('Incident Tests', () => {
   });
 
   it('should update an incident when someone gets ccd to it', done => {
-    return makeServerCall(userToken, ccdRequestBody, done);
+    return makeServerCall(userToken, ccdRequestBody, done, updateIncidentStub);
   });
 
   it('should delete an incident provided an existing incident ID', done => {
     const deleteIncidentStub = testStub('delete');
-    request(app)
-      .post(incidentsEndpoint)
-      .send(testIncident)
-      .then(res => {
-        request(app)
-          .delete('/api/incidents/' + res.body.data.id)
-          .set('Authorization', userToken)
-          .expect(204)
-          .end(err => {
-            if (err) throw err;
-            createStub.restore();
-            deleteIncidentStub.restore();
-            done();
-          });
-      });
+    makeServerCall(userToken, testIncident, done, deleteIncidentStub);
   });
 
   it('should list an incident if provided with an existing incident Id', done => {
     const listIncidentsByIdStub = testStub('listIncidents');
-    request(app)
-      .post(incidentsEndpoint)
-      .send(testIncident)
-      .then(res => {
-        request(app)
-          .get('/api/incidents/' + res.body.data.id)
-          .set('Authorization', userToken)
-          .expect(200)
-          .end(err => {
-            if (err) throw err;
-            createStub.restore();
-            listIncidentsByIdStub.restore();
-            done();
-          });
-      });
+    makeServerCall(userToken, testIncident, done, listIncidentsByIdStub);
   });
 });
