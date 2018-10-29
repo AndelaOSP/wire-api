@@ -90,8 +90,9 @@ describe('Incident Tests', () => {
     nodemailerStub.restore();
   });
 
-  let createStub = sinon.stub(incident, 'create').resolves(Object({}, ''));
-  let updateIncidentStub = sinon.stub(incident, 'update').resolves(Object({}, ''));
+  const testStub = queryType => sinon.stub(incident, queryType).resolves(Object({}, ''));
+  const createStub = testStub('create');
+  const updateIncidentStub = testStub('update');
 
   const makeServerCall = (userToken, requestBody, done) => {
     request(app)
@@ -221,9 +222,7 @@ describe('Incident Tests', () => {
   });
 
   it('should delete an incident provided an existing incident ID', done => {
-    let deleteIncidentStub = sinon
-      .stub(incident, 'delete')
-      .resolves(Object({}, ''));
+    const deleteIncidentStub = testStub('delete');
     request(app)
       .post(incidentsEndpoint)
       .send(testIncident)
@@ -242,10 +241,7 @@ describe('Incident Tests', () => {
   });
 
   it('should list an incident if provided with an existing incident Id', done => {
-    // let createStub = sinon.stub(incident, 'create').resolves(Object({}, ''));
-    let listIncidentsByIdStub = sinon
-      .stub(incident, 'listIncidents')
-      .resolves(Object({}, ''));
+    const listIncidentsByIdStub = testStub('listIncidents');
     request(app)
       .post(incidentsEndpoint)
       .send(testIncident)
