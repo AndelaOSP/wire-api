@@ -15,17 +15,26 @@ module.exports = app => {
       message: 'Log an incident on WIRE'
     })
   );
-  // incidents endpoints
-  app.post('/api/incidents', incidentsService.create);
-  app.get('/api/incidents', [Auth, canViewIncidents], incidentsService.list);
-  app.get('/api/incidents/:id', [Auth, canViewIncidents], incidentsService.findById);
-  app.put('/api/incidents/:id', [Auth, canViewIncidents], incidentsService.update);
-  app.get('/api/search/incidents', [Auth, isAdmin], incidentsService.search);
-  app.delete('/api/incidents/:id', [Auth, isAdmin], incidentsService.delete);
 
+  //no auth needed
+  app.post('/api/incidents', incidentsService.create);
+  app.post('/api/users/login', usersService.login);
+
+  app.use(Auth);
   // locations endpoints
   app.post('/api/locations', locationsService.create);
   app.get('/api/locations', locationsService.list);
+
+  // filter incidents
+  app.get('/api/categories/:id/incidents', incidentsService.listIncidents);
+
+  app.use([
+    Auth,
+    canViewIncidents
+  ]);
+  app.get('/api/incidents', incidentsService.list);
+  app.get('/api/incidents/:id', incidentsService.findById);
+  app.put('/api/incidents/:id', incidentsService.update);
 
   // notes endpoints
   app.post('/api/incidents/:id/notes', notesService.create);
@@ -44,22 +53,20 @@ module.exports = app => {
   app.put('/api/chats/:id', chatsService.update);
   app.delete('/api/chats/:id', chatsService.delete);
 
-  // filter incidents
-  app.get(
-    '/api/categories/:id/incidents',
-    Auth,
-    incidentsService.listIncidents
-  );
 
-  // users endpoints
+  // only authorised admins can do the shit below
+  app.use([Auth, isAdmin]);
+  app.get('/api/search/incidents', incidentsService.search);
+  app.delete('/api/incidents/:id', incidentsService.delete);
+
+  // admin accessible user endpoints
   app.post('/api/users', usersService.create);
-  app.post('/api/users/login', usersService.login);
   app.get('/api/users', usersService.list);
-  app.get('/api/users/:userId', usersService.getUserById);
   app.put('/api/users/:userId', usersService.editUser);
   app.delete('/api/users/:userId', usersService.deleteUser);
   app.post('/api/users/invite', usersService.inviteUser);
   app.get('/api/users/search', usersService.searchUser);
+  app.get('/api/users/:userId', usersService.getUserById);
 
   // roles endpoints
   app.get('/api/roles', rolesService.list);
