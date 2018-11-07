@@ -18,16 +18,14 @@ const Auth = (req, res, next) => {
         messsage: 'Invalid token provided'
       });
     }
-
-    res.locals.roleId = decoded.roleId;
-    res.locals.id = decoded.id;
+    res.locals.currentUser = decoded;
     return next();
   });
 };
 
 const isAdmin = (req, res, next) => {
   const Admin = 3;
-  if (res.locals.roleId === Admin) {
+  if (res.locals.currentUser.roleId === Admin) {
     return next();
   }
   res.status(403).send({ message: 'You are not an Authorised user' });
@@ -41,15 +39,15 @@ const isAdmin = (req, res, next) => {
 * @param function next()
 **/
 const canViewIncidents = (req, res, next) => {
-  const roleId = res.locals.roleId;
+  const roleId = res.locals.currentUser.roleId;
   if (roleId === 2 || roleId === 3) {
     return next();
   }
   res.status(403).send({ message: 'You are not an Authorised user' });
 };
 
-const token = (id, roleId) => {
-  return jwt.sign({ id, roleId }, secretKey, { expiresIn: '24h' });
+const token = ({id, roleId, username}) => {
+  return jwt.sign({ id, roleId, username }, secretKey, { expiresIn: '24h' });
 };
 
 module.exports = { isAdmin, canViewIncidents, Auth, token };
