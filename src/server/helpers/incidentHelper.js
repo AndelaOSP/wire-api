@@ -121,9 +121,38 @@ const addCcdUser = ({ ccdUser, res, incident, tagger}) => {
     });
 };
 
+/**
+ * @function mapAssignees
+ * @param incident object
+ * @return assignee incident
+ */
+const mapAssignees = incident => {
+  return incident.map(oneIncident => {
+    oneIncident.dataValues.assignedRole =
+      oneIncident.dataValues.assigneeIncidents.assignedRole;
+    delete oneIncident.dataValues.assigneeIncidents;
+    return oneIncident;
+  });
+};
+
+/**
+ * @function mapIncidents
+ * @param incidents
+ * @return incident
+ */
+const mapIncidents = incidents => {
+  incidents.map(incident => {
+    incident.assignees && mapAssignees(incident.assignees);
+    incident.dataValues.reporter = incident.dataValues.reporter[0];
+    return incident;
+  });
+};
+
 module.exports = {
   addAssignee,
   addCcdUser,
   findIncidentById,
+  mapAssignees,
+  mapIncidents,
   returnIncidentsIncludes
 };

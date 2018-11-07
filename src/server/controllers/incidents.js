@@ -9,19 +9,12 @@ const {
   addAssignee,
   addCcdUser,
   findIncidentById,
+  mapAssignees,
+  mapIncidents,
   returnIncidentsIncludes
 } = require('../helpers/incidentHelper');
 
 const include = returnIncidentsIncludes();
-// mapping Assignees
-const mapAssignees = incident => {
-  return incident.map(oneIncident => {
-    oneIncident.dataValues.assignedRole =
-      oneIncident.dataValues.assigneeIncidents.assignedRole;
-    delete oneIncident.dataValues.assigneeIncidents;
-    return oneIncident;
-  });
-};
 
 module.exports = {
   // create an incident
@@ -123,11 +116,7 @@ module.exports = {
         include: includeForAssignee
       });
       const userAssignedIncidents = findIncidents.assignedIncidents;
-      let mappedIncidents = userAssignedIncidents.map(incident => {
-        incident.assignees && mapAssignees(incident.assignees);
-        incident.dataValues.reporter = incident.dataValues.reporter[0];
-        return incident;
-      });
+      const mappedIncidents = mapIncidents(userAssignedIncidents);
       return res
         .status(200)
         .send({ data: { incidents: mappedIncidents }, status: 'success' });
@@ -136,11 +125,7 @@ module.exports = {
       include
     })
       .then(incidents => {
-        let mappedIncidents = incidents.map(incident => {
-          incident.assignees && mapAssignees(incident.assignees);
-          incident.dataValues.reporter = incident.dataValues.reporter[0];
-          return incident;
-        });
+        const mappedIncidents = mapIncidents(incidents);
         return res
           .status(200)
           .send({ data: { incidents: mappedIncidents }, status: 'success' });
