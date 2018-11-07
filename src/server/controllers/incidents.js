@@ -115,17 +115,14 @@ module.exports = {
 
   // get all incidents
   async list(req, res) {
-    if (res.locals.roleId === 2) {
+    if (res.locals.currentUser.roleId === 2) {
     
       const includeForAssignee = listAssigneeIncidentsIncludes();
       const findIncidents = await User.findOne({
-        where: { id: res.locals.id },
+        where: { id: res.locals.currentUser.id },
         include: includeForAssignee
       });
       const userAssignedIncidents = findIncidents.assignedIncidents;
-      // const mappedUserAssignedIncidents =  userAssignedIncidents.map(incident => {
-      //   return {...incident.dataValues, reporter: incident.dataValues.reporter.length > 0 ? incident.dataValues.reporter[0] : {} };
-      // });
       let mappedIncidents = userAssignedIncidents.map(incident => {
         incident.assignees && mapAssignees(incident.assignees);
         incident.dataValues.reporter = incident.dataValues.reporter[0];
@@ -191,22 +188,7 @@ module.exports = {
     if (assignedUser || ccdUser) {
       const userKey = assignedUser ? 'assignedUser' : 'ccdUser';
       
-      const users = { 
-        assignedUser: { 
-          assingedRole: 'assignee', 
-          action: addAssignee, 
-          arguments: { 
-            assignedUser, 
-          } 
-        }, 
-        ccdUser: { 
-          assingedRole: 'ccd', 
-          action: addCcdUser, 
-          arguments: { 
-            ccdUser, 
-          } 
-        } 
-      };
+      const users = { assignedUser: { assingedRole: 'assignee', action: addAssignee, arguments: { assignedUser } }, ccdUser: { assingedRole: 'ccd', action: addCcdUser, arguments: { ccdUser, tagger: res.locals.currentUser.username } } };
 
       const selectedUser = users[userKey];
 

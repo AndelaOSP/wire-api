@@ -73,8 +73,8 @@ const ccdRequestBody = {
 let nodemailerStub;
 const incidentsEndpoint = '/api/incidents';
 
-const userToken = token(3453, 3);
-const assigneeUserToken = token('cjl6ege6e000053nyv67otq7a', 2);
+const userToken = token({ id:3453, roleId:3, username: 'Batian Muthoga' });
+const assigneeUserToken = token({ id:'cjl6ege6e000053nyv67otq7a', roleId:2, username:'Mercy Muchai'});
 describe('Incident Tests', () => {
   beforeEach(() => {
     const transport = {
