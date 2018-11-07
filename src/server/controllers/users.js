@@ -74,7 +74,7 @@ module.exports = {
         if (user.roleId === 1) {
           return res.status(403).send({ message: 'You are not aunthorized' });
         }
-        const userToken = token(user.id, user.roleId);
+        const userToken = token(user);
         return res.status(200).send({
           message: 'You were successfully logged in',
           user,
