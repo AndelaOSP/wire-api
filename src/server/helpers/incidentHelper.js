@@ -59,6 +59,7 @@ const sendAssigneeOrCcdEmail = async payload => {
   const userDetails = await getUserDetails(payload);
   const emailBody = await generateAssigneeOrCcdEmailBody({
     ...userDetails.dataValues,
+    tagger: payload.tagger,
     assignedRole: payload.assignedRole // add assigned role
   });
   emailHelper.sendMail(emailBody, error => {
@@ -101,10 +102,10 @@ const addAssignee = ({ assignedUser, incident, res }) => {
  * @param incident object
  * @return data and success message
  */
-const addCcdUser = ({ ccdUser, res, incident}) => {
+const addCcdUser = ({ ccdUser, res, incident, tagger}) => {
   const ccdPromises = ccdUser.map(async user => {
-    const ccd = User.findById(user.userId);
-    let currentCcd = { ...user, assignedRole: 'ccd' };
+    const ccd = await User.findById(user.userId);
+    let currentCcd = { ...user, assignedRole: 'ccd', tagger};
     await sendAssigneeOrCcdEmail(currentCcd);
     ccd.assigneeIncidents = {
       assignedRole: 'ccd'
