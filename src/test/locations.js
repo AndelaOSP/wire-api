@@ -15,7 +15,7 @@ const testLocation = {
   centre: 'Nairobi',
   country: 'Kenya'
 };
-const userToken = token(3453, 3);
+const userToken = token({ id: 3453, roleId: 3, username: 'Batian Muthoga' });
 
 describe('/POST locations', () => {
   const locationsEndpoint = '/api/locations';

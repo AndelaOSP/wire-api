@@ -10,7 +10,7 @@ const { token } = require('../server/middlewares/authentication');
 
 const app = require('../index');
 chai.use(chaiHttp);
-const userToken = token(3453, 3);
+const userToken = token({ id: 3453, roleId: 3, username: 'Batian Muthoga' });
 
 describe('/POST note', () => {
   const notesEndpoint = '/api/incidents/:id/notes';
