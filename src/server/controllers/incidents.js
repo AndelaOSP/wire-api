@@ -173,7 +173,7 @@ module.exports = {
     if (assignedUser || ccdUser) {
       const userKey = assignedUser ? 'assignedUser' : 'ccdUser';
       
-      const users = { assignedUser: { assingedRole: 'assignee', action: addAssignee, arguments: { assignedUser } }, ccdUser: { assingedRole: 'ccd', action: addCcdUser, arguments: { ccdUser, tagger: res.locals.currentUser.username } } };
+      const users = { assignedUser: { assignedRole: 'assignee', action: addAssignee, arguments: { assignedUser } }, ccdUser: { assignedRole: 'ccd', action: addCcdUser, arguments: { ccdUser, tagger: res.locals.currentUser.username } } };
 
       const selectedUser = users[userKey];
 

@@ -16,7 +16,7 @@ module.exports = async userDetails => {
     let body;
     if (userDetails.assignedRole === 'ccd') {
       body = { subject: 'An incident has been assigned.', message: `Hi <strong>${name.first} ${name.last} </strong>,<br/> 
-      You have been tagged in an <a href="${config.WIRE_BASE_URL}/timeline/${userDetails.incidentId}">Incident</a> by ${userDetails.tagger}.
+      You have been tagged in an <a href="${config.WIRE_BASE_URL}timeline/${userDetails.incidentId}">Incident</a> by ${userDetails.tagger}.
       `, to: userDetails.email };
       return body;
     }
@@ -25,7 +25,7 @@ module.exports = async userDetails => {
       subject: 'You have been assigned an incident',
       message: `Hi <strong>${name.first} ${name.last} </strong>,<br/> 
       You've been assigned an incident on <strong>WIRE(Workspace Incident Reporting)</strong>. 
-      Click <a href="${config.WIRE_BASE_URL}/timeline/${userDetails.incidentId}">here</a> to view it.`,
+      Click <a href="${config.WIRE_BASE_URL}timeline/${userDetails.incidentId}">here</a> to view it.`,
       to: userDetails.email,
     };
     return body;
