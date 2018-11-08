@@ -9,7 +9,7 @@ const category = require('../server/models').Categories;
 const app = require('../index');
 
 chai.use(chaiHttp);
-const userToken = token(3453, 3);
+const userToken = token({ id: 3453, roleId: 3, username: 'Batian Muthoga' });
 
 describe('/GET categories', () => {
   it('Should return all the categories', function(done) {

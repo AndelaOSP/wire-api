@@ -9,19 +9,12 @@ const {
   addAssignee,
   addCcdUser,
   findIncidentById,
+  mapAssignees,
+  mapIncidents,
   returnIncidentsIncludes
 } = require('../helpers/incidentHelper');
 
 const include = returnIncidentsIncludes();
-// mapping Assignees
-const mapAssignees = incident => {
-  return incident.map(oneIncident => {
-    oneIncident.dataValues.assignedRole =
-      oneIncident.dataValues.assigneeIncidents.assignedRole;
-    delete oneIncident.dataValues.assigneeIncidents;
-    return oneIncident;
-  });
-};
 
 module.exports = {
   // create an incident
@@ -115,22 +108,15 @@ module.exports = {
 
   // get all incidents
   async list(req, res) {
-    if (res.locals.roleId === 2) {
+    if (res.locals.currentUser.roleId === 2) {
     
       const includeForAssignee = listAssigneeIncidentsIncludes();
       const findIncidents = await User.findOne({
-        where: { id: res.locals.id },
+        where: { id: res.locals.currentUser.id },
         include: includeForAssignee
       });
       const userAssignedIncidents = findIncidents.assignedIncidents;
-      // const mappedUserAssignedIncidents =  userAssignedIncidents.map(incident => {
-      //   return {...incident.dataValues, reporter: incident.dataValues.reporter.length > 0 ? incident.dataValues.reporter[0] : {} };
-      // });
-      let mappedIncidents = userAssignedIncidents.map(incident => {
-        incident.assignees && mapAssignees(incident.assignees);
-        incident.dataValues.reporter = incident.dataValues.reporter[0];
-        return incident;
-      });
+      const mappedIncidents = mapIncidents(userAssignedIncidents);
       return res
         .status(200)
         .send({ data: { incidents: mappedIncidents }, status: 'success' });
@@ -139,11 +125,7 @@ module.exports = {
       include
     })
       .then(incidents => {
-        let mappedIncidents = incidents.map(incident => {
-          incident.assignees && mapAssignees(incident.assignees);
-          incident.dataValues.reporter = incident.dataValues.reporter[0];
-          return incident;
-        });
+        const mappedIncidents = mapIncidents(incidents);
         return res
           .status(200)
           .send({ data: { incidents: mappedIncidents }, status: 'success' });
@@ -191,22 +173,7 @@ module.exports = {
     if (assignedUser || ccdUser) {
       const userKey = assignedUser ? 'assignedUser' : 'ccdUser';
       
-      const users = { 
-        assignedUser: { 
-          assingedRole: 'assignee', 
-          action: addAssignee, 
-          arguments: { 
-            assignedUser, 
-          } 
-        }, 
-        ccdUser: { 
-          assingedRole: 'ccd', 
-          action: addCcdUser, 
-          arguments: { 
-            ccdUser, 
-          } 
-        } 
-      };
+      const users = { assignedUser: { assignedRole: 'assignee', action: addAssignee, arguments: { assignedUser } }, ccdUser: { assignedRole: 'ccd', action: addCcdUser, arguments: { ccdUser, tagger: res.locals.currentUser.username } } };
 
       const selectedUser = users[userKey];
 

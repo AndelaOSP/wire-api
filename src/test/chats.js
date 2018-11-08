@@ -16,7 +16,7 @@ const testChat = {
   chat: 'smapleChat'
 };
 
-const userToken = token(3453, 3);
+const userToken = token({ id: 3453, roleId: 3, username: 'Batian Muthoga' });
 
 describe('/POST chat', () => {
   const chatsEndpoint = '/api/incidents/:id/chats';
