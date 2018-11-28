@@ -7,10 +7,10 @@ module.exports = {
       dateOccurred: '12-10-2017',
       levelId: '1',
       statusId: '2',
-      categoryId: '2',
+      categoryId: '113',
       locationId: 'cjee256gt0000ioxs69v4870x',
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString() 
+      updatedAt: new Date().toISOString()
     },
     {
       id: 'cjfkubrlv0001tgxs3',
@@ -19,10 +19,10 @@ module.exports = {
       dateOccurred: '3-1-2018',
       levelId: '2',
       statusId: '1',
-      categoryId: '3',
+      categoryId: '114',
       locationId: 'cjee24n0n0000hfxsefer9tjh',
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString() 
+      updatedAt: new Date().toISOString()
     },
     {
       id: 'cjfkubrlv0001tsjksuis3',
@@ -31,10 +31,10 @@ module.exports = {
       dateOccurred: '2-3-2018',
       levelId: '3',
       statusId: '3',
-      categoryId: '15',
+      categoryId: '115',
       locationId: 'cjee241h20000g7xsfzd572sl',
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString() 
+      updatedAt: new Date().toISOString()
     }
     ]);
   },
