@@ -1,27 +1,21 @@
-const errorLogs = require('./errorLogs');
 const Location = require('../models').Locations;
 const Incident = require('../models').Incidents;
+const errorLogs = require('../controllers/errorLogs');
 
 module.exports = {
   // add a location
-  create(location, res) {
-    let { name, centre, country } = location;
-    console.log(location.body);
+  create(req, res) {
+    let { name, centre, country } = req.body;
     if (!name || !centre || !country) {
       return res.status(400).send({
-        status: 'fail',
-        message: 'Provide the location name, centre and country'
+        message: 'Location name, centre or country missing'
       });
     }
-    return Location.findOrCreate({
-      where: {
-        name,
-        centre,
-        country
-      }
-    })
-      .spread((location, created) => {
-        return location;
+
+    return Location.findOrCreate({ where: req.body })
+      .then(([location, created]) => {
+        if(created) return res.status(201).send(location);
+        return res.status(409).send('Location already exists');
       })
       .catch(error => {
         errorLogs.catchErrors(error);
