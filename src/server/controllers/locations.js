@@ -6,6 +6,7 @@ module.exports = {
   // add a location
   create(location, res) {
     let { name, centre, country } = location;
+    console.log(location.body);
     if (!name || !centre || !country) {
       return res.status(400).send({
         status: 'fail',

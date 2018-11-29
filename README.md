@@ -62,3 +62,8 @@ Navigate to the port and test the endpoints on postman
 ### Screenshots
 
 <img width="1097" alt="wire-api" src="https://user-images.githubusercontent.com/16113214/30543777-f7e5ad12-9c8c-11e7-80e0-b5fd3fa36546.png">
+
+### Api Documentation
+The documentation for the endpoints can be found at [api endpoints][a7b389c1].
+
+  [a7b389c1]: https://github.com/AndelaOSP/wire-api/blob/master/docs/endpoints.md "Api Endpoints"
