@@ -107,6 +107,7 @@ module.exports = {
     if (req.params.userId === 'search') return next('route');
     return User.findById(req.params.userId, {
       include: [
+        ...includes,
         {
           model: Incident,
           as: 'reportedIncidents',
@@ -128,7 +129,7 @@ module.exports = {
             attributes: []
           }
         }
-      ].concat(includes)
+      ]
     })
       .then(user => {
         return res.status(200).send(user);
