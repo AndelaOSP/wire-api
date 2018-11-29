@@ -107,7 +107,6 @@ module.exports = {
     if (req.params.userId === 'search') return next('route');
     return User.findById(req.params.userId, {
       include: [
-        includes,
         {
           model: Incident,
           as: 'reportedIncidents',
@@ -129,7 +128,7 @@ module.exports = {
             attributes: []
           }
         }
-      ]
+      ].concat(includes)
     })
       .then(user => {
         return res.status(200).send(user);
@@ -157,7 +156,7 @@ module.exports = {
           const emailBody = await generateEmailBody(req.body.email, req.body.roleId);
           emailHelper.sendMail(emailBody, callback);
           const user = await User.findOne({ where: { email: req.body.email }, include: includes });
-          return res.status(200).send({ data: user, status: 'success' });        
+          return res.status(200).send({ data: user, status: 'success' });
         } catch(err){
           res.status(400).send('An error occurred inviting the user');
         }
@@ -211,7 +210,7 @@ module.exports = {
       return res.status(200).send({ data: user, status: 'success' });
     } catch (error) {
       errorLogs.catchErrors(error);
-      res.status(400).send(error); 
+      res.status(400).send(error);
     }
   },
 
@@ -232,7 +231,7 @@ module.exports = {
       return res.status(200).send({message});
     } catch (error) {
       errorLogs.catchErrors(error);
-      res.status(400).send(error); 
+      res.status(400).send(error);
     }
   },
 
@@ -252,7 +251,7 @@ module.exports = {
       return res.status(200).send({data: {users}, status: 'success'});
     } catch (error) {
       errorLogs.catchErrors(error);
-      res.status(400).send(error); 
+      res.status(400).send(error);
     }
   }
 };
