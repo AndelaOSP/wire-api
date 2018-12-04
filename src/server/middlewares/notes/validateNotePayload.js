@@ -1,10 +1,6 @@
-const Joi = require('joi');
 const { noteSchema } = require('../schemas');
+const validateBody = require('../validateBody');
+
 module.exports = (req, res, next) => {
-  Joi.validate(req.body, noteSchema, error => {
-    if (error) {
-      return res.status(400).send({ message: error.details[0].message });
-    }
-    next();
-  });
+  validateBody(req, res, next, noteSchema);
 };

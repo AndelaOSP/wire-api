@@ -76,10 +76,10 @@ module.exports = app => {
   app.get('/api/users', usersService.list);
   app.post('/api/users/invite', usersService.inviteUser);
   app.get('/api/users/search', usersService.searchUser);
-  app.use('/api/users/:userId', validateUserId);
-  app.put('/api/users/:userId', validateUserPayload, usersService.editUser);
-  app.delete('/api/users/:userId', usersService.deleteUser);
-  app.get('/api/users/:userId', usersService.getUserById);
+  app.use('/api/users/:id', validateUserId);
+  app.put('/api/users/:id', validateUserPayload, usersService.editUser);
+  app.delete('/api/users/:id', usersService.deleteUser);
+  app.get('/api/users/:id', usersService.getUserById);
 
   // roles endpoints
   app.get('/api/roles', rolesService.list);

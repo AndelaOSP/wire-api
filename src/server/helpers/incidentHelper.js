@@ -13,9 +13,24 @@ const returnIncidentsIncludes = () => {
     { model: Level, attributes: ['name'] },
     { model: Status, attributes: ['status'] },
     { model: Location, attributes: ['name', 'centre', 'country'] },
-    { model: User, as: 'assignees', userAttributes, through: { attributes: ['assignedRole'] } },
-    { model: User, as: 'reporter', userAttributes, through: { attributes: [] } },
-    { model: User, as: 'witnesses', userAttributes, through: { attributes: [] } }
+    {
+      model: User,
+      as: 'assignees',
+      userAttributes,
+      through: { attributes: ['assignedRole'] }
+    },
+    {
+      model: User,
+      as: 'reporter',
+      userAttributes,
+      through: { attributes: [] }
+    },
+    {
+      model: User,
+      as: 'witnesses',
+      userAttributes,
+      through: { attributes: [] }
+    }
   ];
 };
 const findIncidentById = id => {
@@ -93,7 +108,7 @@ const addAssignee = ({ assignedUser, incident, res }) => {
     .then(data => {
       return res.status(200).send({ data, status: 'success' });
     });
-}
+};
 
 /**
  * @function addCcdUser
@@ -102,10 +117,10 @@ const addAssignee = ({ assignedUser, incident, res }) => {
  * @param incident object
  * @return data and success message
  */
-const addCcdUser = ({ ccdUser, res, incident, tagger}) => {
+const addCcdUser = ({ ccdUser, res, incident, tagger }) => {
   const ccdPromises = ccdUser.map(async user => {
     const ccd = await User.findById(user.userId);
-    let currentCcd = { ...user, assignedRole: 'ccd', tagger};
+    let currentCcd = { ...user, assignedRole: 'ccd', tagger };
     await sendAssigneeOrCcdEmail(currentCcd);
     ccd.assigneeIncidents = {
       assignedRole: 'ccd'

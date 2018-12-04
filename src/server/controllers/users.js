@@ -105,8 +105,8 @@ module.exports = {
       });
   },
   getUserById(req, res, next) {
-    if (req.params.userId === 'search') return next('route');
-    return User.findById(req.params.userId, {
+    if (req.params.id === 'search') return next('route');
+    return User.findById(req.params.id, {
       include: [
         ...includes,
         {
