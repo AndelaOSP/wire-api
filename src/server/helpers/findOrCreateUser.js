@@ -1,8 +1,8 @@
-const LocationService = require('../controllers/locations');
+const { findOrCreateLocation } = require('./locationHelper');
 const User = require('../models').Users;
 
 const findOrCreateUser = (userType, userLocation, res) => {
-  return LocationService.create(userLocation, res)
+  return findOrCreateLocation(userLocation, res)
     .then(location => {
       return location.dataValues.id;
     })

@@ -3,7 +3,7 @@ const User = require('../models').Users;
 const Incident = require('../models').Incidents;
 const Role = require('../models').Roles;
 const Location = require('../models').Locations;
-const LocationService = require('./locations');
+const { findOrCreateLocation } = require('../helpers/locationHelper');
 const emailHelper = require('../helpers/emailHelper');
 const generateEmailBody = require('../helpers/generateEmailBody');
 const { token } = require('../middlewares/authentication');
@@ -39,7 +39,7 @@ module.exports = {
     let imageUrl = req.body.imageUrl;
     let roleId = 2;
     let location = req.body.location;
-    return LocationService.create(location, res)
+    return findOrCreateLocation(location, res)
       .then(location => {
         return location.dataValues.id;
       })

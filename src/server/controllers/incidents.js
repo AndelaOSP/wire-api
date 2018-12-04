@@ -2,7 +2,7 @@ const errorLogs = require('./errorLogs');
 const Incident = require('../models').Incidents;
 const User = require('../models').Users;
 const AssigneeModel = require('../models').assigneeIncidents;
-const LocationService = require('../controllers/locations');
+const { findOrCreateLocation } = require('../helpers/locationHelper');
 const findOrCreateUser = require('../helpers/findOrCreateUser');
 const listAssigneeIncidentsIncludes = require('../helpers/listAssigneeIncidentsIncludes');
 const {
@@ -27,7 +27,7 @@ module.exports = {
     let createdIncident;
     let [dd, mm, yy] = req.body.dateOccurred.split('-');
     dateOccurred = `${mm}-${dd}-${yy}`;
-    return LocationService.create(location, res)
+    return findOrCreateLocation(location, res)
       .then(location => {
         return location.dataValues.id;
       })
@@ -109,7 +109,7 @@ module.exports = {
   // get all incidents
   async list(req, res) {
     if (res.locals.currentUser.roleId === 2) {
-    
+
       const includeForAssignee = listAssigneeIncidentsIncludes();
       const findIncidents = await User.findOne({
         where: { id: res.locals.currentUser.id },
@@ -172,7 +172,7 @@ module.exports = {
 
     if (assignedUser || ccdUser) {
       const userKey = assignedUser ? 'assignedUser' : 'ccdUser';
-      
+
       const users = { assignedUser: { assignedRole: 'assignee', action: addAssignee, arguments: { assignedUser } }, ccdUser: { assignedRole: 'ccd', action: addCcdUser, arguments: { ccdUser, tagger: res.locals.currentUser.username } } };
 
       const selectedUser = users[userKey];
@@ -180,7 +180,7 @@ module.exports = {
       return findIncidentPromise
         .then(incident => {
           if (incident.dataValues.assignees.length === 0) {
-            return selectedUser.action({ 
+            return selectedUser.action({
               ...selectedUser.arguments,
               incident,
               res
@@ -192,7 +192,7 @@ module.exports = {
                 incidentId: incident.id
               }
             }).then(() => {
-              return selectedUser.action({ 
+              return selectedUser.action({
                 ...selectedUser.arguments,
                 incident,
                 res
@@ -204,7 +204,7 @@ module.exports = {
           errorLogs.catchErrors(error);
           return res.status(400).send(error);
         });
-    
+
     } else {
       return findIncidentPromise
         .then(incident => {
