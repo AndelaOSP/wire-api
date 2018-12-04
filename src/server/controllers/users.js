@@ -107,7 +107,7 @@ module.exports = {
     if (req.params.userId === 'search') return next('route');
     return User.findById(req.params.userId, {
       include: [
-        includes,
+        ...includes,
         {
           model: Incident,
           as: 'reportedIncidents',
