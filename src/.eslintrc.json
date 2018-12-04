@@ -8,10 +8,13 @@
       "jest": true
   },
   "extends": [
+      "airbnb-base",
       "eslint:recommended",
       "plugin:import/errors",
-      "plugin:import/warnings"
+      "plugin:import/warnings",
+      "prettier"
   ],
+  "plugins": [ "prettier" ],
   "parser": "babel-eslint",
   "parserOptions": {
       "ecmaVersion": 6,
@@ -21,6 +24,14 @@
       }
   },
   "rules": {
+      "prettier/prettier": [
+        "error",
+        {
+        "singleQuote": true, 
+        "trailingComma": "all",
+        "bracketSpacing": true
+        }
+    ],
       "quotes": [
           2,
           "single"
@@ -39,6 +50,21 @@
           "error",
           2
       ],
+      "prefer-destructuring": ["error",
+        {
+      "VariableDeclarator": {
+        "array": true,
+        "object": true
+            },
+      "AssignmentExpression": {
+        "array": true,
+        "object": false
+            }
+        },
+        {
+      "enforceForRenamedProperties": false
+        }
+    ],
       "no-trailing-spaces": 0,
       "eol-last": 1,
       "no-unused-vars": 0,
