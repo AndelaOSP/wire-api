@@ -20,7 +20,7 @@ const testIncident = {
   dateOccurred: '01-09-2018',
   levelId: '1',
   incidentReporter: {
-    slackId: 'U7LEPG8LF',
+    userId: 'U7LEPG8LF',
     email: 'batian.muthoga@andela.com',
     username: 'Batian Muthoga',
     imageUrl:
@@ -29,7 +29,7 @@ const testIncident = {
   },
   witnesses: [
     {
-      slackId: 'U7LEPG8LF',
+      userId: 'U7LEPG8LF',
       email: 'batian.muthoga@andela.com',
       username: 'Batian Muthoga',
       imageUrl:
@@ -41,7 +41,7 @@ const testIncident = {
       }
     },
     {
-      slackId: 'UBQ8DDCBF',
+      userId: 'UBQ8DDCBF',
       email: 'eugene.omar@andela.com',
       username: 'Eugene',
       imageUrl:
@@ -73,8 +73,12 @@ const ccdRequestBody = {
 let nodemailerStub;
 const incidentsEndpoint = '/api/incidents';
 
-const userToken = token({ id:3453, roleId:3, username: 'Batian Muthoga' });
-const assigneeUserToken = token({ id:'cjl6ege6e000053nyv67otq7a', roleId:2, username:'Mercy Muchai'});
+const userToken = token({ id: 3453, roleId: 3, username: 'Batian Muthoga' });
+const assigneeUserToken = token({
+  id: 'cjl6ege6e000053nyv67otq7a',
+  roleId: 2,
+  username: 'Mercy Muchai'
+});
 describe('Incident Tests', () => {
   beforeEach(() => {
     const transport = {
@@ -90,7 +94,8 @@ describe('Incident Tests', () => {
     nodemailerStub.restore();
   });
 
-  const testStub = queryType => sinon.stub(incident, queryType).resolves(Object({}, ''));
+  const testStub = queryType =>
+    sinon.stub(incident, queryType).resolves(Object({}, ''));
   const createStub = testStub('create');
   const updateIncidentStub = testStub('update');
 
@@ -155,7 +160,8 @@ describe('Incident Tests', () => {
               }
               listStub.restore();
               done();
-            });});
+            });
+        });
       });
     });
   });
@@ -181,21 +187,13 @@ describe('Incident Tests', () => {
       });
   });
 
-  it('should throw an error if an error occurs while trying to find an incident id', done => {
-    let findByIdStub = sinon.stub(incidents, 'findById').rejects({});
-    request(app)
-      .get('/api/incidents/' + 'someID')
-      .set('Authorization', userToken)
-      .expect(400)
-      .end(err => {
-        if (err) throw err;
-        findByIdStub.restore();
-        done();
-      });
-  });
-
   it('should update an incident when someone gets assigned to it', done => {
-    return makeServerCall(userToken, assigneeRequestBody, done, updateIncidentStub);
+    return makeServerCall(
+      userToken,
+      assigneeRequestBody,
+      done,
+      updateIncidentStub
+    );
   });
 
   it('should update an incident provided an existing incident ID', done => {
@@ -205,8 +203,8 @@ describe('Incident Tests', () => {
       .then(res => {
         request(app)
           .put('/api/incidents/' + res.body.data.id)
-          .send({ statusId: 3 })
           .set('Authorization', userToken)
+          .send({ ...testIncident, statusId: 3 })
           .expect(200)
           .end(err => {
             if (err) throw err;
