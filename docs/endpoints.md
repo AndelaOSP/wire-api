@@ -1,14 +1,15 @@
-All data sent and received is in *JSON* format. All responses are in [Jsend format](https://labs.omniti.com/labs/jsend). This is the [baseURL](https://wireapi-staging.herokuapp.com) for all endpoints.
+All data sent and received is in _JSON_ format. All responses are in [Jsend format](https://labs.omniti.com/labs/jsend). This is the [baseURL](https://wireapi-staging.herokuapp.com) for all endpoints.
 
 ## POST Login a user
 
-Allows an  authorized user to login.The body is a json object as sampled below. The login method gives the user a token that enables them to perfom some of the routes/endpoints enlisted below.
-
+Allows an authorized user to login.The body is a json object as sampled below. The login method gives the user a token that enables them to perfom some of the routes/endpoints enlisted below.
 
 ### Sample request
+
 `url --request POST`
 
 #### url
+
 `/api/users/login`
 
 #### payload
@@ -20,6 +21,7 @@ Allows an  authorized user to login.The body is a json object as sampled below. 
 ```
 
 ### Sample response
+
 ```
 {
     "message": "You were successfully logged in",
@@ -37,17 +39,21 @@ Allows an  authorized user to login.The body is a json object as sampled below. 
     "expiresIn": "24h"
 }
 ```
+
 ## POST Location
 
 Allows a user to post location.
 
 ### Sample request
+
 `curl --request POST`
 
 #### url
+
 `/api/locations`
 
 #### payload
+
 ```
 {
 	"name": "Narnia",
@@ -57,6 +63,7 @@ Allows a user to post location.
 ```
 
 ### Sample response
+
 ```
 {
    "id": "cjp2mbox80000z4v24mbtpox5",
@@ -73,12 +80,15 @@ Allows a user to post location.
 To get all existing locations
 
 ### Sample request
+
 `curl --request GET`
 
 #### url
+
 `/api/locations`
 
 ### Sample response
+
 ```
 {
     "data": {
@@ -110,12 +120,15 @@ To get all existing locations
 Allows a user to post an incident. The body is a json object as sampled below. Some of the values can be left out when posting. These include: **witnesses** and **levelId**
 
 ### Sample request
+
 `curl --request POST`
 
 #### url
+
 `/api/incidents`
 
 ### Sample response
+
 ```
  {
     "id": "cjfjgiroz0001lexs5h8kx4d5",
@@ -158,12 +171,15 @@ Allows a user to post an incident. The body is a json object as sampled below. S
 To get all existing incidents
 
 ### Sample request
+
 `curl --request GET`
 
 #### url
+
 `/api/incidents`
 
 ### Sample response
+
 ```
 {
     "data": {
@@ -321,17 +337,21 @@ To get all existing incidents
     "status": "success"
 }
 ```
-##  GET Incident
+
+## GET Incident
 
 To get one existing incident
 
 ### Sample request
+
 `curl --request GET`
 
 #### url
+
 `/api/incidents/<incidentId>`
 
 ### Sample response
+
 ```
  {
     "id": "cjfkubrlv0001tsjksuis3",
@@ -378,9 +398,11 @@ This endpoint is made use of when updating an assignee to an incident. Can only 
 `curl --request PUT`
 
 #### url
+
 `/api/incidents/<incidentId>`
 
 #### payload
+
 ```
 {
    "assignee":
@@ -389,7 +411,9 @@ This endpoint is made use of when updating an assignee to an incident. Can only 
     }
 }
 ```
+
 It can also be an array of users to CC. i.e
+
 ```
 {
     "ccd":
@@ -403,7 +427,9 @@ It can also be an array of users to CC. i.e
     ]
 }
 ```
+
 It could also be:
+
 ```
 {
     "levelId": "2",
@@ -412,6 +438,7 @@ It could also be:
 ```
 
 ### Sample response
+
 ```
  {
     "status": "success",
@@ -453,15 +480,19 @@ It could also be:
 ```
 
 ## GET categories
+
 Allows a user to get all categories
 
 ### Sample request
+
 `curl --request GET`
 
 #### url
+
 `/api/categories`
 
 ### Sample response
+
 ```
 {
     "data": {
@@ -489,15 +520,19 @@ Allows a user to get all categories
 ```
 
 ## GET Category incidents
+
 Allows a user to get incidents by category
 
 ### Sample request
+
 `curl --request GET`
 
 #### url
+
 `/api/categories/<categoryId>incidents`
 
 ### Sample response
+
 ```
 {
     "data": {
@@ -546,164 +581,20 @@ Allows a user to get incidents by category
 }
 ```
 
-## POST chat
-
-Allows a user to post a chat.
-
-### Sample request
-`curl --request POST`
-
-#### url
-`/api/incidents/<incidentId>/chats`
-
-#### payload
-```
-{
-    "userEmail": "batian.muthoga@andela.com",
-    "chat": "chat1"
-}
-```
-
-### Sample response
-```
-{
-  "data": {
-      "id": "cjfjgiroz0001lexs5h8kx4d5",
-      "chat": "New note",
-      "createdAt": "2018-04-03T09:24:19.763Z",
-      "updatedAt": "2018-04-03T09:24:19.763Z",
-      "incidentId": "cjfcbhngw00013dxsfm2nufln",
-      "userEmail": "batian.muthoga@andela.com",
-      "User": {
-          "id": "U7LEPG8LF",
-          "imageUrl": "https://avatars.slack-edge.com/2018-01-31/308111298950_b15a779680c4d2bb093c_48.png",
-          "username": "Batian Muthoga"
-      }
-  }
-}
-```
-
-## GET chats
-
-To get all existing chats to an incident
-
-### Sample request
-`curl --request GET`
-
-#### url
-`/api/incidents/<incidentId>/chats`
-
-### Sample response
-```
-{
-    "data": {
-        "chats": [
-            {
-                "id": "cjfjgiroz0001lexs5h8kx4d5",
-                "chat": "New note",
-                "createdAt": "2018-04-03T09:24:19.763Z",
-                "updatedAt": "2018-04-03T09:24:19.763Z",
-                "incidentId": "cjfcbhngw00013dxsfm2nufln",
-                "userEmail": "batian.muthoga@andela.com",
-                "User": {
-                    "id": "U7LEPG8LF",
-                    "imageUrl": "https://avatars.slack-edge.com/2018-01-31/308111298950_b15a779680c4d2bb093c_48.png",
-                    "username": "Batian Muthoga"
-                }
-            }
-        ]
-    },
-    "status": "success"
-}
-```
-
-## GET one  chat
-
-To get one chat on a specific incident.
-
-### Sample request
-`curl --request GET`
-
-#### url
-`/api/chats/<chatId>`
-
-### Sample response
-```
-{
-    "data": {
-        "id": "cjfjgiroz0001lexs5h8kx4d5",
-        "chat": "New note",
-        "createdAt": "2018-04-03T09:24:19.763Z",
-        "updatedAt": "2018-04-03T09:24:19.763Z",
-        "incidentId": "cjfcbhngw00013dxsfm2nufln",
-        "userEmail": "batian.muthoga@andela.com",
-        "User": {
-            "id": "U7LEPG8LF",
-            "imageUrl": "https://avatars.slack-edge.com/2018-01-31/308111298950_b15a779680c4d2bb093c_48.png",
-            "username": "Batian Muthoga"
-        }
-  }
-}
-```
-
-## PUT chat
-
-Allows a user to edit a chat using the chat id.
-
-### Sample request
-`curl --request PUT`
-
-#### url
-`/api/chats/<chatId>`
-
-#### payload
-```
-{
-    "userEmail": "batian.muthoga@andela.com",
-    "chat": "edited chat1"
-}
-```
-
-### Sample response
-```
-{
-  "data": {
-    "id": "cjfjgiroz0001lexs5h8kx4d5",
-    "chat": "New note",
-    "createdAt": "2018-04-03T09:24:19.763Z",
-    "updatedAt": "2018-04-03T09:24:19.763Z",
-    "incidentId": "cjfcbhngw00013dxsfm2nufln",
-    "userEmail": "batian.muthoga@andela.com",
-    "User": {
-        "id": "U7LEPG8LF",
-        "imageUrl": "https://avatars.slack-edge.com/2018-01-31/308111298950_b15a779680c4d2bb093c_48.png",
-        "username": "Batian Muthoga"
-    }
-  }
-}
-```
-
-## DELETE chat
-
-Allows a user to delete a chat posted using the chat id.
-
-### Sample request
-`curl --request DELETE`
-
-#### url
-`/api/chats/<chatId>`
-
 ## POST note
 
 Allows a user to post a note on an incident.
 
 ### Sample request
+
 `curl --request POST`
 
 #### url
+
 `/api/incidents/<incidentId>/notes`
 
 #### payload
+
 ```
 {
     "userEmail": "batian.muthoga@andela.com",
@@ -712,6 +603,7 @@ Allows a user to post a note on an incident.
 ```
 
 ### Sample response
+
 ```
 {
     "data": {
@@ -737,9 +629,11 @@ To get all existing notes to an incident
 `curl --request GET`
 
 #### url
+
 `/api/incidents/<incidentId>/notes`
 
 ### Sample response
+
 ```
 {
     "data": {
@@ -763,16 +657,20 @@ To get all existing notes to an incident
 }
 ```
 
-## GET one  note
+## GET one note
 
 To get a specific note to an existing incident
+
 ### Sample request
+
 `curl --request GET`
 
 #### url
+
 `/api/notes/<noteId>`
 
 ### Sample response
+
 ```
 {
     "data": {
@@ -793,15 +691,19 @@ To get a specific note to an existing incident
 ```
 
 ## PUT note
+
 Allows a user to edit a note using the note id.
 
 ### Sample request
+
 `curl --request PUT`
 
 #### url
+
 `/api/notes/<noteId>`
 
 #### payload
+
 ```
 {
     "userEmail": "batian.muthoga@andela.com",
@@ -810,6 +712,7 @@ Allows a user to edit a note using the note id.
 ```
 
 ### Sample response
+
 ```
 {
     "data": {
@@ -834,9 +737,11 @@ Allows a user to edit a note using the note id.
 Allows a user to delete a note posted using the note id.
 
 ### Sample request
+
 `curl --request DELETE`
 
 #### url
+
 `/api/notes/<noteId>`
 
 # Admin endpoints
@@ -846,12 +751,15 @@ Allows a user to delete a note posted using the note id.
 To get all existing incidents
 
 ### Sample request
+
 `curl --request GET`
 
 #### url
+
 `/api/search/incidents?q=<key_word>`
 
 ### Sample response
+
 ```
 {
     "data": {
@@ -1011,24 +919,31 @@ To get all existing incidents
 ```
 
 ## DELETE Incident
+
 Allows an admin to delete an incident.
 
 ### Sample request
+
 `curl --request DELETE`
 
 #### url
+
 `/api/incidents/<incidentId>`
 
 ## POST user
+
 Allows an admin to create a user
 
 ### Sample request
+
 `curl --request POST`
 
 #### url
+
 `/api/users`
 
 #### payload
+
 ```
 {
 	"email": "oliver.munala@andela.com",
@@ -1043,6 +958,7 @@ Allows an admin to create a user
 ```
 
 ### Sample response
+
 ```
 {
     "data": {
@@ -1061,15 +977,19 @@ Allows an admin to create a user
 ```
 
 ## GET Users
+
 Allows an admin to get all users
 
 ### Sample request
+
 `curl --request GET`
 
 #### url
+
 `/api/users`
 
 ### Sample response
+
 ```
 {
     "data": {
@@ -1161,15 +1081,19 @@ Allows an admin to get all users
 ```
 
 ## PUT user
+
 Allows an admin to edit a user
 
 ### Sample request
+
 `curl --request PUT`
 
 #### url
+
 `/api/users/<userId>`
 
 #### payload
+
 ```
 {
 	"email": "oliver.munala@andela.com",
@@ -1179,6 +1103,7 @@ Allows an admin to edit a user
 ```
 
 ### Sample response
+
 ```
 {
     "data": {
@@ -1206,15 +1131,19 @@ Allows an admin to edit a user
 ```
 
 ## GET user
+
 Allows an admin to get a user
 
 ### Sample request
+
 `curl --request GET`
 
 #### url
+
 `/api/users/<userId>`
 
 ### Sample response
+
 ```
 {
     "data": {
@@ -1242,15 +1171,19 @@ Allows an admin to get a user
 ```
 
 ## GET users by name
+
 Allows an admin to search users using the name
 
 ### Sample request
+
 `curl --request GET`
 
 #### url
+
 `/api/users/search?q=<name>`
 
 ### Sample response
+
 ```
 {
     "data": {
@@ -1282,15 +1215,19 @@ Allows an admin to search users using the name
 ```
 
 ## POST Invite
+
 Allows an admin to invite a user
 
 ### Sample request
+
 `curl --request POST`
 
 #### url
+
 `/api/users/search`
 
 #### payload
+
 ```
 {
     "email": "oliver.munala@andela.com",
@@ -1300,6 +1237,7 @@ Allows an admin to invite a user
 ```
 
 ### Sample response
+
 ```
 {
     "data": {
@@ -1327,15 +1265,19 @@ Allows an admin to invite a user
 ```
 
 ## DELETE user
+
 Allows an admin to delete a user
 
 ### Sample request
+
 `curl --request DELETE`
 
 #### url
+
 `/api/users/<userId>`
 
 ### Sample response
+
 ```
 {
     "message": "User deleted Successfully"

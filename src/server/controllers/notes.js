@@ -13,7 +13,8 @@ const findNoteById = (id, res) => {
       return note;
     })
     .catch(error => {
-      throw(error);
+      errorLogs.catchErrors(error);
+      res.status(500).send(error);
     });
 };
 
@@ -33,7 +34,7 @@ module.exports = {
       })
       .catch(error => {
         errorLogs.catchErrors(error);
-        res.status(400).send(error);
+        res.status(500).send(error);
       });
   },
 
@@ -45,14 +46,12 @@ module.exports = {
       },
       include: userAttributes
     })
-      .then(note => {
-        return res
-          .status(200)
-          .send({ data: { notes: note }, status: 'success' });
+      .then(notes => {
+        return res.status(200).send({ data: { notes }, status: 'success' });
       })
       .catch(error => {
         errorLogs.catchErrors(error);
-        res.status(400).send(error);
+        res.status(500).send(error);
       });
   },
 
@@ -69,7 +68,7 @@ module.exports = {
       })
       .catch(error => {
         errorLogs.catchErrors(error);
-        return res.status(400).send(error);
+        return res.status(500).send(error);
       });
   },
 
@@ -82,10 +81,11 @@ module.exports = {
           status: 'fail'
         });
       }
-      return Note.update({
-        note: req.body.note || Note.note,
-        userEmail: req.body.userEmail || Note.userEmail
-      })
+      return res.locals.note
+        .update({
+          note: req.body.note || Note.note,
+          userEmail: req.body.userEmail || Note.userEmail
+        })
         .then(Note => {
           return findNoteById(Note.id, res);
         })
@@ -94,28 +94,21 @@ module.exports = {
         })
         .catch(error => {
           errorLogs.catchErrors(error);
-          res.status(400).send(error);
+          res.status(500).send(error);
         });
     });
   },
 
   // delete a note
   delete(req, res) {
-    return Note.findById(req.params.id).then(Note => {
-      if (!Note) {
-        return res.status(404).send({
-          message: 'Note not found',
-          status: 'fail'
-        });
-      }
-      return Note.destroy()
-        .then(() => {
-          return res.status(204).send();
-        })
-        .catch(error => {
-          errorLogs.catchErrors(error);
-          res.status(400).send(error);
-        });
-    });
+    return res.locals.note
+      .destroy()
+      .then(() => {
+        return res.status(204).send();
+      })
+      .catch(error => {
+        errorLogs.catchErrors(error);
+        res.status(500).send(error);
+      });
   }
 };
