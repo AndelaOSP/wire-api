@@ -1,0 +1,63 @@
+{
+  "name": "wire-api",
+  "version": "1.0.0",
+  "description": "Wire API",
+  "main": "index.js",
+  "repository": "https://github.com/andelaosp/wire-api.git",
+  "author": "Wire People <@Andela>",
+  "license": "MIT",
+  "scripts": {
+    "start:dev": "nodemon ./bin/www",
+    "debug": "node --inspect ./bin/www",
+    "seed": "sequelize db:seed:undo:all && sequelize db:seed --seed levels && sequelize db:seed --seed categories && sequelize db:seed --seed status && sequelize db:seed --seed locations && sequelize db:seed --seed roles && sequelize db:seed --seed incidents && sequelize db:seed --seed users && sequelize db:seed --seed reporters && sequelize db:seed --seed witnesses",
+    "migrate": "sequelize db:migrate:undo:all && sequelize db:migrate",
+    "lint": "./node_modules/.bin/eslint --fix ./server ./test",
+    "migrate-seed": "npm run migrate && npm run seed",
+    "pretest": "NODE_ENV=test sequelize db:migrate:undo:all && NODE_ENV=test sequelize db:migrate && NODE_ENV=test yarn run seed",
+    "posttest": "NODE_ENV=test sequelize db:migrate:undo:all",
+    "test": "NODE_ENV=test nyc --reporter=html --reporter=text jest --detectOpenHandles --runInBand",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "forceExit": true
+  },
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "cuid": "^2.1.0",
+    "dotenv": "^4.0.0",
+    "express": "^4.16.2",
+    "joi": "14.3.0",
+    "jsonwebtoken": "^7.4.3",
+    "knex": "^0.13.0",
+    "lodash": "^4.17.4",
+    "morgan": "^1.9.0",
+    "mysql": "2.15.0",
+    "nodemailer": "4.6.7",
+    "nodemailer-smtp-transport": "2.7.4",
+    "nodemon": "^1.14.11",
+    "pg": "^6.2.3",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^3.30.4",
+    "sequelize-cli": "^4.1.1",
+    "slack-error-notify": "^1.0.4"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.0.1",
+    "coveralls": "^3.0.1",
+    "eslint": "5.6.0",
+    "eslint-config-airbnb-base": "13.1.0",
+    "eslint-config-prettier": "3.3.0",
+    "eslint-plugin-import": "2.14.0",
+    "eslint-plugin-jest": "^22.1.2",
+    "eslint-plugin-prettier": "^3.0.0",
+    "istanbul": "^0.4.5",
+    "jest": "^23.6.0",
+    "jest-cli": "^23.6.0",
+    "nodemon": "^1.14.11",
+    "nyc": "^11.6.0",
+    "prettier": "1.15.3",
+    "supertest": "^3.0.0"
+  }
+}

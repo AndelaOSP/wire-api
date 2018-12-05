@@ -1,0 +1,77 @@
+{
+  "env": {
+      "browser": true,
+      "node": true,
+      "es6": true,
+      "jquery": true,
+      "mocha": true,
+      "jest": true
+  },
+  "extends": [
+      "airbnb-base",
+      "eslint:recommended",
+      "plugin:import/errors",
+      "plugin:import/warnings",
+      "prettier",
+      "plugin:jest/recommended"
+  ],
+  "plugins": [ "prettier", "jest" ],
+  "parser": "babel-eslint",
+  "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module",
+      "ecmaFeatures": {
+          "experimentalObjectRestSpread": true
+      }
+  },
+  "rules": {
+      "prettier/prettier": [
+        "error",
+        {
+        "singleQuote": true,
+        "trailingComma": "all",
+        "bracketSpacing": true
+        }
+    ],
+      "quotes": [
+          2,
+          "single"
+      ],
+      "no-console": 1,
+      "no-debugger": 1,
+      "no-var": 1,
+      "strict": [
+          1
+      ],
+      "semi": [
+          1,
+          "always"
+      ],
+      "indent": [
+          "error",
+          2
+      ],
+      "prefer-destructuring": ["error",
+        {
+      "VariableDeclarator": {
+        "array": true,
+        "object": true
+            },
+      "AssignmentExpression": {
+        "array": true,
+        "object": false
+            }
+        },
+        {
+      "enforceForRenamedProperties": false
+        }
+    ],
+      "no-trailing-spaces": 0,
+      "eol-last": 1,
+      "no-unused-vars": 0,
+      "no-underscore-dangle": 0,
+      "no-alert": 0,
+      "no-lone-blocks": 0,
+      "import/no-unresolved": 0
+  }
+}
