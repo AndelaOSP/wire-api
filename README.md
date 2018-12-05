@@ -1,5 +1,4 @@
 [![Coverage Status](https://coveralls.io/repos/github/AndelaOSP/wire-api/badge.svg?branch=develop)](https://coveralls.io/github/AndelaOSP/wire-api?branch=develop)
-
 [![CircleCI](https://circleci.com/gh/AndelaOSP/wire-api/tree/develop.svg?style=svg)](https://circleci.com/gh/AndelaOSP/wire-api/tree/develop)
 
 # wire-api
