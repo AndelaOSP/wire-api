@@ -102,14 +102,13 @@ module.exports = {
       })
       .catch(error => {
         errorLogs.catchErrors(error);
-        res.status(400).send(error);
+        res.status(500).send(error);
       });
   },
 
   // get all incidents
   async list(req, res) {
     if (res.locals.currentUser.roleId === 2) {
-
       const includeForAssignee = listAssigneeIncidentsIncludes();
       const findIncidents = await User.findOne({
         where: { id: res.locals.currentUser.id },
@@ -132,7 +131,7 @@ module.exports = {
       })
       .catch(error => {
         errorLogs.catchErrors(error);
-        return res.status(400).send(error);
+        return res.status(500).send(error);
       });
   },
 
@@ -140,18 +139,13 @@ module.exports = {
   findById(req, res) {
     return findIncidentById(req.params.id, res)
       .then(incident => {
-        if (!incident) {
-          return res
-            .status(404)
-            .send({ message: 'Incident not found', status: 'fail' });
-        }
         incident.assignees && mapAssignees(incident.assignees);
         incident.dataValues.reporter = incident.dataValues.reporter[0];
         return res.status(200).send({ data: incident, status: 'success' });
       })
       .catch(error => {
         errorLogs.catchErrors(error);
-        return res.status(400).send(error);
+        return res.status(500).send(error);
       });
   },
 
@@ -165,15 +159,26 @@ module.exports = {
       return incident
         ? Promise.resolve(incident)
         : Promise.reject({
-          message: 'Incident not found',
-          status: 'fail'
-        });
+            message: 'Incident not found',
+            status: 'fail'
+          });
     });
 
     if (assignedUser || ccdUser) {
       const userKey = assignedUser ? 'assignedUser' : 'ccdUser';
 
-      const users = { assignedUser: { assignedRole: 'assignee', action: addAssignee, arguments: { assignedUser } }, ccdUser: { assignedRole: 'ccd', action: addCcdUser, arguments: { ccdUser, tagger: res.locals.currentUser.username } } };
+      const users = {
+        assignedUser: {
+          assignedRole: 'assignee',
+          action: addAssignee,
+          arguments: { assignedUser }
+        },
+        ccdUser: {
+          assignedRole: 'ccd',
+          action: addCcdUser,
+          arguments: { ccdUser, tagger: res.locals.currentUser.username }
+        }
+      };
 
       const selectedUser = users[userKey];
 
@@ -202,9 +207,8 @@ module.exports = {
         })
         .catch(error => {
           errorLogs.catchErrors(error);
-          return res.status(400).send(error);
+          return res.status(500).send(error);
         });
-
     } else {
       return findIncidentPromise
         .then(incident => {
@@ -223,28 +227,20 @@ module.exports = {
         })
         .catch(error => {
           errorLogs.catchErrors(error);
-          return res.status(400).send(error);
+          return res.status(500).send(error);
         });
     }
   },
 
   // delete an incident by ID. To be refactored into archive incidents that are old and resolved.
   delete(req, res) {
-    return Incident.findById(req.params.id).then(incident => {
-      if (!incident) {
-        return res.status(404).send({
-          message: 'Incident not found',
-          status: 'fail'
-        });
-      }
-      return incident
-        .destroy()
-        .then(() => res.status(204).send())
-        .catch(error => {
-          errorLogs.catchErrors(error);
-          res.status(400).send(error);
-        });
-    });
+    return res.locals.incident
+      .destroy()
+      .then(() => res.status(204).send())
+      .catch(error => {
+        errorLogs.catchErrors(error);
+        res.status(500).send(error);
+      });
   },
 
   //search an incident by subject or description.
@@ -268,7 +264,7 @@ module.exports = {
       })
       .catch(error => {
         errorLogs.catchErrors(error);
-        res.status(400).send(error);
+        res.status(500).send(error);
       });
   },
 
@@ -287,7 +283,7 @@ module.exports = {
       })
       .catch(error => {
         errorLogs.catchErrors(error);
-        res.status(400).send(error);
+        res.status(500).send(error);
       });
   }
 };

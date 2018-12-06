@@ -4,171 +4,136 @@ const request = require('supertest');
 const assert = chai.assert;
 const sinon = require('sinon');
 
-const note = require('../server/models').Notes;
+const Note = require('../server/models').Notes;
 const { token } = require('../server/middlewares/authentication');
-
 
 const app = require('../index');
 chai.use(chaiHttp);
 const userToken = token({ id: 3453, roleId: 3, username: 'Batian Muthoga' });
+const testPayload = {
+  userEmail: 'batian.muthoga@andela.com',
+  note: 'This is a sample note'
+};
 
-describe('/POST note', () => {
-  const notesEndpoint = '/api/incidents/:id/notes';
+let noteId;
+const notesEndpoint = '/api/incidents/cjfkubrlv0001tsjksuis3/notes';
+
+describe('NOTE tests', () => {
+  beforeEach(done => {
+    Note.create(testPayload).then(note => {
+      noteId = note.id;
+      done();
+    });
+  });
 
   it('should fail to add a note', done => {
-    let createStub = sinon.stub(note, 'create').rejects();
     request(app)
       .post(notesEndpoint)
       .set('Authorization', userToken)
+      .send({})
       .expect(400)
       .end((err, res) => {
         if (err) throw err;
-        createStub.restore();
         done();
       });
   });
-});
-
-describe('/PUT note', () => {
-  it('should fail to update when note id is not found', done => {
-    let findByIdStub = sinon.stub(note, 'findById').resolves();
-    request(app)
-      .put('/api/notes/cjfm86c2r0001ris1w0or7g59')
-      .set('Authorization', userToken)
-      .expect(404)
-      .end((err, res) => {
-        if (err) throw err;
-        findByIdStub.restore();
-        done();
-      });
-  });
-});
-
-describe('/GET note', () => {
   it('Should return all the notes', done => {
-    let findAllStub = sinon.stub(note, 'findAll').resolves(Object({}, ''));
     request(app)
-      .get('/api/incidents/:id/notes')
+      .get(notesEndpoint)
       .set('Authorization', userToken)
       .expect(200)
       .end((err, res) => {
         if (err) throw err;
         assert.deepEqual(res.body, {
           data: {
-            notes: {}
+            notes: []
           },
           status: 'success'
         });
-        findAllStub.restore();
         done();
       });
   });
 
-  it('Should fail to return all the notes', done => {
-    let findAllStub = sinon.stub(note, 'findAll').rejects(Object({}, ''));
+  it('Should fail when the incident does not exist', done => {
     request(app)
-      .get('/api/incidents/:id/notes')
+      .get('/api/incidents/cjfkubrlv0001tsjksuis34/notes')
       .set('Authorization', userToken)
-      .expect(400)
-      .end((err, res) => {
-        if (err) throw err;
-        assert.deepEqual(res.body, {});
-        findAllStub.restore();
+      .expect(404)
+      .end(() => {
         done();
       });
   });
 
   it('should fail to retrieve one note', done => {
-    let findByIdStub = sinon.stub(note, 'findById').resolves();
     request(app)
-      .get('/api/notes/:id')
+      .get('/api/notes/cjfkubrlv0001tsjksuis3e4')
       .set('Authorization', userToken)
       .expect(404)
       .end((err, res) => {
         if (err) throw err;
-        findByIdStub.restore();
         done();
       });
   });
 
-  it('should fail to retrieve one note when error occurs', done => {
-    let findByIdStub = sinon.stub(note, 'findById').rejects();
+  it('should get a note successfully', done => {
     request(app)
-      .get('/api/notes/:id')
+      .get(`/api/notes/${noteId}`)
       .set('Authorization', userToken)
-      .expect(400)
+      .expect(200)
       .end((err, res) => {
         if (err) throw err;
-        findByIdStub.restore();
+        assert.equal(res.body.data.note, testPayload.note);
+        done();
+      });
+  });
+  it('should fail to update when note id not found', done => {
+    request(app)
+      .put('/api/notes/1')
+      .set('Authorization', userToken)
+      .expect(404)
+      .end((err, res) => {
+        if (err) throw err;
         done();
       });
   });
 
-  describe('/PUT note', () => {
-    it('should fail to update when document id not found', done => {
-      let findByIdStub = sinon.stub(note, 'findById').resolves();
-      request(app)
-        .put('/api/notes/1')
-        .set('Authorization', userToken)
-        .expect(404)
-        .end((err, res) => {
-          if (err) throw err;
-          findByIdStub.restore();
-          done();
-        });
-    });
-
-    it('should update fields sucessfully', done => {
-      let findByIdStub = sinon.stub(note, 'findById').resolves({
-        update: () =>
-          new Promise((resolve, reject) => {
-            resolve({});
-          })
-      });
-      request(app)
-        .put('/api/notes/:id')
-        .set('Authorization', userToken)
-        .expect(200)
-        .end((err, res) => {
-          if (err) throw err;
-          findByIdStub.restore();
-          done();
-        });
-    });
-  });
-
-  describe('/DELETE note', () => {
-    it('should fail to delete when noteId is not found', done => {
-      let findByIdStub = sinon.stub(note, 'findById').resolves();
-      request(app)
-        .delete('/api/notes/:id')
-        .set('Authorization', userToken)
-        .expect(404)
-        .end((err, res) => {
-          if (err) throw err;
-          findByIdStub.restore();
-          done();
-        });
-    });
-  });
-
-  it('should delete a note successfully ', done => {
-    let findByIdStub = sinon.stub(note, 'findById').resolves({
-      destroy: () =>
-        new Promise((resolve, reject) => {
-          resolve(true);
-        })
-    });
-    let destroyStub = sinon.stub(note, 'destroy').resolves({});
+  it('should update fields sucessfully', done => {
     request(app)
-      .delete('/api/notes/:id')
+      .put(`/api/notes/${noteId}`)
+      .set('Authorization', userToken)
+      .send({ ...testPayload, note: 'new note' })
+      .expect(200)
+      .end((err, res) => {
+        if (err) throw err;
+        assert.equal(res.body.data.note, 'new note');
+        done();
+      });
+  });
+
+  it('should fail to delete when noteId is not found', done => {
+    request(app)
+      .delete(`/api/notes/fdfgddgdgdgdgdgd`)
+      .set('Authorization', userToken)
+      .expect(404)
+      .end((err, res) => {
+        done();
+      });
+  });
+  it('should delete a note successfully ', done => {
+    request(app)
+      .delete(`/api/notes/${noteId}`)
       .set('Authorization', userToken)
       .expect(204)
       .end((err, res) => {
         if (err) throw err;
-        findByIdStub.restore();
-        destroyStub.restore();
         done();
       });
+  });
+
+  afterEach(done => {
+    Note.destroy({ where: {} }).then(() => {
+      noteId = null;
+      done();
+    });
   });
 });

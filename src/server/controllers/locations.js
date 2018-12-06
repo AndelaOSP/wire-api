@@ -6,6 +6,7 @@ module.exports = {
   // add a location
   create(req, res) {
     let { name, centre, country } = req.body;
+
     if (!name || !centre || !country) {
       return res.status(400).send({
         message: 'Location name, centre or country missing'
@@ -14,7 +15,7 @@ module.exports = {
 
     return Location.findOrCreate({ where: req.body })
       .then(([location, created]) => {
-        if(created) return res.status(201).send(location);
+        if (created) return res.status(201).send(location);
         return res.status(409).send('Location already exists');
       })
       .catch(error => {
