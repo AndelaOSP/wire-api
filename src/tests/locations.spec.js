@@ -46,15 +46,36 @@ describe('Locations controller', () => {
       });
   });
 
-  it('Should not create location with wrong payload', function(done) {
+  it('Should not create a location with invalid payload', done => {
+    request(app)
+      .post(locationsEndpoint)
+      .set('Authorization', userToken)
+      .send({})
+      .expect(400)
+      .end((err, res) => {
+        expect(res.body.message).toEqual(
+          'Location name, centre or country missing',
+        );
+        done();
+      });
+  });
+
+  it('Should not create a duplicate location', done => {
     request(app)
       .post(locationsEndpoint)
       .set('Authorization', userToken)
       .send(testLocation)
-      .expect(400)
-      .end((err, res) => {
-        expect(err).not.toBeNull();
-        done();
+      .expect(200)
+      .end(() => {
+        request(app)
+          .post(locationsEndpoint)
+          .set('Authorization', userToken)
+          .send(testLocation)
+          .expect(409)
+          .end((err, res) => {
+            expect(res.status).toEqual(409);
+            done();
+          });
       });
   });
 

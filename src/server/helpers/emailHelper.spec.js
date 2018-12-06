@@ -21,4 +21,5 @@ describe('#####EmailHelper', () => {
     expect(callback).toHaveBeenCalled();
   });
 });
+
 jest.clearAllMocks();

@@ -27,16 +27,16 @@ jobs:
       - checkout
       - run:
           name: Install packages
-          command: npm install
+          command: cd src && npm install
       - run:
           name: Migrate and seed
-          command: npm run migrate-seed
+          command: cd src && npm run migrate-seed
       - run:
           name: Run tests
-          command: npm test
+          command: cd src && npm test
       - run:
           name: Send coverage report
-          command: npm run coverage
+          command: cd src && npm run coverage
 
   deploy:
     docker:

@@ -20,7 +20,7 @@ git clone https://github.com/AndelaOSP/wire-api.git
 
 Navigate to repo:
 ```
-cd wire-api
+cd src/wire-api
 ```
 
 Install all dependencies:

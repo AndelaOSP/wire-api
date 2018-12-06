@@ -11,5 +11,5 @@ module.exports = {
   validateUserPayload,
   validateUserId,
   validateNotePayload,
-  validateNoteId
+  validateNoteId,
 };

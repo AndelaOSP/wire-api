@@ -1,4 +1,3 @@
-const errorLogs = require('../controllers/errorLogs');
 const Location = require('../models').Locations;
 
 const findOrCreateLocation = (location, res) => {
@@ -15,14 +14,9 @@ const findOrCreateLocation = (location, res) => {
       centre,
       country,
     },
-  })
-    .spread((location, created) => {
-      return location;
-    })
-    .catch(error => {
-      errorLogs.catchErrors(error);
-      res.status(400).send(error);
-    });
+  }).spread((location, created) => {
+    return location;
+  });
 };
 
 module.exports = {

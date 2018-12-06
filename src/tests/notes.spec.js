@@ -16,10 +16,16 @@ const notesEndpoint = '/api/incidents/cjfkubrlv0001tsjksuis3/notes';
 
 describe('NOTE tests', () => {
   beforeEach(done => {
-    Note.create(testPayload).then(note => {
-      noteId = note.id;
-      done();
-    });
+    request(app)
+      .post(notesEndpoint)
+      .set('Authorization', userToken)
+      .send(testPayload)
+      .expect(201)
+      .end((err, res) => {
+        expect(res.body.data).toHaveProperty('id');
+        noteId = res.body.data.id;
+        done();
+      });
   });
 
   it('should fail to add a note with wrong payload', done => {
@@ -40,17 +46,12 @@ describe('NOTE tests', () => {
       .set('Authorization', userToken)
       .expect(200)
       .end((err, res) => {
-        expect(res.body).toMatchObject({
-          data: {
-            notes: [],
-          },
-          status: 'success',
-        });
+        expect(res.body.data.notes.length).toEqual(1);
         done();
       });
   });
 
-  it('Should fail when the incident not found', done => {
+  it('Should fail when the incident is not found', done => {
     request(app)
       .get('/api/incidents/cjfkubrlv0001tsjksuis34/notes')
       .set('Authorization', userToken)
@@ -129,7 +130,7 @@ describe('NOTE tests', () => {
   });
 
   afterEach(done => {
-    Note.destroy({ where: {} }).then(() => {
+    Note.destroy({ where: { id: noteId } }).then(() => {
       noteId = null;
       done();
     });

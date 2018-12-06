@@ -112,7 +112,7 @@ describe('Incident Tests', () => {
     request(app)
       .post(incidentsEndpoint)
       .send(testIncident)
-      .expect(204)
+      .expect(201)
       .end((err, res) => {
         expect(res.body.data).toHaveProperty('id');
         done();
@@ -185,25 +185,62 @@ describe('Incident Tests', () => {
   it('should update an incident when someone gets assigned to it', done => {
     makeServerCall(assigneeRequestBody, done, 'put', ({ err, res }) => {
       expect(res.body.data).toHaveProperty('id');
+      done();
     });
   });
 
   it('should update an incident when someone gets ccd to it', done => {
     makeServerCall(ccdRequestBody, done, 'put', ({ err, res }) => {
       expect(res.body.data).toHaveProperty('id');
+      done();
     });
   });
 
   it('should delete an incident provided an existing incident ID', done => {
     makeServerCall(testIncident, done, 'delete', ({ err, res }) => {
       expect(res.body).toMatchObject({});
+      done();
     });
   });
 
   it('should get an incident if provided with an existing incident Id', done => {
     makeServerCall(testIncident, done, 'get', ({ err, res }) => {
       expect(res.body.data).toHaveProperty('id');
+      done();
     });
+  });
+
+  it('should search incidents', done => {
+    request(app)
+      .get('/api/search/incidents?q=something')
+      .set('Authorization', userToken)
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.data).toHaveProperty('incidents');
+        done();
+      });
+  });
+
+  it('should return error if query is not provided', done => {
+    request(app)
+      .get('/api/search/incidents')
+      .set('Authorization', userToken)
+      .expect(200)
+      .end((err, res) => {
+        expect(err).not.toBeNull();
+        done();
+      });
+  });
+
+  it('should list incidents by category', done => {
+    request(app)
+      .get('/api/categories/23/incidents')
+      .set('Authorization', userToken)
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.data).toHaveProperty('incidents');
+        done();
+      });
   });
 });
 

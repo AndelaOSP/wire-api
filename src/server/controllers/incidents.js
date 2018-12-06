@@ -18,13 +18,20 @@ const include = returnIncidentsIncludes();
 module.exports = {
   // create an incident
   create(req, res) {
-    let { location } = req.body;
-    let { witnesses } = req.body;
-    let { reporterLocation } = req.body.incidentReporter;
-    let { incidentReporter } = req.body;
-    let { dateOccurred } = req.body;
+    let {
+      location,
+      witnesses,
+      incidentReporter,
+      dateOccurred,
+      description,
+      subject,
+      categoryId,
+      statusId,
+      levelId,
+    } = req.body;
+    const { reporterLocation } = incidentReporter;
     let createdIncident;
-    let [dd, mm, yy] = req.body.dateOccurred.split('-');
+    let [dd, mm, yy] = dateOccurred.split('-');
     dateOccurred = `${mm}-${dd}-${yy}`;
     return findOrCreateLocation(location, res)
       .then(location => {
@@ -32,13 +39,13 @@ module.exports = {
       })
       .then(locationId => {
         return Incident.create({
-          description: req.body.description,
-          subject: req.body.subject,
+          description,
+          subject,
           dateOccurred,
-          categoryId: req.body.categoryId,
-          statusId: req.body.statusId || 1,
+          categoryId,
+          statusId: statusId || 1,
           locationId,
-          levelId: req.body.levelId || 3,
+          levelId: levelId || 3,
         });
       })
       .then(incident => {
@@ -66,9 +73,6 @@ module.exports = {
         if (witnesses && witnesses.length > 0) {
           for (let i = 0; i < witnesses.length; i++) {
             let { witnessLocation } = req.body.witnesses[i];
-            for (let k = 0; k < witnessLocation.length; k++) {
-              witnessLocation = witnessLocation[k];
-            }
             let witness = witnesses[i];
             let witnessCreationPromise = findOrCreateUser(
               witness,

@@ -12,10 +12,9 @@
       "eslint:recommended",
       "plugin:import/errors",
       "plugin:import/warnings",
-      "prettier",
-      "plugin:jest/recommended"
+      "prettier"
   ],
-  "plugins": [ "prettier", "jest" ],
+  "plugins": [ "prettier" ],
   "parser": "babel-eslint",
   "parserOptions": {
       "ecmaVersion": 6,

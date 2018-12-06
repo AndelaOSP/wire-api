@@ -17,6 +17,12 @@ const testUser = {
   },
 };
 
+const newUser = {
+  ...testUser,
+  email: 'oliver.omar@andela.com',
+  username: 'Oliver Omar',
+};
+
 const userToken = token({ id: 3453, roleId: 3, username: 'Batian Muthoga' });
 
 jest.mock('nodemailer', () => ({
@@ -30,11 +36,59 @@ jest.mock('nodemailer', () => ({
 describe('User tests', () => {
   const usersEndpoint = '/api/users';
 
-  it('should not login in an unauthorised user', done => {
+  it('should create a user', done => {
+    request(app)
+      .post('/api/users')
+      .set('Authorization', userToken)
+      .send(newUser)
+      .expect(201)
+      .end((err, res) => {
+        expect(res.body.data).toHaveProperty('id');
+        done();
+      });
+  });
+
+  it('should  login an authorised user', done => {
     request(app)
       .post('/api/users/login')
       .set('Authorization', userToken)
-      .send({ email: 'john.doe@gmail.com', password: 'astrongpassword' })
+      .send({ email: 'eugene.omar@andela.com' })
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.message).toEqual('You were successfully logged in');
+        done();
+      });
+  });
+
+  it('should not login an unauthorised user', done => {
+    request(app)
+      .post('/api/users/login')
+      .set('Authorization', userToken)
+      .send({ email: 'batian.sss@andela.com' })
+      .expect(403)
+      .end((err, res) => {
+        expect(res.body.message).toEqual('You are not aunthorized');
+        done();
+      });
+  });
+
+  it('should not login an user with missing email', done => {
+    request(app)
+      .post('/api/users/login')
+      .set('Authorization', userToken)
+      .send({})
+      .expect(400)
+      .end((err, res) => {
+        expect(res.body.message).toEqual('Email missing');
+        done();
+      });
+  });
+
+  it('should not login a user who does not exist', done => {
+    request(app)
+      .post('/api/users/login')
+      .set('Authorization', userToken)
+      .send({ email: 'john.ssdoe@gmail.com' })
       .expect(401)
       .end((err, res) => {
         expect(res.body.message).toEqual('User does not exist');
@@ -76,6 +130,22 @@ describe('User tests', () => {
       .expect(200)
       .end((err, res) => {
         expect(res.body.data.username).toEqual('Oliver Munala');
+        done();
+      });
+  });
+
+  it('InviteUser: Should update a user if they already exist', done => {
+    request(app)
+      .post('/api/users/invite')
+      .set('Authorization', userToken)
+      .send({
+        email: 'batian.sss@andela.com',
+        roleId: 1,
+        locationId: 'cjee24cz40000guxs6bdner6l',
+      })
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.data.username).toEqual('Batian Sss');
         done();
       });
   });

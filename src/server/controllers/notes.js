@@ -43,37 +43,22 @@ module.exports = {
 
   // retrieve a note by id
   findById(req, res) {
-    return findNoteById(req.params.id, res).then(note => {
-      if (!note) {
-        return res
-          .status(404)
-          .send({ message: 'Note not found', status: 'fail' });
-      }
-      return res.status(200).send({ data: note, status: 'success' });
-    });
+    return res.status(200).send({ data: res.locals.note, status: 'success' });
   },
 
   // update a note
   update(req, res) {
-    return Note.findById(req.params.id).then(Note => {
-      if (!Note) {
-        return res.status(404).send({
-          message: 'Note not found',
-          status: 'fail',
-        });
-      }
-      return res.locals.note
-        .update({
-          note: req.body.note || Note.note,
-          userEmail: req.body.userEmail || Note.userEmail,
-        })
-        .then(Note => {
-          return findNoteById(Note.id, res);
-        })
-        .then(data => {
-          return res.status(200).send({ data, status: 'success' });
-        });
-    });
+    return res.locals.note
+      .update({
+        note: req.body.note || Note.note,
+        userEmail: req.body.userEmail || Note.userEmail,
+      })
+      .then(Note => {
+        return findNoteById(Note.id, res);
+      })
+      .then(data => {
+        return res.status(200).send({ data, status: 'success' });
+      });
   },
 
   // delete a note

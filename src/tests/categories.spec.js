@@ -1,7 +1,6 @@
 const request = require('supertest');
 const { token } = require('../server/middlewares/authentication');
 
-const category = require('../server/models').Categories;
 const app = require('../index');
 
 const userToken = token({ id: 3453, roleId: 3, username: 'Batian Muthoga' });
