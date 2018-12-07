@@ -13,7 +13,9 @@ const config = require('../config/config.json')[env];
 module.exports = async userDetails => {
   try {
     const name = getUsernameFromEmail(userDetails.email);
+
     let body;
+
     if (userDetails.assignedRole === 'ccd') {
       body = {
         subject: 'An incident has been assigned.',
@@ -34,6 +36,7 @@ module.exports = async userDetails => {
       ${userDetails.incidentId}">here</a> to view it.`,
       to: userDetails.email,
     };
+
     return body;
   } catch (error) {
     throw error;

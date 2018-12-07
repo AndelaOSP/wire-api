@@ -17,7 +17,7 @@ const include = returnIncidentsIncludes();
 
 module.exports = {
   // create an incident
-  create(req, res) {
+  create: async (req, res) => {
     let {
       location,
       witnesses,
@@ -30,125 +30,111 @@ module.exports = {
       levelId,
     } = req.body;
     const { reporterLocation } = incidentReporter;
-    let createdIncident;
     let [dd, mm, yy] = dateOccurred.split('-');
     dateOccurred = `${mm}-${dd}-${yy}`;
-    return findOrCreateLocation(location, res)
-      .then(location => {
-        return location.dataValues.id;
-      })
-      .then(locationId => {
-        return Incident.create({
-          description,
-          subject,
-          dateOccurred,
-          categoryId,
-          statusId: statusId || 1,
-          locationId,
-          levelId: levelId || 3,
-        });
-      })
-      .then(incident => {
-        createdIncident = incident;
-        return User.findOne({
-          where: {
-            email: incidentReporter.email,
-          },
-        })
-          .then(user => {
-            if (user) {
-              return user.update({ slackId: incidentReporter.slackId });
-            }
-            return findOrCreateUser(incidentReporter, reporterLocation, res);
-          })
-          .catch(error => {
-            return error;
-          });
-      })
-      .then(createdReporter => {
-        createdIncident.addReporter(createdReporter);
-      })
-      .then(() => {
-        let witnessCreationPromises = [];
-        if (witnesses && witnesses.length > 0) {
-          for (let i = 0; i < witnesses.length; i++) {
-            let { witnessLocation } = req.body.witnesses[i];
-            let witness = witnesses[i];
-            let witnessCreationPromise = findOrCreateUser(
-              witness,
-              witnessLocation,
-            );
-            witnessCreationPromises.push(witnessCreationPromise);
-          }
-        }
-        return Promise.all(witnessCreationPromises);
-      })
-      .then(createdWitnesses => {
-        let addedWitnessesPromises = [];
-        if (createdWitnesses.length > 0) {
-          let mappedWitnesses = createdWitnesses.map(witness => {
-            return witness[0];
-          });
-          for (let i = 0; i < mappedWitnesses.length; i++) {
-            addedWitnessesPromises.push(
-              createdIncident.addWitness(mappedWitnesses[i]),
-            );
-          }
-        }
-        return Promise.all(addedWitnessesPromises);
-      })
-      .then(() => {
-        return findIncidentById(createdIncident.id, res);
-      })
-      .then(data => {
-        res.status(201).send({ data, status: 'success' });
+
+    const foundLocation = await findOrCreateLocation(location, res);
+    const locationId = foundLocation.dataValues.id;
+    const incident = await Incident.create({
+      description,
+      subject,
+      dateOccurred,
+      categoryId,
+      statusId: statusId || 1,
+      locationId,
+      levelId: levelId || 3,
+    });
+
+    const user = await User.findOne({
+      where: { email: incidentReporter.email },
+    });
+
+    let createdReporter;
+
+    if (user) {
+      createdReporter = await user.update({
+        slackId: incidentReporter.slackId,
       });
+    } else {
+      createdReporter = await findOrCreateUser(
+        incidentReporter,
+        reporterLocation,
+        res
+      );
+    }
+
+    await incident.addReporter(createdReporter);
+
+    const witnessCreationPromises = witnesses.map(witness => {
+      let { witnessLocation } = witness;
+
+      return findOrCreateUser(witness, witnessLocation);
+    });
+
+    const createdWitnesses = await Promise.all(witnessCreationPromises);
+
+    if (createdWitnesses.length > 0) {
+      const addedWitnessesPromises = createdWitnesses.map(mappedWitness => {
+        return incident.addWitness(mappedWitness[0]);
+      });
+
+      await Promise.all(addedWitnessesPromises);
+    }
+
+    const data = await findIncidentById(incident.id, res);
+
+    return res.status(201).send({ data, status: 'success' });
   },
 
   // get all incidents
-  async list(req, res) {
+  list: async (req, res) => {
     if (res.locals.currentUser.roleId === 2) {
       const includeForAssignee = listAssigneeIncidentsIncludes();
+
       const findIncidents = await User.findOne({
         where: { id: res.locals.currentUser.id },
         include: includeForAssignee,
       });
+
       const userAssignedIncidents = findIncidents.assignedIncidents;
       const mappedIncidents = mapIncidents(userAssignedIncidents);
+
       return res
         .status(200)
         .send({ data: { incidents: mappedIncidents }, status: 'success' });
     }
-    return Incident.findAll({
-      include,
-    }).then(incidents => {
-      const mappedIncidents = mapIncidents(incidents);
-      return res
-        .status(200)
-        .send({ data: { incidents: mappedIncidents }, status: 'success' });
-    });
+
+    const incidents = await Incident.findAll({ include });
+
+    const mappedIncidents = mapIncidents(incidents);
+
+    return res
+      .status(200)
+      .send({ data: { incidents: mappedIncidents }, status: 'success' });
   },
 
   // retrieve an incident by ID
-  findById(req, res) {
-    return findIncidentById(req.params.id, res).then(incident => {
-      incident.assignees && mapAssignees(incident.assignees);
-      [incident.dataValues.reporter] = incident.dataValues.reporter;
-      return res.status(200).send({ data: incident, status: 'success' });
-    });
+  findById: async (req, res) => {
+    const incident = await findIncidentById(req.params.id, res);
+    incident.assignees = mapAssignees(incident.assignees);
+    [incident.dataValues.reporter] = incident.dataValues.reporter;
+
+    return res.status(200).send({ data: incident, status: 'success' });
   },
 
   // update an incident
-  update(req, res) {
+  update: async (req, res) => {
     let { assignee: assignedUser, ccd: ccdUser } = req.body;
 
-    let findIncidentPromise = Incident.findById(req.params.id, {
+    const incident = await Incident.findById(req.params.id, {
       include,
-    }).then(incident => {
-      return incident
-        ? Promise.resolve(incident)
-        : Promise.reject({ message: 'Incident not found', status: 'fail' });
     });
+
+    if (!incident) {
+      return res
+        .status(404)
+        .send({ message: 'Incident not found', status: 'fail' });
+    }
 
     if (assignedUser || ccdUser) {
       const userKey = assignedUser ? 'assignedUser' : 'ccdUser';
@@ -168,57 +154,51 @@ module.exports = {
 
       const selectedUser = users[userKey];
 
-      return findIncidentPromise.then(incident => {
-        if (incident.dataValues.assignees.length === 0) {
-          return selectedUser.action({
-            ...selectedUser.arguments,
-            incident,
-            res,
-          });
-        } else {
-          return AssigneeModel.destroy({
-            where: {
-              assignedRole: selectedUser.assignedRole,
-              incidentId: incident.id,
-            },
-          }).then(() => {
-            return selectedUser.action({
-              ...selectedUser.arguments,
-              incident,
-              res,
-            });
-          });
-        }
-      });
+      if (incident.dataValues.assignees.length === 0) {
+        return selectedUser.action({
+          ...selectedUser.arguments,
+          incident,
+          res,
+        });
+      } else {
+        await AssigneeModel.destroy({
+          where: {
+            assignedRole: selectedUser.assignedRole,
+            incidentId: incident.id,
+          },
+        });
+
+        return selectedUser.action({
+          ...selectedUser.arguments,
+          incident,
+          res,
+        });
+      }
     } else {
-      return findIncidentPromise.then(incident => {
-        return incident
-          .update({
-            statusId: req.body.statusId || incident.statusId,
-            categoryId: req.body.categoryId || incident.categoryId,
-            levelId: req.body.levelId || incident.levelId,
-          })
-          .then(() => {
-            return findIncidentById(incident.id, res);
-          })
-          .then(data => {
-            return res.status(200).send({ data, status: 'success' });
-          });
+      await incident.update({
+        statusId: req.body.statusId || incident.statusId,
+        categoryId: req.body.categoryId || incident.categoryId,
+        levelId: req.body.levelId || incident.levelId,
       });
+
+      return res.status(200).send({ data: incident, status: 'success' });
     }
   },
 
   // delete an incident by ID. To be refactored into archive incidents that are old and resolved.
-  delete(req, res) {
-    return res.locals.incident.destroy().then(() => res.status(204).send());
+  delete: async (req, res) => {
+    await res.locals.incident.destroy();
+
+    return res.status(204).send();
   },
 
   //search an incident by subject or description.
-  search(req, res) {
+  search: async (req, res) => {
     if (!req.query.q) {
       return res.status(400).send({ message: 'please provide query' });
     }
-    return Incident.findAll({
+
+    const incidents = await Incident.findAll({
       include,
       where: {
         $or: [
@@ -226,20 +206,18 @@ module.exports = {
           { description: { $ilike: `%${req.query.q}%` } },
         ],
       },
-    }).then(incidents => {
-      res.status(200).send({ data: { incidents }, status: 'success' });
     });
+
+    return res.status(200).send({ data: { incidents }, status: 'success' });
   },
 
   // filter incidents by category
-  listIncidents(req, res) {
-    return Incident.findAll({
-      where: {
-        categoryId: req.params.id,
-      },
+  listIncidents: async (req, res) => {
+    const incidents = await Incident.findAll({
+      where: { categoryId: req.params.id },
       include,
-    }).then(incidents => {
-      res.status(200).send({ data: { incidents }, status: 'success' });
     });
+
+    return res.status(200).send({ data: { incidents }, status: 'success' });
   },
 };

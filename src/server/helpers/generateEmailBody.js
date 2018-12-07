@@ -13,7 +13,9 @@ const config = require('../config/config.json')[env];
 
 module.exports = async (email, roleId) => {
   const name = getUsernameFromEmail(email);
+
   const assignedRole = await matchRoleIdToRoleName(roleId);
+
   return {
     subject: 'Invite to join WIRE',
     message: `Hi <strong>${name.first} ${name.last} </strong>,<br/>

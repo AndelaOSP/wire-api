@@ -34,12 +34,12 @@ describe('Locations controller', () => {
       .get(locationsEndpoint)
       .set('Authorization', userToken)
       .expect(200)
-      .end((error, res) => {
+      .end(() => {
         request(app)
           .get(locationsEndpoint)
           .set('Authorization', userToken)
           .expect(409)
-          .end((err, res) => {
+          .end(err => {
             expect(err).not.toBeNull();
             done();
           });

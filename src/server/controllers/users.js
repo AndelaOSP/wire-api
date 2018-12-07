@@ -28,64 +28,63 @@ let includes = [
 
 module.exports = {
   // add a user
-  create(req, res) {
-    let id = req.body.userId;
-    let { email, username, imageUrl, location } = req.body;
+  create: async (req, res) => {
+    let { email, username, imageUrl, location, userId: id } = req.body;
     let roleId = 2;
-    return findOrCreateLocation(location, res)
-      .then(location => {
-        return location.dataValues.id;
-      })
-      .then(locationId => {
-        return User.findOrCreate({
-          where: {
-            id,
-            email,
-            username,
-            imageUrl,
-            roleId,
-            locationId,
-          },
-        });
-      })
-      .spread((user, created) => {
-        return res.status(201).send({ data: user, status: 'success' });
-      });
+    const foundLocation = await findOrCreateLocation(location, res);
+
+    const [user] = await User.findOrCreate({
+      where: {
+        id,
+        email,
+        username,
+        imageUrl,
+        roleId,
+        locationId: foundLocation.id,
+      },
+    });
+
+    return res.status(201).send({ data: user, status: 'success' });
   },
 
   // login a user
-  login(req, res) {
+  login: async (req, res) => {
     if (!req.body.email) {
       return res.status(400).send({ message: 'Email missing', status: 'fail' });
     }
-    return User.findOne({ where: { email: req.body.email } }).then(user => {
-      if (!user) {
-        return res.status(401).send({ message: 'User does not exist' });
-      }
-      if (user.roleId === 1) {
-        return res.status(403).send({ message: 'You are not aunthorized' });
-      }
-      const userToken = token(user);
-      return res.status(200).send({
-        message: 'You were successfully logged in',
-        user,
-        userToken,
-        expiresIn: '24h',
-      });
+
+    const user = await User.findOne({ where: { email: req.body.email } });
+
+    if (!user) {
+      return res.status(401).send({ message: 'User does not exist' });
+    }
+
+    if (user.roleId === 1) {
+      return res.status(403).send({ message: 'You are not aunthorized' });
+    }
+
+    const userToken = token(user);
+
+    return res.status(200).send({
+      message: 'You were successfully logged in',
+      user,
+      userToken,
+      expiresIn: '24h',
     });
   },
 
-  list(req, res) {
-    return User.findAll({
+  list: async (req, res) => {
+    const users = await User.findAll({
       include: includes,
-    }).then(user => {
-      return res.status(200).send({ data: { users: user }, status: 'success' });
     });
+
+    return res.status(200).send({ data: { users }, status: 'success' });
   },
-  
-  getUserById(req, res, next) {
+
+  getUserById: async (req, res, next) => {
     if (req.params.id === 'search') return next('route');
-    return User.findById(req.params.id, {
+
+    const user = await User.findById(req.params.id, {
       include: [
         ...includes,
         {
@@ -110,39 +109,48 @@ module.exports = {
           },
         },
       ],
-    }).then(user => {
-      return res.status(200).send(user);
     });
+
+    return res.status(200).send(user);
   },
-  async inviteUser(req, res) {
+
+  inviteUser: async (req, res) => {
     const validEmail = checkEmail(req.body.email);
+
     const userExists = await User.findOne({
       where: { email: req.body.email },
       include: includeRole,
     });
+
     const callback = error => {
       if (error) {
         return error;
       }
       return { message: 'The email was sent successfully' };
     };
+
     const emailBody = await generateEmailBody(req.body.email, req.body.roleId);
+
     if (userExists && userExists.Role) {
       // If user was created through reporting an incident, update the user with provided role
       if (userExists.Role.id === 1) {
         await User.update(
           { roleId: req.body.roleId },
-          { where: { email: req.body.email } },
+          { where: { email: req.body.email } }
         );
+
         const emailBody = await generateEmailBody(
           req.body.email,
-          req.body.roleId,
+          req.body.roleId
         );
+
         emailHelper.sendMail(emailBody, callback);
+
         const user = await User.findOne({
           where: { email: req.body.email },
           include: includes,
         });
+
         return res.status(200).send({ data: user, status: 'success' });
       } else {
         return res.status(400).json({
@@ -154,28 +162,35 @@ module.exports = {
     } else {
       if (validEmail && !userExists) {
         const name = getUsernameFromEmail(req.body.email);
-        res.locals.username = name.first + ' ' + name.last;
+
+        res.locals.username = `${name.first} ${name.last}`;
+
         const userObject = {
           email: req.body.email,
           username: res.locals.username,
           roleId: req.body.roleId,
           locationId: req.body.locationId,
         };
-        return User.findOrCreate({
+
+        const [createdUser, created] = await User.findOrCreate({
           where: { email: userObject.email },
           defaults: userObject,
-        }).spread(async (createdUser, created) => {
-          if (!created) {
-            await updateUserAndSendMail(userObject, res);
-          }
-          emailHelper.sendMail(emailBody, callback);
-          const user = await User.findById(createdUser.id, {
-            include: includes,
-          });
-          return res.status(200).send({ data: user, status: 'success' });
         });
+
+        if (!created) {
+          await updateUserAndSendMail(userObject, res);
+        }
+
+        emailHelper.sendMail(emailBody, callback);
+
+        const user = await User.findById(createdUser.id, {
+          include: includes,
+        });
+
+        return res.status(200).send({ data: user, status: 'success' });
       }
-      res.status(400).json({
+
+      return res.status(400).json({
         message: 'You can only invite Andela users through their Andela emails',
       });
     }
@@ -187,9 +202,11 @@ module.exports = {
    * @param Object res
    * @return Status Code & Object
    */
-  async editUser(req, res) {
+  editUser: async (req, res) => {
     const updatedUser = await res.locals.user.update(req.body);
+
     const user = await User.findById(updatedUser.id, { include: includes });
+
     return res.status(200).send({ data: user, status: 'success' });
   },
 
@@ -199,7 +216,7 @@ module.exports = {
    * @param Object res
    * @return Status Code & Object
    */
-  async deleteUser(req, res) {
+  deleteUser: async (req, res) => {
     await res.locals.user.destroy();
     const message = 'User deleted Successfully';
     return res.status(200).send({ message });
@@ -215,10 +232,12 @@ module.exports = {
     const searchQuery = {
       $ilike: Sequelize.fn('lower', `%${req.query.q.toLowerCase()}%`),
     };
+
     const users = await User.findAll({
       where: { $or: { username: searchQuery, email: searchQuery } },
       include: includes,
     });
+
     return res.status(200).send({ data: { users }, status: 'success' });
   },
 };

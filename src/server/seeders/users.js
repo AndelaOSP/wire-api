@@ -1,5 +1,5 @@
 module.exports = {
-  up(queryInterface, Sequelize) {
+  up(queryInterface) {
     return queryInterface.bulkInsert('Users', [
       {
         id: 'cjl6efcka00004tny9ilz7b61',

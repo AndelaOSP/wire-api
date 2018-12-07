@@ -1,10 +1,8 @@
-const nodemailer = require('nodemailer');
 const request = require('supertest');
 const { token } = require('../server/middlewares/authentication');
 const incidents = require('../server/models').Incidents;
 const User = require('../server/models').Users;
 
-const incident = require('../server/controllers').incidents;
 const app = require('../index');
 
 const testIncident = {
@@ -96,7 +94,7 @@ describe('Incident Tests', () => {
       .set('Authorization', userToken)
       .send(testIncident)
       .expect(201)
-      .then((res, err) => {
+      .then(res => {
         request(app)
           [method]('/api/incidents/' + res.body.data.id)
           .send(requestBody)
@@ -183,28 +181,28 @@ describe('Incident Tests', () => {
   });
 
   it('should update an incident when someone gets assigned to it', done => {
-    makeServerCall(assigneeRequestBody, done, 'put', ({ err, res }) => {
+    makeServerCall(assigneeRequestBody, done, 'put', ({ res }) => {
       expect(res.body.data).toHaveProperty('id');
       done();
     });
   });
 
   it('should update an incident when someone gets ccd to it', done => {
-    makeServerCall(ccdRequestBody, done, 'put', ({ err, res }) => {
+    makeServerCall(ccdRequestBody, done, 'put', ({ res }) => {
       expect(res.body.data).toHaveProperty('id');
       done();
     });
   });
 
   it('should delete an incident provided an existing incident ID', done => {
-    makeServerCall(testIncident, done, 'delete', ({ err, res }) => {
+    makeServerCall(testIncident, done, 'delete', ({ res }) => {
       expect(res.body).toMatchObject({});
       done();
     });
   });
 
   it('should get an incident if provided with an existing incident Id', done => {
-    makeServerCall(testIncident, done, 'get', ({ err, res }) => {
+    makeServerCall(testIncident, done, 'get', ({ res }) => {
       expect(res.body.data).toHaveProperty('id');
       done();
     });
@@ -226,7 +224,7 @@ describe('Incident Tests', () => {
       .get('/api/search/incidents')
       .set('Authorization', userToken)
       .expect(200)
-      .end((err, res) => {
+      .end(err => {
         expect(err).not.toBeNull();
         done();
       });

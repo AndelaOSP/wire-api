@@ -1,8 +1,6 @@
 const request = require('supertest');
-const nodemailer = require('nodemailer');
 const { token } = require('../server/middlewares/authentication');
 
-const user = require('../server/models').Users;
 const app = require('../index');
 
 const testUser = {
@@ -34,8 +32,6 @@ jest.mock('nodemailer', () => ({
 }));
 
 describe('User tests', () => {
-  const usersEndpoint = '/api/users';
-
   it('should create a user', done => {
     request(app)
       .post('/api/users')

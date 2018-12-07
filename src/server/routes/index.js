@@ -26,7 +26,7 @@ module.exports = app => {
   app.get('/api', (req, res) =>
     res.status(200).send({
       message: 'Log an incident on WIRE',
-    }),
+    })
   );
 
   //no auth needed
@@ -50,14 +50,14 @@ module.exports = app => {
   app.put(
     '/api/incidents/:id',
     validateIncidentPayload,
-    incidentsService.update,
+    incidentsService.update
   );
 
   // notes endpoints
   app.post(
     '/api/incidents/:id/notes',
     validateNotePayload,
-    notesService.create,
+    notesService.create
   );
   app.get('/api/incidents/:id/notes', notesService.list);
   app.use('/api/notes/:id', validateNoteId);

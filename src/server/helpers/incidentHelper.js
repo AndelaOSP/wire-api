@@ -33,15 +33,13 @@ const returnIncidentsIncludes = () => {
     },
   ];
 };
-const findIncidentById = id => {
+
+const findIncidentById = async id => {
   const include = returnIncidentsIncludes();
-  return Incident.findById(id, { include })
-    .then(incident => {
-      return incident;
-    })
-    .catch(error => {
-      throw error;
-    });
+
+  const incident = await Incident.findById(id, { include });
+
+  return incident;
 };
 
 /**
@@ -51,16 +49,23 @@ const findIncidentById = id => {
  */
 const getUserDetails = async payload => {
   let userDetails;
+
   if (Array.isArray(payload)) {
     payload.map(async ccdUser => {
       userDetails = await User.findById(ccdUser.userId);
+
       userDetails.dataValues.incidentId = ccdUser.incidentId;
+
       return userDetails;
     });
+
     return userDetails;
   }
+
   userDetails = await User.findById(payload.userId);
+
   userDetails.dataValues.incidentId = payload.incidentId;
+
   return userDetails;
 };
 
@@ -72,15 +77,18 @@ const getUserDetails = async payload => {
 
 const sendAssigneeOrCcdEmail = async payload => {
   const userDetails = await getUserDetails(payload);
+
   const emailBody = await generateAssigneeOrCcdEmailBody({
     ...userDetails.dataValues,
     tagger: payload.tagger,
     assignedRole: payload.assignedRole, // add assigned role
   });
+
   emailHelper.sendMail(emailBody, error => {
     if (error) {
       return error;
     }
+
     return { message: 'The email was sent successfully' };
   });
 };
@@ -92,22 +100,22 @@ const sendAssigneeOrCcdEmail = async payload => {
  * @param res object
  * @return data and success message
  */
-const addAssignee = ({ assignedUser, incident, res }) => {
-  User.findById(assignedUser.userId)
-    .then(async assignee => {
-      assignedUser.assignedRole = 'assignee';
-      await sendAssigneeOrCcdEmail(assignedUser);
-      assignee.assigneeIncidents = {
-        assignedRole: 'assignee',
-      };
-      return incident.addAssignee(assignee);
-    })
-    .then(() => {
-      return findIncidentById(incident.id, res);
-    })
-    .then(data => {
-      return res.status(200).send({ data, status: 'success' });
-    });
+const addAssignee = async ({ assignedUser, incident, res }) => {
+  const assignee = await User.findById(assignedUser.userId);
+
+  assignedUser.assignedRole = 'assignee';
+
+  await sendAssigneeOrCcdEmail(assignedUser);
+
+  assignee.assigneeIncidents = {
+    assignedRole: 'assignee',
+  };
+
+  await incident.addAssignee(assignee);
+
+  const data = await findIncidentById(incident.id, res);
+
+  return res.status(200).send({ data, status: 'success' });
 };
 
 /**
@@ -117,23 +125,26 @@ const addAssignee = ({ assignedUser, incident, res }) => {
  * @param incident object
  * @return data and success message
  */
-const addCcdUser = ({ ccdUser, res, incident, tagger }) => {
+const addCcdUser = async ({ ccdUser, res, incident, tagger }) => {
   const ccdPromises = ccdUser.map(async user => {
     const ccd = await User.findById(user.userId);
+
     let currentCcd = { ...user, assignedRole: 'ccd', tagger };
+
     await sendAssigneeOrCcdEmail(currentCcd);
+
     ccd.assigneeIncidents = {
       assignedRole: 'ccd',
     };
+
     return incident.addAssignee(ccd);
   });
-  return Promise.all(ccdPromises)
-    .then(() => {
-      return findIncidentById(incident.id, res);
-    })
-    .then(data => {
-      return res.status(200).send({ data, status: 'success' });
-    });
+
+  await Promise.all(ccdPromises);
+
+  const data = await findIncidentById(incident.id, res);
+
+  return res.status(200).send({ data, status: 'success' });
 };
 
 /**

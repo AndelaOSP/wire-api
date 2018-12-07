@@ -8,5 +8,6 @@ const models = require('../models');
 
 module.exports = async roleId => {
   const role = await models.Roles.findById(roleId);
+
   return role.name;
 };

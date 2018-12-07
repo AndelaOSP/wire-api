@@ -1,10 +1,9 @@
-const errorLogs = require('./errorLogs');
 const Role = require('../models').Roles;
 
 module.exports = {
-  list(req, res) {
-    return Role.findAll().then(role => {
-      return res.status(200).send({ data: { roles: role }, status: 'success' });
-    });
+  list: async (req, res) => {
+    const roles = await Role.findAll();
+
+    return res.status(200).send({ data: { roles }, status: 'success' });
   },
 };

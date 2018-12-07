@@ -14,13 +14,18 @@ module.exports = async (body, res) => {
     },
     returning: true,
   });
+
   const emailBody = await generateEmailBody(body.email, body.roleId);
+
   const callback = error => {
     if (error) {
       return error;
     }
+
     return { message: 'The email was sent successfully' };
   };
+
   emailHelper.sendMail(emailBody, callback);
+
   return res.status(200).send({ message: 'the user role has been updated' });
 };

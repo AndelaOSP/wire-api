@@ -123,7 +123,7 @@ describe('NOTE tests', () => {
       .delete(`/api/notes/${noteId}`)
       .set('Authorization', userToken)
       .expect(204)
-      .end((err, res) => {
+      .end(err => {
         expect(err).toBeNull();
         done();
       });
