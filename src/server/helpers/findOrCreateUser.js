@@ -9,19 +9,20 @@ const findOrCreateUser = (userType, userLocation, res) => {
     .then(locationId => {
       let userObject = {
         where: {
-          email: userType.email
+          email: userType.email,
         },
         defaults: {
           slackId: userType.slackId,
           email: userType.email,
           username: userType.username,
           roleId: userType.roleId,
-          locationId
+          locationId,
         },
-        plain: true
+        plain: true,
       };
       return User.findOrCreate(userObject);
-    }).catch(error => {
+    })
+    .catch(error => {
       return error;
     });
 };

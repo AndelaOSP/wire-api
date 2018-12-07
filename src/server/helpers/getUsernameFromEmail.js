@@ -6,7 +6,8 @@
 
 module.exports = email => {
   let name = {};
-  let first, last = '';
+  let first = '';
+  let last = '';
   const email_username = email.split('@')[0].split('.');
   if (email_username.length > 1) {
     // email has '.'

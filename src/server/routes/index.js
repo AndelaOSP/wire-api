@@ -1,15 +1,17 @@
 const controllers = require('../controllers/index');
+
 const incidentsService = controllers.incidents;
 const locationsService = controllers.locations;
 const notesService = controllers.notes;
 const categoriesService = controllers.categories;
 const usersService = controllers.users;
 const rolesService = controllers.roles;
+const { catchErrors } = controllers;
 
 const {
   Auth,
   isAdmin,
-  canViewIncidents
+  canViewIncidents,
 } = require('../middlewares/authentication'); // authorise routes
 const {
   validateIncidentPayload,
@@ -17,14 +19,14 @@ const {
   validateUserPayload,
   validateUserId,
   validateNotePayload,
-  validateNoteId
+  validateNoteId,
 } = require('../middlewares');
 
 module.exports = app => {
   app.get('/api', (req, res) =>
     res.status(200).send({
-      message: 'Log an incident on WIRE'
-    })
+      message: 'Log an incident on WIRE',
+    }),
   );
 
   //no auth needed
@@ -48,14 +50,14 @@ module.exports = app => {
   app.put(
     '/api/incidents/:id',
     validateIncidentPayload,
-    incidentsService.update
+    incidentsService.update,
   );
 
   // notes endpoints
   app.post(
     '/api/incidents/:id/notes',
     validateNotePayload,
-    notesService.create
+    notesService.create,
   );
   app.get('/api/incidents/:id/notes', notesService.list);
   app.use('/api/notes/:id', validateNoteId);
@@ -83,4 +85,5 @@ module.exports = app => {
 
   // roles endpoints
   app.get('/api/roles', rolesService.list);
+  app.use(catchErrors);
 };

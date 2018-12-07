@@ -17,20 +17,20 @@ const returnIncidentsIncludes = () => {
       model: User,
       as: 'assignees',
       userAttributes,
-      through: { attributes: ['assignedRole'] }
+      through: { attributes: ['assignedRole'] },
     },
     {
       model: User,
       as: 'reporter',
       userAttributes,
-      through: { attributes: [] }
+      through: { attributes: [] },
     },
     {
       model: User,
       as: 'witnesses',
       userAttributes,
-      through: { attributes: [] }
-    }
+      through: { attributes: [] },
+    },
   ];
 };
 const findIncidentById = id => {
@@ -75,7 +75,7 @@ const sendAssigneeOrCcdEmail = async payload => {
   const emailBody = await generateAssigneeOrCcdEmailBody({
     ...userDetails.dataValues,
     tagger: payload.tagger,
-    assignedRole: payload.assignedRole // add assigned role
+    assignedRole: payload.assignedRole, // add assigned role
   });
   emailHelper.sendMail(emailBody, error => {
     if (error) {
@@ -98,7 +98,7 @@ const addAssignee = ({ assignedUser, incident, res }) => {
       assignedUser.assignedRole = 'assignee';
       await sendAssigneeOrCcdEmail(assignedUser);
       assignee.assigneeIncidents = {
-        assignedRole: 'assignee'
+        assignedRole: 'assignee',
       };
       return incident.addAssignee(assignee);
     })
@@ -123,7 +123,7 @@ const addCcdUser = ({ ccdUser, res, incident, tagger }) => {
     let currentCcd = { ...user, assignedRole: 'ccd', tagger };
     await sendAssigneeOrCcdEmail(currentCcd);
     ccd.assigneeIncidents = {
-      assignedRole: 'ccd'
+      assignedRole: 'ccd',
     };
     return incident.addAssignee(ccd);
   });
@@ -156,9 +156,9 @@ const mapAssignees = incident => {
  * @return incident
  */
 const mapIncidents = incidents => {
-  incidents.map(incident => {
+  return incidents.map(incident => {
     incident.assignees && mapAssignees(incident.assignees);
-    incident.dataValues.reporter = incident.dataValues.reporter[0];
+    [incident.dataValues.reporter] = incident.dataValues.reporter;
     return incident;
   });
 };
@@ -169,5 +169,5 @@ module.exports = {
   findIncidentById,
   mapAssignees,
   mapIncidents,
-  returnIncidentsIncludes
+  returnIncidentsIncludes,
 };
