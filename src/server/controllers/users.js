@@ -1,30 +1,16 @@
 const Sequelize = require('sequelize');
 const User = require('../models').Users;
 const Incident = require('../models').Incidents;
-const Role = require('../models').Roles;
-const Location = require('../models').Locations;
 const { findOrCreateLocation } = require('../helpers/locationHelper');
-const emailHelper = require('../helpers/emailHelper');
-const generateEmailBody = require('../helpers/generateEmailBody');
 const { token } = require('../middlewares/authentication');
-const getUsernameFromEmail = require('../helpers/getUsernameFromEmail');
-const checkEmail = require('../helpers/checkEmail');
-const updateUserAndSendMail = require('../helpers/updateUserAndSendMail');
+const {
+  getUserByEmail,
+  include,
+  updateExistingUser,
+  createAndInviteUser,
+} = require('../helpers/userHelper');
 
 require('dotenv').config();
-
-const includeRole = {
-  model: Role,
-  attributes: ['name', 'id'],
-};
-
-let includes = [
-  includeRole,
-  {
-    model: Location,
-    attributes: ['name', 'centre', 'country'],
-  },
-];
 
 module.exports = {
   // add a user
@@ -74,9 +60,7 @@ module.exports = {
   },
 
   list: async (req, res) => {
-    const users = await User.findAll({
-      include: includes,
-    });
+    const users = await User.findAll({ include });
 
     return res.status(200).send({ data: { users }, status: 'success' });
   },
@@ -86,7 +70,7 @@ module.exports = {
 
     const user = await User.findById(req.params.id, {
       include: [
-        ...includes,
+        ...include,
         {
           model: Incident,
           as: 'reportedIncidents',
@@ -115,85 +99,12 @@ module.exports = {
   },
 
   inviteUser: async (req, res) => {
-    const validEmail = checkEmail(req.body.email);
-
-    const userExists = await User.findOne({
-      where: { email: req.body.email },
-      include: includeRole,
-    });
-
-    const callback = error => {
-      if (error) {
-        return error;
-      }
-      return { message: 'The email was sent successfully' };
-    };
-
-    const emailBody = await generateEmailBody(req.body.email, req.body.roleId);
-
+    const userExists = await getUserByEmail(req.body.email);
     if (userExists && userExists.Role) {
       // If user was created through reporting an incident, update the user with provided role
-      if (userExists.Role.id === 1) {
-        await User.update(
-          { roleId: req.body.roleId },
-          { where: { email: req.body.email } }
-        );
-
-        const emailBody = await generateEmailBody(
-          req.body.email,
-          req.body.roleId
-        );
-
-        emailHelper.sendMail(emailBody, callback);
-
-        const user = await User.findOne({
-          where: { email: req.body.email },
-          include: includes,
-        });
-
-        return res.status(200).send({ data: user, status: 'success' });
-      } else {
-        return res.status(400).json({
-          message: `The user with that email address already exists as an ${
-            userExists.Role.name
-          } . Try updating their role`,
-        });
-      }
-    } else {
-      if (validEmail && !userExists) {
-        const name = getUsernameFromEmail(req.body.email);
-
-        res.locals.username = `${name.first} ${name.last}`;
-
-        const userObject = {
-          email: req.body.email,
-          username: res.locals.username,
-          roleId: req.body.roleId,
-          locationId: req.body.locationId,
-        };
-
-        const [createdUser, created] = await User.findOrCreate({
-          where: { email: userObject.email },
-          defaults: userObject,
-        });
-
-        if (!created) {
-          await updateUserAndSendMail(userObject, res);
-        }
-
-        emailHelper.sendMail(emailBody, callback);
-
-        const user = await User.findById(createdUser.id, {
-          include: includes,
-        });
-
-        return res.status(200).send({ data: user, status: 'success' });
-      }
-
-      return res.status(400).json({
-        message: 'You can only invite Andela users through their Andela emails',
-      });
+      return updateExistingUser(req, res, userExists);
     }
+    return createAndInviteUser(req, res, userExists);
   },
 
   /**
@@ -202,10 +113,11 @@ module.exports = {
    * @param Object res
    * @return Status Code & Object
    */
+
   editUser: async (req, res) => {
     const updatedUser = await res.locals.user.update(req.body);
 
-    const user = await User.findById(updatedUser.id, { include: includes });
+    const user = await User.findById(updatedUser.id, { include: include });
 
     return res.status(200).send({ data: user, status: 'success' });
   },
@@ -228,6 +140,7 @@ module.exports = {
    * @param Object res
    * @return Status Code & Object with array of users
    */
+
   async searchUser(req, res) {
     const searchQuery = {
       $ilike: Sequelize.fn('lower', `%${req.query.q.toLowerCase()}%`),
@@ -235,7 +148,7 @@ module.exports = {
 
     const users = await User.findAll({
       where: { $or: { username: searchQuery, email: searchQuery } },
-      include: includes,
+      include: include,
     });
 
     return res.status(200).send({ data: { users }, status: 'success' });
