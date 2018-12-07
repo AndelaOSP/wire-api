@@ -1,16 +1,14 @@
 const Incident = require('../models').Incidents;
 const User = require('../models').Users;
-const AssigneeModel = require('../models').assigneeIncidents;
 const { findOrCreateLocation } = require('../helpers/locationHelper');
 const findOrCreateUser = require('../helpers/findOrCreateUser');
 const listAssigneeIncidentsIncludes = require('../helpers/listAssigneeIncidentsIncludes');
 const {
-  addAssignee,
-  addCcdUser,
   findIncidentById,
   mapAssignees,
   mapIncidents,
   returnIncidentsIncludes,
+  updateIncident,
 } = require('../helpers/incidentHelper');
 
 const include = returnIncidentsIncludes();
@@ -124,8 +122,6 @@ module.exports = {
 
   // update an incident
   update: async (req, res) => {
-    let { assignee: assignedUser, ccd: ccdUser } = req.body;
-
     const incident = await Incident.findById(req.params.id, {
       include,
     });
@@ -136,53 +132,7 @@ module.exports = {
         .send({ message: 'Incident not found', status: 'fail' });
     }
 
-    if (assignedUser || ccdUser) {
-      const userKey = assignedUser ? 'assignedUser' : 'ccdUser';
-
-      const users = {
-        assignedUser: {
-          assignedRole: 'assignee',
-          action: addAssignee,
-          arguments: { assignedUser },
-        },
-        ccdUser: {
-          assignedRole: 'ccd',
-          action: addCcdUser,
-          arguments: { ccdUser, tagger: res.locals.currentUser.username },
-        },
-      };
-
-      const selectedUser = users[userKey];
-
-      if (incident.dataValues.assignees.length === 0) {
-        return selectedUser.action({
-          ...selectedUser.arguments,
-          incident,
-          res,
-        });
-      } else {
-        await AssigneeModel.destroy({
-          where: {
-            assignedRole: selectedUser.assignedRole,
-            incidentId: incident.id,
-          },
-        });
-
-        return selectedUser.action({
-          ...selectedUser.arguments,
-          incident,
-          res,
-        });
-      }
-    } else {
-      await incident.update({
-        statusId: req.body.statusId || incident.statusId,
-        categoryId: req.body.categoryId || incident.categoryId,
-        levelId: req.body.levelId || incident.levelId,
-      });
-
-      return res.status(200).send({ data: incident, status: 'success' });
-    }
+    return updateIncident(incident, req, res);
   },
 
   // delete an incident by ID. To be refactored into archive incidents that are old and resolved.

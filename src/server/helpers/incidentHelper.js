@@ -3,6 +3,7 @@ const User = require('../models').Users;
 const Location = require('../models').Locations;
 const Level = require('../models').Levels;
 const Status = require('../models').Statuses;
+const AssigneeModel = require('../models').assigneeIncidents;
 const generateAssigneeOrCcdEmailBody = require('../helpers/generateAssigneeOrCcdEmailBody');
 const emailHelper = require('../helpers/emailHelper');
 
@@ -58,8 +59,6 @@ const getUserDetails = async payload => {
 
       return userDetails;
     });
-
-    return userDetails;
   }
 
   userDetails = await User.findById(payload.userId);
@@ -174,11 +173,74 @@ const mapIncidents = incidents => {
   });
 };
 
+const updateAssignedOrCcdUser = async (
+  assignedUser,
+  ccdUser,
+  incident,
+  res
+) => {
+  const userKey = assignedUser ? 'assignedUser' : 'ccdUser';
+
+  const users = {
+    assignedUser: {
+      assignedRole: 'assignee',
+      action: addAssignee,
+      arguments: { assignedUser },
+    },
+    ccdUser: {
+      assignedRole: 'ccd',
+      action: addCcdUser,
+      arguments: { ccdUser, tagger: res.locals.currentUser.username },
+    },
+  };
+
+  const selectedUser = users[userKey];
+
+  if (incident.dataValues.assignees.length === 0) {
+    return selectedUser.action({
+      ...selectedUser.arguments,
+      incident,
+      res,
+    });
+  } else {
+    await AssigneeModel.destroy({
+      where: {
+        assignedRole: selectedUser.assignedRole,
+        incidentId: incident.id,
+      },
+    });
+
+    return selectedUser.action({
+      ...selectedUser.arguments,
+      incident,
+      res,
+    });
+  }
+};
+
+const updateIncident = async (incident, req, res) => {
+  let { assignee: assignedUser, ccd: ccdUser } = req.body;
+
+  if (assignedUser || ccdUser) {
+    return updateAssignedOrCcdUser(assignedUser, ccdUser, incident, res);
+  }
+
+  await incident.update({
+    statusId: req.body.statusId || incident.statusId,
+    categoryId: req.body.categoryId || incident.categoryId,
+    levelId: req.body.levelId || incident.levelId,
+  });
+
+  return res.status(200).send({ data: incident, status: 'success' });
+};
+
 module.exports = {
   addAssignee,
   addCcdUser,
   findIncidentById,
   mapAssignees,
   mapIncidents,
+  updateIncident,
   returnIncidentsIncludes,
+  updateAssignedOrCcdUser,
 };
