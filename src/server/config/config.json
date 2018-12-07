@@ -16,7 +16,7 @@
     "host": "localhost",
     "dialect": "postgres",
     "WIRE_BASE_URL": "http://wire.andela.com:8080/",
-    "logger": false
+    "logging": false
   },
   "production": {
     "use_env_variable": "DATABASE_URL",
