@@ -1,17 +1,11 @@
-const chaiHttp = require('chai-http');
-const chai = require('chai');
+const nodemailer = require('nodemailer');
 const request = require('supertest');
-const sinon = require('sinon');
 const { token } = require('../server/middlewares/authentication');
 const incidents = require('../server/models').Incidents;
 const User = require('../server/models').Users;
-const nodemailer = require('nodemailer');
 
-// const incident = require('../server/models').Incidents;
 const incident = require('../server/controllers').incidents;
 const app = require('../index');
-
-chai.use(chaiHttp);
 
 const testIncident = {
   subject: 'incident payload',
@@ -25,7 +19,7 @@ const testIncident = {
     username: 'Batian Muthoga',
     imageUrl:
       'https://avatars.slack-edge.com/2018-01-31/308111298950_b15a779680c4d2bb093c_48.png',
-    reporterLocation: { name: 'office', country: 'USA', centre: 'New York' }
+    reporterLocation: { name: 'office', country: 'USA', centre: 'New York' },
   },
   witnesses: [
     {
@@ -37,8 +31,8 @@ const testIncident = {
       witnessLocation: {
         name: 'office',
         centre: 'St. Catherines',
-        country: 'Kenya'
-      }
+        country: 'Kenya',
+      },
     },
     {
       userId: 'UBQ8DDCBF',
@@ -49,102 +43,95 @@ const testIncident = {
       witnessLocation: {
         name: 'office',
         centre: 'St. Catherines',
-        country: 'Kenya'
-      }
-    }
-  ]
+        country: 'Kenya',
+      },
+    },
+  ],
 };
 
 const assigneeRequestBody = {
+  ...testIncident,
   assignee: {
     userId: 'cjl6egyei00005dnytqp4a06l',
-    incidentId: 'cjfkubrlv0001tgxs3'
-  }
+    incidentId: 'cjfkubrlv0001tgxs3',
+  },
 };
 
 const ccdRequestBody = {
+  ...testIncident,
   ccd: [
     {
       userId: 'cjl6ege6e000053nyv67otq7a',
-      incidentId: 'cjfkubrlv0001tgxs3'
-    }
-  ]
+      incidentId: 'cjfkubrlv0001tgxs3',
+    },
+  ],
 };
-let nodemailerStub;
+
 const incidentsEndpoint = '/api/incidents';
 
-const userToken = token({ id: 3453, roleId: 3, username: 'Batian Muthoga' });
+const userToken = token({
+  id: 3453,
+  roleId: 3,
+  username: 'Batian Muthoga',
+});
+
 const assigneeUserToken = token({
   id: 'cjl6ege6e000053nyv67otq7a',
   roleId: 2,
-  username: 'Mercy Muchai'
+  username: 'Mercy Muchai',
 });
+
+jest.mock('nodemailer', () => ({
+  createTransport: () => ({
+    sendMail: (options, call) => {
+      call();
+    },
+  }),
+}));
+
 describe('Incident Tests', () => {
-  beforeEach(() => {
-    const transport = {
-      sendMail: (data, callback) => {
-        callback(null, null);
-      }
-    };
-    nodemailerStub = sinon
-      .stub(nodemailer, 'createTransport')
-      .returns(transport);
-  });
-  afterEach(() => {
-    nodemailerStub.restore();
-  });
-
-  const testStub = queryType =>
-    sinon.stub(incident, queryType).resolves(Object({}, ''));
-  const createStub = testStub('create');
-  const updateIncidentStub = testStub('update');
-
-  const makeServerCall = (userToken, requestBody, done, stub) => {
+  const makeServerCall = (requestBody, done, method, callback) => {
     request(app)
       .post(incidentsEndpoint)
+      .set('Authorization', userToken)
       .send(testIncident)
-      .then(res => {
+      .expect(201)
+      .then((res, err) => {
         request(app)
-          .put('/api/incidents/' + res.body.data.id)
+          [method]('/api/incidents/' + res.body.data.id)
           .send(requestBody)
           .set('Authorization', userToken)
-          .expect(200)
-          .end(err => {
-            // if (err) throw err;
-            createStub.restore();
-            stub.restore();
+          .end((err, res) => {
+            callback({ err, res });
             done();
           });
       });
   };
+
   it('should create an incident given the correct payload', done => {
     request(app)
       .post(incidentsEndpoint)
       .send(testIncident)
       .expect(201)
-      .end(err => {
-        if (err) throw err;
-        createStub.restore();
+      .end((err, res) => {
+        expect(res.body.data).toHaveProperty('id');
         done();
       });
   });
 
   it('should list all incidents', done => {
-    let listStub = sinon.stub(incident, 'list').resolves(Object({}, ''));
     request(app)
       .get(incidentsEndpoint)
       .set('Authorization', userToken)
       .expect(200)
-      .end(err => {
-        if (err) throw err;
-        listStub.restore();
+      .end((err, res) => {
+        expect(res.body.data.incidents.length).toBeGreaterThan(0);
         done();
       });
   });
 
   it('should list all incidents for an Assignee', done => {
     const incidentId = 'cjfkubrlv0001tgxs3mre';
-    let listStub = sinon.stub(incident, 'list').resolves(Object({}, ''));
     incidents.findById(incidentId).then(incident => {
       const assingedUserId = 'cjl6ege6e000053nyv67otq7a';
       User.findById(assingedUserId).then(user => {
@@ -153,12 +140,8 @@ describe('Incident Tests', () => {
             .get(incidentsEndpoint)
             .set('Authorization', assigneeUserToken)
             .expect(200)
-            .end(err => {
-              if (err) {
-                done();
-                throw err;
-              }
-              listStub.restore();
+            .end((err, res) => {
+              expect(res.body.data.id).toEqual(res.body.data.id);
               done();
             });
         });
@@ -167,9 +150,6 @@ describe('Incident Tests', () => {
   });
 
   it('should find an incident provided an existing incident ID', done => {
-    let findByIdStub = sinon
-      .stub(incident, 'findById')
-      .resolves(Object({}, ''));
     request(app)
       .post(incidentsEndpoint)
       .send(testIncident)
@@ -178,22 +158,11 @@ describe('Incident Tests', () => {
           .get('/api/incidents/' + res.body.data.id)
           .set('Authorization', userToken)
           .expect(200)
-          .end(err => {
-            if (err) throw err;
-            createStub.restore();
-            findByIdStub.restore();
+          .end((err, res) => {
+            expect(res.body.data.id).toEqual(res.body.data.id);
             done();
           });
       });
-  });
-
-  it('should update an incident when someone gets assigned to it', done => {
-    return makeServerCall(
-      userToken,
-      assigneeRequestBody,
-      done,
-      updateIncidentStub
-    );
   });
 
   it('should update an incident provided an existing incident ID', done => {
@@ -206,26 +175,73 @@ describe('Incident Tests', () => {
           .set('Authorization', userToken)
           .send({ ...testIncident, statusId: 3 })
           .expect(200)
-          .end(err => {
-            if (err) throw err;
-            createStub.restore();
-            updateIncidentStub.restore();
+          .end((err, res) => {
+            expect(res.body.data.statusId).toEqual(3);
             done();
           });
       });
   });
 
+  it('should update an incident when someone gets assigned to it', done => {
+    makeServerCall(assigneeRequestBody, done, 'put', ({ err, res }) => {
+      expect(res.body.data).toHaveProperty('id');
+      done();
+    });
+  });
+
   it('should update an incident when someone gets ccd to it', done => {
-    return makeServerCall(userToken, ccdRequestBody, done, updateIncidentStub);
+    makeServerCall(ccdRequestBody, done, 'put', ({ err, res }) => {
+      expect(res.body.data).toHaveProperty('id');
+      done();
+    });
   });
 
   it('should delete an incident provided an existing incident ID', done => {
-    const deleteIncidentStub = testStub('delete');
-    makeServerCall(userToken, testIncident, done, deleteIncidentStub);
+    makeServerCall(testIncident, done, 'delete', ({ err, res }) => {
+      expect(res.body).toMatchObject({});
+      done();
+    });
   });
 
-  it('should list an incident if provided with an existing incident Id', done => {
-    const listIncidentsByIdStub = testStub('listIncidents');
-    makeServerCall(userToken, testIncident, done, listIncidentsByIdStub);
+  it('should get an incident if provided with an existing incident Id', done => {
+    makeServerCall(testIncident, done, 'get', ({ err, res }) => {
+      expect(res.body.data).toHaveProperty('id');
+      done();
+    });
+  });
+
+  it('should search incidents', done => {
+    request(app)
+      .get('/api/search/incidents?q=something')
+      .set('Authorization', userToken)
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.data).toHaveProperty('incidents');
+        done();
+      });
+  });
+
+  it('should return error if query is not provided', done => {
+    request(app)
+      .get('/api/search/incidents')
+      .set('Authorization', userToken)
+      .expect(200)
+      .end((err, res) => {
+        expect(err).not.toBeNull();
+        done();
+      });
+  });
+
+  it('should list incidents by category', done => {
+    request(app)
+      .get('/api/categories/23/incidents')
+      .set('Authorization', userToken)
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.data).toHaveProperty('incidents');
+        done();
+      });
   });
 });
+
+jest.clearAllMocks();

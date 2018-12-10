@@ -1,18 +1,14 @@
-const chaiHttp = require('chai-http');
-const chai = require('chai');
 const request = require('supertest');
-const assert = chai.assert;
-const sinon = require('sinon');
 
 const Note = require('../server/models').Notes;
 const { token } = require('../server/middlewares/authentication');
 
 const app = require('../index');
-chai.use(chaiHttp);
+
 const userToken = token({ id: 3453, roleId: 3, username: 'Batian Muthoga' });
 const testPayload = {
   userEmail: 'batian.muthoga@andela.com',
-  note: 'This is a sample note'
+  note: 'This is a sample note',
 };
 
 let noteId;
@@ -20,57 +16,59 @@ const notesEndpoint = '/api/incidents/cjfkubrlv0001tsjksuis3/notes';
 
 describe('NOTE tests', () => {
   beforeEach(done => {
-    Note.create(testPayload).then(note => {
-      noteId = note.id;
-      done();
-    });
+    request(app)
+      .post(notesEndpoint)
+      .set('Authorization', userToken)
+      .send(testPayload)
+      .expect(201)
+      .end((err, res) => {
+        expect(res.body.data).toHaveProperty('id');
+        noteId = res.body.data.id;
+        done();
+      });
   });
 
-  it('should fail to add a note', done => {
+  it('should fail to add a note with wrong payload', done => {
     request(app)
       .post(notesEndpoint)
       .set('Authorization', userToken)
       .send({})
       .expect(400)
       .end((err, res) => {
-        if (err) throw err;
+        expect(res.body.message).toEqual('"note" is required');
         done();
       });
   });
+
   it('Should return all the notes', done => {
     request(app)
       .get(notesEndpoint)
       .set('Authorization', userToken)
       .expect(200)
       .end((err, res) => {
-        if (err) throw err;
-        assert.deepEqual(res.body, {
-          data: {
-            notes: []
-          },
-          status: 'success'
-        });
+        expect(res.body.data.notes.length).toEqual(1);
         done();
       });
   });
 
-  it('Should fail when the incident does not exist', done => {
+  it('Should fail when the incident is not found', done => {
     request(app)
       .get('/api/incidents/cjfkubrlv0001tsjksuis34/notes')
       .set('Authorization', userToken)
       .expect(404)
-      .end(() => {
+      .end((err, res) => {
+        expect(res.body.message).toEqual('incident not found');
         done();
       });
   });
 
-  it('should fail to retrieve one note', done => {
+  it('should fail to retrieve one note if it not found', done => {
     request(app)
       .get('/api/notes/cjfkubrlv0001tsjksuis3e4')
       .set('Authorization', userToken)
       .expect(404)
       .end((err, res) => {
-        if (err) throw err;
+        expect(res.body.message).toEqual('note not found');
         done();
       });
   });
@@ -81,18 +79,18 @@ describe('NOTE tests', () => {
       .set('Authorization', userToken)
       .expect(200)
       .end((err, res) => {
-        if (err) throw err;
-        assert.equal(res.body.data.note, testPayload.note);
+        expect(res.body.data.note).toEqual(testPayload.note);
         done();
       });
   });
+
   it('should fail to update when note id not found', done => {
     request(app)
       .put('/api/notes/1')
       .set('Authorization', userToken)
       .expect(404)
       .end((err, res) => {
-        if (err) throw err;
+        expect(res.body.message).toEqual('note not found');
         done();
       });
   });
@@ -104,34 +102,35 @@ describe('NOTE tests', () => {
       .send({ ...testPayload, note: 'new note' })
       .expect(200)
       .end((err, res) => {
-        if (err) throw err;
-        assert.equal(res.body.data.note, 'new note');
+        expect(res.body.data.note).toEqual('new note');
         done();
       });
   });
 
   it('should fail to delete when noteId is not found', done => {
     request(app)
-      .delete(`/api/notes/fdfgddgdgdgdgdgd`)
+      .delete('/api/notes/fdfgddgdgdgdgdgd')
       .set('Authorization', userToken)
       .expect(404)
       .end((err, res) => {
+        expect(res.body.message).toEqual('note not found');
         done();
       });
   });
+
   it('should delete a note successfully ', done => {
     request(app)
       .delete(`/api/notes/${noteId}`)
       .set('Authorization', userToken)
       .expect(204)
       .end((err, res) => {
-        if (err) throw err;
+        expect(err).toBeNull();
         done();
       });
   });
 
   afterEach(done => {
-    Note.destroy({ where: {} }).then(() => {
+    Note.destroy({ where: { id: noteId } }).then(() => {
       noteId = null;
       done();
     });

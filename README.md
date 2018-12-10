@@ -18,15 +18,15 @@ Clone repo:
 git clone https://github.com/AndelaOSP/wire-api.git
 ```
 
-Navidate to `src` directory:
+Navigate to repo:
 ```
-cd wire-api/src
+cd src/wire-api
 ```
 
 Install all dependencies:
 
 ```
-npm install
+yarn install
 ```
 
 Start Postgres and create `wired_dev` database if it does not exist.
@@ -47,13 +47,13 @@ export DATABASE_URL = postgres://localhost:5432/wire_dev
 
 Run migrations and seeders:
 ```
-npm run migrate-seed
+yarn run migrate-seed
 ```
 
 Start the dev server:
 
 ```
-npm run start:dev
+yarn start:dev
 ```
 
 Navigate to the port and test the endpoints on postman

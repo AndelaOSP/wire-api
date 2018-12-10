@@ -4,6 +4,7 @@ const notes = require('./notes');
 const categories = require('./categories');
 const users = require('./users');
 const roles = require('./roles');
+const { catchErrors } = require('./errorLogs');
 
 module.exports = {
   incidents,
@@ -11,5 +12,6 @@ module.exports = {
   notes,
   categories,
   users,
-  roles
+  roles,
+  catchErrors,
 };

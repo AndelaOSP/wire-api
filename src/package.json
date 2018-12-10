@@ -15,8 +15,12 @@
     "migrate-seed": "npm run migrate && npm run seed",
     "pretest": "NODE_ENV=test sequelize db:migrate:undo:all && NODE_ENV=test sequelize db:migrate && NODE_ENV=test yarn run seed",
     "posttest": "NODE_ENV=test sequelize db:migrate:undo:all",
-    "test": "NODE_ENV=test nyc --reporter=html --reporter=text mocha --recursive -t 10000",
+    "test": "NODE_ENV=test nyc --reporter=html --reporter=text jest --detectOpenHandles --runInBand",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "forceExit": true
   },
   "dependencies": {
     "body-parser": "^1.18.2",
@@ -41,22 +45,19 @@
   },
   "devDependencies": {
     "babel-eslint": "^8.0.1",
-    "chai": "^4.1.2",
-    "chai-http": "^4.0.0",
     "coveralls": "^3.0.1",
     "eslint": "5.6.0",
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-config-prettier": "3.3.0",
     "eslint-plugin-import": "2.14.0",
-    "eslint-plugin-prettier": "3.0.0",
+    "eslint-plugin-jest": "^22.1.2",
+    "eslint-plugin-prettier": "^3.0.0",
     "istanbul": "^0.4.5",
-    "mocha": "^5.0.5",
-    "mocha-lcov-reporter": "^1.3.0",
+    "jest": "^23.6.0",
+    "jest-cli": "^23.6.0",
     "nodemon": "^1.14.11",
     "nyc": "^11.6.0",
     "prettier": "1.15.3",
-    "sinon": "^4.5.0",
-    "sinon-as-promised": "^4.0.3",
     "supertest": "^3.0.0"
   }
 }

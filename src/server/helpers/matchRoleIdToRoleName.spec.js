@@ -1,10 +1,9 @@
 const matchRoleIdToRoleName = require('./matchRoleIdToRoleName');
-const chai = require('chai');
-const assert = chai.assert;
 
 describe('#####MatchRoleIdToRoleName', () => {
-  it('should create a username given an email', async () => {
+  it('should create a username given an email', async done => {
     const roleName = await matchRoleIdToRoleName(3);
-    assert.equal(roleName, 'Admin');
+    expect(roleName).toEqual('Admin');
+    done();
   });
 });

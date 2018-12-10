@@ -3,7 +3,7 @@ const Joi = require('joi');
 const locationSchema = {
   name: Joi.string().required(),
   centre: Joi.string().required(),
-  country: Joi.string().required()
+  country: Joi.string().required(),
 };
 
 const userSchema = {
@@ -12,24 +12,29 @@ const userSchema = {
     .email()
     .required(),
   username: Joi.string().required(),
-  imageUrl: Joi.string()
+  imageUrl: Joi.string(),
 };
 
 const incidentReporterSchema = {
   ...userSchema,
-  reporterLocation: locationSchema
+  reporterLocation: locationSchema,
 };
 
 const witnessSchema = {
   ...userSchema,
-  witnessLocation: locationSchema
+  witnessLocation: locationSchema,
 };
 
 const noteSchema = {
   note: Joi.string().required(),
   userEmail: Joi.string()
     .email()
-    .required()
+    .required(),
+};
+
+const incidentUserSchema = {
+  userId: Joi.string().required(),
+  incidentId: Joi.string().required(),
 };
 
 const incidentSchema = {
@@ -43,7 +48,9 @@ const incidentSchema = {
   incidentReporter: incidentReporterSchema,
   witnesses: Joi.array()
     .items(witnessSchema)
-    .required()
+    .required(),
+  assignee: incidentUserSchema,
+  ccd: Joi.array().items(incidentUserSchema),
 };
 
 const { userId, ...rest } = userSchema;
@@ -51,7 +58,7 @@ const { userId, ...rest } = userSchema;
 const newUserSchema = {
   ...rest,
   roleId: Joi.number().required(),
-  location: locationSchema
+  location: locationSchema,
 };
 
 module.exports = {
@@ -61,5 +68,5 @@ module.exports = {
   witnessSchema,
   incidentSchema,
   newUserSchema,
-  noteSchema
+  noteSchema,
 };

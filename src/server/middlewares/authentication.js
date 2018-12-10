@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+
 const secretKey = process.env.SECRET_KEY;
 
 const Auth = (req, res, next) => {
@@ -7,7 +8,7 @@ const Auth = (req, res, next) => {
   if (!token) {
     return res.status(401).send({
       success: false,
-      message: 'No token provided'
+      message: 'No token provided',
     });
   }
 
@@ -15,7 +16,7 @@ const Auth = (req, res, next) => {
     if (err) {
       return res.status(401).json({
         success: false,
-        messsage: 'Invalid token provided'
+        messsage: 'Invalid token provided',
       });
     }
     res.locals.currentUser = decoded;
@@ -32,21 +33,21 @@ const isAdmin = (req, res, next) => {
 };
 
 /**
-* Checks if user viewing incidents is an assignee or admin
-* @function canViewIncidents
-* @param Request Object
-* @param Response Object
-* @param function next()
-**/
+ * Checks if user viewing incidents is an assignee or admin
+ * @function canViewIncidents
+ * @param Request Object
+ * @param Response Object
+ * @param function next()
+ **/
 const canViewIncidents = (req, res, next) => {
-  const roleId = res.locals.currentUser.roleId;
+  const { roleId } = res.locals.currentUser;
   if (roleId === 2 || roleId === 3) {
     return next();
   }
   res.status(403).send({ message: 'You are not an Authorised user' });
 };
 
-const token = ({id, roleId, username}) => {
+const token = ({ id, roleId, username }) => {
   return jwt.sign({ id, roleId, username }, secretKey, { expiresIn: '24h' });
 };
 
