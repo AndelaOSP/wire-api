@@ -1,51 +1,62 @@
 {
-  "env": {
-      "browser": true,
-      "node": true,
-      "es6": true,
-      "jquery": true,
-      "mocha": true,
-      "jest": true
-  },
-  "extends": [
-      "airbnb-base",
-      "eslint:recommended",
-      "plugin:import/errors",
-      "plugin:import/warnings",
-      "prettier"
-  ],
-  "plugins": [ "prettier" ],
-  "rules": {
-      "prettier/prettier": [
-        "error",
-        {
-        "singleQuote": true,
-        "trailingComma": "es5",
-        "bracketSpacing": true
-        }
+    "env": {
+        "browser": true,
+        "node": true,
+        "es6": true,
+        "jquery": true,
+        "mocha": true,
+        "jest": true
+    },
+    "extends": [
+        "airbnb-base",
+        "eslint:recommended",
+        "plugin:import/errors",
+        "plugin:import/warnings",
+        "prettier"
     ],
-      "quotes": [
-          2,
-          "single"
-      ],
-      "no-console": 1,
-      "no-debugger": 1,
-      "no-var": 1,
-      "strict": [
-          1
-      ],
-      "semi": [
-          1,
-          "always"
-      ],
-      "indent": [
-          "error",
-          2
-      ],
-      "prefer-destructuring": "error",
-      "eol-last": 1,
-      "no-unused-vars": "error",
-      "import/no-unresolved": "error",
-      "complexity": ["error", { "max": 10 }]
-  }
+    "plugins": [
+        "prettier"
+    ],
+    "rules": {
+        "prettier/prettier": [
+            "error",
+            {
+                "singleQuote": true,
+                "trailingComma": "es5",
+                "bracketSpacing": true
+            }
+        ],
+        "max-lines-per-function": [
+            "error",
+            40
+        ],
+        "quotes": [
+            2,
+            "single"
+        ],
+        "no-console": 1,
+        "no-debugger": 1,
+        "no-var": 1,
+        "strict": [
+            1
+        ],
+        "semi": [
+            1,
+            "always"
+        ],
+        "indent": [
+            "error",
+            2
+        ],
+        "prefer-destructuring": "error",
+        "eol-last": 1,
+        "no-unused-vars": "error",
+        "import/no-unresolved": "error",
+        "complexity": [
+            "error",
+            {
+                "max": 10
+            }
+        ]
+    }
 }
