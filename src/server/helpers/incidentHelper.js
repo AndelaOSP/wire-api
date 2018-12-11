@@ -109,11 +109,8 @@ const addAssignee = async ({ assignedUser, incident, res }) => {
   assignee.assigneeIncidents = {
     assignedRole: 'assignee',
   };
-
   await incident.addAssignee(assignee);
-
   const data = await findIncidentById(incident.id, res);
-
   return res.status(200).send({ data, status: 'success' });
 };
 
@@ -173,15 +170,8 @@ const mapIncidents = incidents => {
   });
 };
 
-const updateAssignedOrCcdUser = async (
-  assignedUser,
-  ccdUser,
-  incident,
-  res
-) => {
-  const userKey = assignedUser ? 'assignedUser' : 'ccdUser';
-
-  const users = {
+const getUserOptions = (assignedUser, ccdUser, res) => {
+  return {
     assignedUser: {
       assignedRole: 'assignee',
       action: addAssignee,
@@ -193,29 +183,26 @@ const updateAssignedOrCcdUser = async (
       arguments: { ccdUser, tagger: res.locals.currentUser.username },
     },
   };
+};
 
+const updateAssignedOrCcdUser = async (
+  assignedUser,
+  ccdUser,
+  incident,
+  res
+) => {
+  const userKey = assignedUser ? 'assignedUser' : 'ccdUser';
+  const users = getUserOptions(assignedUser, ccdUser, res);
   const selectedUser = users[userKey];
-
-  if (incident.dataValues.assignees.length === 0) {
-    return selectedUser.action({
-      ...selectedUser.arguments,
-      incident,
-      res,
-    });
-  } else {
-    await AssigneeModel.destroy({
-      where: {
-        assignedRole: selectedUser.assignedRole,
-        incidentId: incident.id,
-      },
-    });
-
-    return selectedUser.action({
-      ...selectedUser.arguments,
-      incident,
-      res,
-    });
-  }
+  if (incident.dataValues.assignees.length === 0)
+    return selectedUser.action({ ...selectedUser.arguments, incident, res });
+  await AssigneeModel.destroy({
+    where: {
+      assignedRole: selectedUser.assignedRole,
+      incidentId: incident.id,
+    },
+  });
+  return selectedUser.action({ ...selectedUser.arguments, incident, res });
 };
 
 const updateIncident = async (incident, req, res) => {

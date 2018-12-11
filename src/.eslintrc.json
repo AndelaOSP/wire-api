@@ -28,7 +28,7 @@
         ],
         "max-lines-per-function": [
             "error",
-            40
+            25
         ],
         "quotes": [
             2,

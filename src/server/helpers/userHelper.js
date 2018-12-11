@@ -60,39 +60,24 @@ const updateExistingUser = async (req, res, userExists) => {
 
 const createAndInviteUser = async (req, res, userExists) => {
   const validEmail = checkEmail(req.body.email);
-
   const emailBody = await generateEmailBody(req.body.email, req.body.roleId);
-
   if (validEmail && !userExists) {
     const name = getUsernameFromEmail(req.body.email);
-
-    res.locals.username = `${name.first} ${name.last}`;
-
     const userObject = {
       email: req.body.email,
-      username: res.locals.username,
+      username: `${name.first} ${name.last}`,
       roleId: req.body.roleId,
       locationId: req.body.locationId,
     };
-
     const [createdUser, created] = await User.findOrCreate({
       where: { email: userObject.email },
       defaults: userObject,
     });
-
-    if (!created) {
-      return updateUserAndSendMail(userObject, res);
-    }
-
+    if (!created) return updateUserAndSendMail(userObject, res);
     emailHelper.sendMail(emailBody, sendEmailCallback);
-
-    const user = await User.findById(createdUser.id, {
-      include,
-    });
-
+    const user = await User.findById(createdUser.id, { include });
     return res.status(200).send({ data: user, status: 'success' });
   }
-
   return res.status(400).send({
     message: 'You can only invite Andela users through their Andela emails',
   });
