@@ -49,6 +49,18 @@ module.exports = {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       },
+      {
+        id: 'cjpjfaq5h0000fim3xv1ijlpa',
+        slackId: 'U4DCMF8EL',
+        email: 'joseph.nzau@andela.com',
+        username: 'Joseph Nzau',
+        imageUrl:
+          'https://ca.slack-edge.com/T02R3LKBA-U4GHQF7BQ-89b22f3000e2-48',
+        roleId: 3,
+        locationId: 'cjee24xnn0000i2xsh9qauyn5',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
     ]);
   },
 
