@@ -1,5 +1,6 @@
 const Note = require('../models').Notes;
 const User = require('../models').Users;
+const deleteFromResponseLocals = require('../helpers/deleteFromResponseLocals')
 
 let userAttributes = {
   model: User,
@@ -56,9 +57,7 @@ module.exports = {
   },
 
   // delete a note
-  delete: async (req, res) => {
-    await res.locals.note.destroy();
-
-    return res.status(204).send();
+  delete: (req, res) => {
+    deleteFromResponseLocals(req, res, 'note');
   },
 };

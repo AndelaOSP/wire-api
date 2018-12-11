@@ -1,15 +1,11 @@
-const request = require('supertest');
-
-const { token } = require('../server/middlewares/authentication');
 const Location = require('../server/models').Locations;
-const app = require('../index');
+const sendRequest = require('./sendRequest');
 
 const testLocation = {
   name: 'Grass',
   centre: 'Nairobi',
   country: 'Kenya',
 };
-const userToken = token({ id: 3453, roleId: 3, username: 'Batian Muthoga' });
 
 describe('Locations controller', () => {
   const locationsEndpoint = '/api/locations';
@@ -18,76 +14,44 @@ describe('Locations controller', () => {
     Location.destroy({ where: {} });
   });
 
-  it('Should return all the locations', function(done) {
-    request(app)
-      .get(locationsEndpoint)
-      .set('Authorization', userToken)
-      .expect(200)
-      .end((err, res) => {
-        expect(res.body.data.locations.length).toBeGreaterThan(0);
-        done();
-      });
+  it('Should return all the locations', done => {
+    sendRequest('get', locationsEndpoint, null, (err, res) => {
+      expect(res.body.data.locations.length).toBeGreaterThan(0);
+      done();
+    });
   });
 
-  it('Should not create duplicate location', function(done) {
-    request(app)
-      .get(locationsEndpoint)
-      .set('Authorization', userToken)
-      .expect(200)
-      .end(() => {
-        request(app)
-          .get(locationsEndpoint)
-          .set('Authorization', userToken)
-          .expect(409)
-          .end(err => {
-            expect(err).not.toBeNull();
-            done();
-          });
+  it('Should not create duplicate location', done => {
+    sendRequest('post', locationsEndpoint, testLocation, () => {
+      sendRequest('post', locationsEndpoint, testLocation, (err, res) => {
+        expect(res.text).toEqual('Location already exists');
+        done();
       });
+    });
   });
 
   it('Should not create a location with invalid payload', done => {
-    request(app)
-      .post(locationsEndpoint)
-      .set('Authorization', userToken)
-      .send({})
-      .expect(400)
-      .end((err, res) => {
-        expect(res.body.message).toEqual(
-          'Location name, centre or country missing',
-        );
-        done();
-      });
+    sendRequest('post', locationsEndpoint, null, (err, res) => {
+      expect(res.body.message).toEqual(
+        'Location name, centre or country missing'
+      );
+      done();
+    });
   });
 
   it('Should not create a duplicate location', done => {
-    request(app)
-      .post(locationsEndpoint)
-      .set('Authorization', userToken)
-      .send(testLocation)
-      .expect(200)
-      .end(() => {
-        request(app)
-          .post(locationsEndpoint)
-          .set('Authorization', userToken)
-          .send(testLocation)
-          .expect(409)
-          .end((err, res) => {
-            expect(res.status).toEqual(409);
-            done();
-          });
+    sendRequest('post', locationsEndpoint, testLocation, () => {
+      sendRequest('post', locationsEndpoint, testLocation, (err, res) => {
+        expect(res.status).toEqual(409);
+        done();
       });
+    });
   });
 
   it('Should create a location', done => {
-    request(app)
-      .post(locationsEndpoint)
-      .set('Authorization', userToken)
-      .send(testLocation)
-      .expect(200)
-      .end((err, res) => {
-        expect(res.body).toHaveProperty('id');
-        done();
-      });
+    sendRequest('post', locationsEndpoint, testLocation, (err, res) => {
+      expect(res.body).toHaveProperty('id');
+      done();
+    });
   });
 });

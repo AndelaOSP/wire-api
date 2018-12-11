@@ -10,6 +10,7 @@ const {
   returnIncidentsIncludes,
   updateIncident,
 } = require('../helpers/incidentHelper');
+const deleteFromResponseLocals = require('../helpers/deleteFromResponseLocals');
 
 const include = returnIncidentsIncludes();
 
@@ -136,10 +137,8 @@ module.exports = {
   },
 
   // delete an incident by ID. To be refactored into archive incidents that are old and resolved.
-  delete: async (req, res) => {
-    await res.locals.incident.destroy();
-
-    return res.status(204).send();
+  delete: (req, res) => {
+    deleteFromResponseLocals(req, res, 'incident');
   },
 
   //search an incident by subject or description.
