@@ -1,3 +1,10 @@
 engines:
   eslint:
     enabled: true
+ratings:
+   paths:
+   - "src/server/*.js"
+exclude_paths:
+  - "src/server/models"
+  - "src/server/seeders"
+  - "src/server/migrations"

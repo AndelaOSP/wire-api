@@ -1,11 +1,7 @@
-const nodemailer = require('nodemailer');
-const request = require('supertest');
 const { token } = require('../server/middlewares/authentication');
 const incidents = require('../server/models').Incidents;
 const User = require('../server/models').Users;
-
-const incident = require('../server/controllers').incidents;
-const app = require('../index');
+const sendRequest = require('./sendRequest');
 
 const testIncident = {
   subject: 'incident payload',
@@ -69,12 +65,6 @@ const ccdRequestBody = {
 
 const incidentsEndpoint = '/api/incidents';
 
-const userToken = token({
-  id: 3453,
-  roleId: 3,
-  username: 'Batian Muthoga',
-});
-
 const assigneeUserToken = token({
   id: 'cjl6ege6e000053nyv67otq7a',
   roleId: 2,
@@ -90,44 +80,28 @@ jest.mock('nodemailer', () => ({
 }));
 
 describe('Incident Tests', () => {
-  const makeServerCall = (requestBody, done, method, callback) => {
-    request(app)
-      .post(incidentsEndpoint)
-      .set('Authorization', userToken)
-      .send(testIncident)
-      .expect(201)
-      .then((res, err) => {
-        request(app)
-          [method]('/api/incidents/' + res.body.data.id)
-          .send(requestBody)
-          .set('Authorization', userToken)
-          .end((err, res) => {
-            callback({ err, res });
-            done();
-          });
+  const makeServerCall = (requestBody, done, method) => {
+    sendRequest('post', incidentsEndpoint, testIncident, (error, res) => {
+      const url = '/api/incidents/' + res.body.data.id;
+      sendRequest(method, url, requestBody, (err, response) => {
+        expect(response.body.data).toHaveProperty('id');
+        done();
       });
+    });
   };
 
   it('should create an incident given the correct payload', done => {
-    request(app)
-      .post(incidentsEndpoint)
-      .send(testIncident)
-      .expect(201)
-      .end((err, res) => {
-        expect(res.body.data).toHaveProperty('id');
-        done();
-      });
+    sendRequest('post', incidentsEndpoint, testIncident, (err, res) => {
+      expect(res.body.data).toHaveProperty('id');
+      done();
+    });
   });
 
   it('should list all incidents', done => {
-    request(app)
-      .get(incidentsEndpoint)
-      .set('Authorization', userToken)
-      .expect(200)
-      .end((err, res) => {
-        expect(res.body.data.incidents.length).toBeGreaterThan(0);
-        done();
-      });
+    sendRequest('get', incidentsEndpoint, null, (err, res) => {
+      expect(res.body.data.incidents.length).toBeGreaterThan(0);
+      done();
+    });
   });
 
   it('should list all incidents for an Assignee', done => {
@@ -136,111 +110,90 @@ describe('Incident Tests', () => {
       const assingedUserId = 'cjl6ege6e000053nyv67otq7a';
       User.findById(assingedUserId).then(user => {
         incident.addAssignee(user).then(() => {
-          request(app)
-            .get(incidentsEndpoint)
-            .set('Authorization', assigneeUserToken)
-            .expect(200)
-            .end((err, res) => {
+          sendRequest(
+            'get',
+            incidentsEndpoint,
+            null,
+            (err, res) => {
               expect(res.body.data.id).toEqual(res.body.data.id);
               done();
-            });
+            },
+            assigneeUserToken
+          );
         });
       });
     });
   });
 
   it('should find an incident provided an existing incident ID', done => {
-    request(app)
-      .post(incidentsEndpoint)
-      .send(testIncident)
-      .then(res => {
-        request(app)
-          .get('/api/incidents/' + res.body.data.id)
-          .set('Authorization', userToken)
-          .expect(200)
-          .end((err, res) => {
-            expect(res.body.data.id).toEqual(res.body.data.id);
-            done();
-          });
+    sendRequest('post', incidentsEndpoint, testIncident, (err, res) => {
+      const incidentUrl = '/api/incidents/' + res.body.data.id;
+      sendRequest('get', incidentUrl, null, (error, response) => {
+        expect(response.body.data.id).toEqual(res.body.data.id);
+        done();
       });
+    });
   });
 
   it('should update an incident provided an existing incident ID', done => {
-    request(app)
-      .post(incidentsEndpoint)
-      .send(testIncident)
-      .then(res => {
-        request(app)
-          .put('/api/incidents/' + res.body.data.id)
-          .set('Authorization', userToken)
-          .send({ ...testIncident, statusId: 3 })
-          .expect(200)
-          .end((err, res) => {
-            expect(res.body.data.statusId).toEqual(3);
-            done();
-          });
-      });
+    sendRequest('post', incidentsEndpoint, testIncident, (err, res) => {
+      const updateIncidentUrl = '/api/incidents/' + res.body.data.id;
+      sendRequest(
+        'put',
+        updateIncidentUrl,
+        { ...testIncident, statusId: 3 },
+        (error, response) => {
+          expect(response.body.data.statusId).toEqual(3);
+          done();
+        }
+      );
+    });
   });
 
   it('should update an incident when someone gets assigned to it', done => {
-    makeServerCall(assigneeRequestBody, done, 'put', ({ err, res }) => {
-      expect(res.body.data).toHaveProperty('id');
-      done();
-    });
+    makeServerCall(assigneeRequestBody, done, 'put');
   });
 
   it('should update an incident when someone gets ccd to it', done => {
-    makeServerCall(ccdRequestBody, done, 'put', ({ err, res }) => {
-      expect(res.body.data).toHaveProperty('id');
-      done();
-    });
+    makeServerCall(ccdRequestBody, done, 'put');
   });
 
   it('should delete an incident provided an existing incident ID', done => {
-    makeServerCall(testIncident, done, 'delete', ({ err, res }) => {
+    const url = '/api/incidents/cjfkubrlv0001tgxs3';
+    sendRequest('delete', url, null, (error, res) => {
       expect(res.body).toMatchObject({});
       done();
     });
   });
 
   it('should get an incident if provided with an existing incident Id', done => {
-    makeServerCall(testIncident, done, 'get', ({ err, res }) => {
-      expect(res.body.data).toHaveProperty('id');
+    makeServerCall(testIncident, done, 'get');
+  });
+
+  it('should search incidents', done => {
+    sendRequest(
+      'get',
+      '/api/search/incidents?q=something',
+      null,
+      (error, res) => {
+        expect(res.body.data).toHaveProperty('incidents');
+        done();
+      }
+    );
+  });
+
+  it('should return error if query is not provided', done => {
+    sendRequest('get', '/api/search/incidents', null, (err, res) => {
+      expect(res.body.message).toEqual('please provide query');
       done();
     });
   });
 
-  it('should search incidents', done => {
-    request(app)
-      .get('/api/search/incidents?q=something')
-      .set('Authorization', userToken)
-      .expect(200)
-      .end((err, res) => {
-        expect(res.body.data).toHaveProperty('incidents');
-        done();
-      });
-  });
-
-  it('should return error if query is not provided', done => {
-    request(app)
-      .get('/api/search/incidents')
-      .set('Authorization', userToken)
-      .expect(200)
-      .end((err, res) => {
-        expect(err).not.toBeNull();
-        done();
-      });
-  });
-
   it('should list incidents by category', done => {
-    request(app)
-      .get('/api/categories/23/incidents')
-      .set('Authorization', userToken)
-      .expect(200)
-      .end((err, res) => {
-        expect(res.body.data).toHaveProperty('incidents');
-        done();
-      });
+    sendRequest('get', '/api/categories/23/incidents', null, (err, res) => {
+      expect(res.body.data).toHaveProperty('incidents');
+      done();
+    });
   });
 });
 

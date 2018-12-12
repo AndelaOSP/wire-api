@@ -21,10 +21,12 @@ const sendMail = (emailBody, callback) => {
       },
       logger: true,
       debug: false,
-    }),
+    })
   );
+
   const logo =
     'https://portal.andela.com/assets/logo-cf374247ec55390fbde32f80367f77187dc7c11cc4774b38d0e5b143d0d2d334.png';
+
   const mailOptions = {
     from: process.env.EMAIL_SENDER,
     to: emailBody.to,

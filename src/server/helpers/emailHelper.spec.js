@@ -1,4 +1,3 @@
-const nodemailer = require('nodemailer');
 const { sendMail } = require('./emailHelper');
 
 jest.mock('nodemailer', () => ({
@@ -15,7 +14,7 @@ describe('#####EmailHelper', () => {
 
     sendMail(
       { to: 'someone', subject: 'something', message: 'some message' },
-      callback,
+      callback
     );
 
     expect(callback).toHaveBeenCalled();
