@@ -1,75 +1,24 @@
-const { token } = require('../server/middlewares/authentication');
 const incidents = require('../server/models').Incidents;
 const User = require('../server/models').Users;
+const Incident = require('../server/models').Incidents;
 const sendRequest = require('./sendRequest');
 
-const testIncident = {
-  subject: 'incident payload',
-  description: 'kernjgknejrngkjerngnkre',
-  location: { name: 'herer', centre: 'ewfewf', country: 'eferf' },
-  dateOccurred: '01-09-2018',
-  levelId: '1',
-  incidentReporter: {
-    userId: 'U7LEPG8LF',
-    email: 'batian.muthoga@andela.com',
-    username: 'Batian Muthoga',
-    imageUrl:
-      'https://avatars.slack-edge.com/2018-01-31/308111298950_b15a779680c4d2bb093c_48.png',
-    reporterLocation: { name: 'office', country: 'USA', centre: 'New York' },
-  },
-  witnesses: [
-    {
-      userId: 'U7LEPG8LF',
-      email: 'batian.muthoga@andela.com',
-      username: 'Batian Muthoga',
-      imageUrl:
-        'https://avatars.slack-edge.com/2018-01-31/308111298950_b15a779680c4d2bb093c_48.png',
-      witnessLocation: {
-        name: 'office',
-        centre: 'St. Catherines',
-        country: 'Kenya',
-      },
-    },
-    {
-      userId: 'UBQ8DDCBF',
-      email: 'eugene.omar@andela.com',
-      username: 'Eugene',
-      imageUrl:
-        'https://secure.gravatar.com/avatar/0e2428d7bc72d6a377a261ef0d95fad5.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2F66f9%2Fimg%2Favatars%2Fava_0006-48.png',
-      witnessLocation: {
-        name: 'office',
-        centre: 'St. Catherines',
-        country: 'Kenya',
-      },
-    },
-  ],
-};
-
-const assigneeRequestBody = {
-  ...testIncident,
-  assignee: {
-    userId: 'cjl6egyei00005dnytqp4a06l',
-    incidentId: 'cjfkubrlv0001tgxs3',
-  },
-};
-
-const ccdRequestBody = {
-  ...testIncident,
-  ccd: [
-    {
-      userId: 'cjl6ege6e000053nyv67otq7a',
-      incidentId: 'cjfkubrlv0001tgxs3',
-    },
-  ],
-};
+const {
+  assigneeRequestBody,
+  ccdRequestBody,
+  assigneeUserToken,
+  makeServerCall,
+  testIncident,
+} = require('./incidentsTestHelper');
 
 const incidentsEndpoint = '/api/incidents';
 
-const assigneeUserToken = token({
-  id: 'cjl6ege6e000053nyv67otq7a',
-  roleId: 2,
-  username: 'Mercy Muchai',
-});
+const addAssignee = async res => {
+  const incident = await Incident.findById(res.body.data.id);
+  const assignee = await User.findById('cjl6ege6e000053nyv67otq7a');
+
+  await incident.addAssignee(assignee);
+};
 
 jest.mock('nodemailer', () => ({
   createTransport: () => ({
@@ -80,15 +29,18 @@ jest.mock('nodemailer', () => ({
 }));
 
 describe('Incident Tests', () => {
-  const makeServerCall = (requestBody, done, method) => {
-    sendRequest('post', incidentsEndpoint, testIncident, (error, res) => {
-      const url = '/api/incidents/' + res.body.data.id;
-      sendRequest(method, url, requestBody, (err, response) => {
-        expect(response.body.data).toHaveProperty('id');
-        done();
-      });
+  it('should create an incident and user if the reporter does not exist', done => {
+    const newIncident = { ...testIncident };
+    newIncident.incidentReporter.email = 'non.existent@andela.com';
+    newIncident.incidentReporter.username = 'non existent';
+    newIncident.incidentReporter.userId = 'U7LEPG8LN';
+    newIncident.incidentReporter.roleId = '1';
+    newIncident.subject = 'new subject';
+    sendRequest('post', incidentsEndpoint, newIncident, (err, res) => {
+      expect(res.body.data).toHaveProperty('id');
+      done();
     });
-  };
+  });
 
   it('should create an incident given the correct payload', done => {
     sendRequest('post', incidentsEndpoint, testIncident, (err, res) => {
@@ -158,6 +110,10 @@ describe('Incident Tests', () => {
     makeServerCall(ccdRequestBody, done, 'put');
   });
 
+  it('should update an incident when it has assignees', done => {
+    makeServerCall(ccdRequestBody, done, 'put', addAssignee);
+  });
+
   it('should delete an incident provided an existing incident ID', done => {
     const url = '/api/incidents/cjfkubrlv0001tgxs3';
     sendRequest('delete', url, null, (error, res) => {
@@ -198,3 +154,8 @@ describe('Incident Tests', () => {
 });
 
 jest.clearAllMocks();
+
+module.exports = {
+  makeServerCall,
+  assigneeRequestBody,
+};

@@ -96,7 +96,21 @@ describe('User tests', () => {
     );
   });
 
-  it('InviteUser: Should create a user if they dont already exist', done => {
+  it('should rsearch users', done => {
+    sendRequest('get', '/api/users/search?q=bat', null, (err, res) => {
+      expect(res.body.data.users.length).toBeGreaterThan(0);
+      done();
+    });
+  });
+
+  it('should return message if query is not provided in search', done => {
+    sendRequest('get', '/api/users/search', null, (err, res) => {
+      expect(res.body.message).toEqual('query missing');
+      done();
+    });
+  });
+
+  it('InviteUser: Should create a user if they dont exist', done => {
     sendRequest(
       'post',
       '/api/users/invite',
@@ -112,6 +126,42 @@ describe('User tests', () => {
     );
   });
 
+  it('InviteUser: Should fail if roleId is not 1', done => {
+    sendRequest(
+      'post',
+      '/api/users/invite',
+      {
+        email: 'joseph.nzau@andela.com',
+        roleId: 3,
+        locationId: 'cjee24cz40000guxs6bdner6l',
+      },
+      (err, res) => {
+        expect(res.body.message).toMatch(
+          /The user with that email address already exists/
+        );
+        done();
+      }
+    );
+  });
+
+  it('InviteUser: Should not invite a user with invalid email', done => {
+    sendRequest(
+      'post',
+      '/api/users/invite',
+      {
+        email: 'joseph.nzau@gmail.com',
+        roleId: 3,
+        locationId: 'cjee24cz40000guxs6bdner6l',
+      },
+      (err, res) => {
+        expect(res.body.message).toMatch(
+          /You can only invite Andela users through their Andela emails/
+        );
+        done();
+      }
+    );
+  });
+
   it('InviteUser: Should update a user if they already exist', done => {
     sendRequest(
       'post',
@@ -119,7 +169,7 @@ describe('User tests', () => {
       {
         email: 'batian.sss@andela.com',
         roleId: 1,
-        locationId: 'cjee24cz40000guxs6bdner6l',
+        locationId: 'cjee24n0n0000hfxsefer9tjh',
       },
       (err, res) => {
         expect(res.body.data.username).toEqual('Batian Sss');

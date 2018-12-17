@@ -13,6 +13,7 @@ const userSchema = {
     .required(),
   username: Joi.string().required(),
   imageUrl: Joi.string(),
+  roleId: Joi.number(),
 };
 
 const incidentReporterSchema = {
