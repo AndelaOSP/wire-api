@@ -8,7 +8,7 @@ const testIncident = {
   dateOccurred: '01-09-2018',
   levelId: '1',
   incidentReporter: {
-    userId: 'U7LEPG8LF',
+    userId: 'cjl6efcka00004tny9ilz7b61',
     email: 'batian.muthoga@andela.com',
     username: 'Batian Muthoga',
     imageUrl:
@@ -17,7 +17,7 @@ const testIncident = {
   },
   witnesses: [
     {
-      userId: 'U7LEPG8LF',
+      userId: 'cjl6efcka00004tny9ilz7b61',
       email: 'batian.muthoga@andela.com',
       username: 'Batian Muthoga',
       imageUrl:
@@ -29,7 +29,7 @@ const testIncident = {
       },
     },
     {
-      userId: 'UBQ8DDCBF',
+      userId: 'cjl6egyei00005dnytqp4a06l',
       email: 'eugene.omar@andela.com',
       username: 'Eugene',
       imageUrl:

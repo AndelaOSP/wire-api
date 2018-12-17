@@ -193,7 +193,7 @@ describe('User tests', () => {
   it('Should delete a user successfully', done => {
     sendRequest(
       'delete',
-      '/api/users/cjl6egyei00005dnytqp4a06l',
+      '/api/users/cjpjfaq5h0000fim3xv1ijlpa',
       null,
       (err, res) => {
         expect(res.body.message).toEqual('User deleted Successfully');
