@@ -43,13 +43,10 @@ module.exports = {
       locationId,
       levelId: levelId || 3,
     });
-
     const user = await User.findOne({
       where: { email: incidentReporter.email },
     });
-
     let createdReporter;
-
     if (user) {
       createdReporter = await user.update({
         slackId: incidentReporter.slackId,
@@ -61,27 +58,19 @@ module.exports = {
         res
       );
     }
-
     await incident.addReporter(createdReporter);
-
     const witnessCreationPromises = witnesses.map(witness => {
       let { witnessLocation } = witness;
-
       return findOrCreateUser(witness, witnessLocation);
     });
-
     const createdWitnesses = await Promise.all(witnessCreationPromises);
-
     if (createdWitnesses.length > 0) {
       const addedWitnessesPromises = createdWitnesses.map(mappedWitness => {
         return incident.addWitness(mappedWitness[0]);
       });
-
       await Promise.all(addedWitnessesPromises);
     }
-
     const data = await findIncidentById(incident.id, res);
-
     return res.status(201).send({ data, status: 'success' });
   },
 
