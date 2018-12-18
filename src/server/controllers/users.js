@@ -67,7 +67,6 @@ module.exports = {
   },
 
   getUserById: async (req, res, next) => {
-    if (req.params.id === 'search') return next('route');
     const user = await User.findById(req.params.id, {
       include: [
         ...include,

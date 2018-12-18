@@ -1,4 +1,4 @@
-const { sendMail } = require('./emailHelper');
+const { sendMail, verifyEmail } = require('./emailHelper');
 
 jest.mock('nodemailer', () => ({
   createTransport: () => ({
@@ -41,6 +41,29 @@ describe('#####Email failure', () => {
     );
 
     expect(callback).toHaveBeenCalledWith('error');
+  });
+});
+
+jest.clearAllMocks();
+
+jest.mock('axios', () => ({
+  create: () => ({
+    defaults: { headers: { common: {} } },
+    get: () =>
+      new Promise((resolve, reject) => {
+        reject({ error: 'invalid api token' });
+      }),
+  }),
+}));
+
+describe('#####Invalid API Token', () => {
+  it('Returns a 401 response', async done => {
+    const validEmail = verifyEmail('some.email@andela.com');
+
+    expect(validEmail).rejects.toEqual(
+      new Error({ error: 'invalid api token' })
+    );
+    done();
   });
 });
 

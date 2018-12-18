@@ -8,8 +8,19 @@ jest.mock('nodemailer', () => ({
   }),
 }));
 
+jest.mock('axios', () => ({
+  create: () => ({
+    defaults: { headers: { common: {} } },
+    get: () => ({
+      data: {
+        values: [{}],
+        total: 1,
+      },
+    }),
+  }),
+}));
 describe('Invite failure tests', () => {
-  it('InviteUser: Should create a user if if email is not sent', done => {
+  it('InviteUser: Should create a user if email is not sent', done => {
     sendRequest(
       'post',
       '/api/users/invite',

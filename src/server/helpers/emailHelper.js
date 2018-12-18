@@ -52,7 +52,9 @@ const sendMail = (emailBody, callback) => {
 const verifyEmail = async email => {
   instance.defaults.headers.common['api-token'] = apiToken;
   try {
-    const response = await axios.get(`${emailVerificationUrl}?email=${email}`);
+    const response = await instance.get(
+      `${emailVerificationUrl}?email=${email}`
+    );
     return response.data.values.length === 1;
   } catch (error) {
     throw new Error(error);
