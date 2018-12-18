@@ -49,19 +49,7 @@ const findIncidentById = async id => {
  * @return userDetails object
  */
 const getUserDetails = async payload => {
-  let userDetails;
-
-  if (Array.isArray(payload)) {
-    payload.map(async ccdUser => {
-      userDetails = await User.findById(ccdUser.userId);
-
-      userDetails.dataValues.incidentId = ccdUser.incidentId;
-
-      return userDetails;
-    });
-  }
-
-  userDetails = await User.findById(payload.userId);
+  const userDetails = await User.findById(payload.userId);
 
   userDetails.dataValues.incidentId = payload.incidentId;
 

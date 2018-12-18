@@ -9,7 +9,7 @@ const findOrCreateUser = async (userType, userLocation, res) => {
       email: userType.email,
     },
     defaults: {
-      slackId: userType.slackId,
+      slackId: null,
       email: userType.email,
       username: userType.username,
       roleId: userType.roleId,

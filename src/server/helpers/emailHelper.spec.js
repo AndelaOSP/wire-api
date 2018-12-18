@@ -22,3 +22,26 @@ describe('#####EmailHelper', () => {
 });
 
 jest.clearAllMocks();
+
+jest.mock('nodemailer', () => ({
+  createTransport: () => ({
+    sendMail: (options, call) => {
+      call('error');
+    },
+  }),
+}));
+
+describe('#####Email failure', () => {
+  it('sends an error', () => {
+    const callback = jest.fn();
+
+    sendMail(
+      { to: 'someone', subject: 'something', message: 'some error' },
+      callback
+    );
+
+    expect(callback).toHaveBeenCalledWith('error');
+  });
+});
+
+jest.clearAllMocks();

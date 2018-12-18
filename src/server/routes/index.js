@@ -85,5 +85,13 @@ module.exports = app => {
 
   // roles endpoints
   app.get('/api/roles', rolesService.list);
+
+  // Setup a default catch-all route that sends back a welcome message in JSON format.
+  app.get('*', (req, res) => {
+    res.status(200).send({
+      message: 'Welcome to WIRE.',
+    });
+  });
+
   app.use(catchErrors);
 };

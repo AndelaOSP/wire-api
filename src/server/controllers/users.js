@@ -66,8 +66,6 @@ module.exports = {
   },
 
   getUserById: async (req, res, next) => {
-    if (req.params.id === 'search') return next('route');
-
     const user = await User.findById(req.params.id, {
       include: [
         ...include,
@@ -142,6 +140,8 @@ module.exports = {
    */
 
   async searchUser(req, res) {
+    if (!req.query.q) return res.status(400).send({ message: 'query missing' });
+
     const searchQuery = {
       $ilike: Sequelize.fn('lower', `%${req.query.q.toLowerCase()}%`),
     };

@@ -7,11 +7,14 @@ const testLocation = {
   country: 'Kenya',
 };
 
+let id;
+
 describe('Locations controller', () => {
   const locationsEndpoint = '/api/locations';
 
-  afterEach(() => {
-    Location.destroy({ where: {} });
+  afterEach(async done => {
+    if (id) await Location.destroy({ where: { id } });
+    done();
   });
 
   it('Should return all the locations', done => {
@@ -22,7 +25,8 @@ describe('Locations controller', () => {
   });
 
   it('Should not create duplicate location', done => {
-    sendRequest('post', locationsEndpoint, testLocation, () => {
+    sendRequest('post', locationsEndpoint, testLocation, (error, response) => {
+      id = response.body.id;
       sendRequest('post', locationsEndpoint, testLocation, (err, res) => {
         expect(res.text).toEqual('Location already exists');
         done();
@@ -39,18 +43,10 @@ describe('Locations controller', () => {
     });
   });
 
-  it('Should not create a duplicate location', done => {
-    sendRequest('post', locationsEndpoint, testLocation, () => {
-      sendRequest('post', locationsEndpoint, testLocation, (err, res) => {
-        expect(res.status).toEqual(409);
-        done();
-      });
-    });
-  });
-
   it('Should create a location', done => {
-    sendRequest('post', locationsEndpoint, testLocation, (err, res) => {
+    sendRequest('post', locationsEndpoint, testLocation, async (err, res) => {
       expect(res.body).toHaveProperty('id');
+      id = res.body.id;
       done();
     });
   });

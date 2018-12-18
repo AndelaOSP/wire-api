@@ -3,13 +3,13 @@ const { sendEmail } = require('./updateUserAndSendMailTestHelper');
 jest.mock('nodemailer', () => ({
   createTransport: () => ({
     sendMail: (options, call) => {
-      call();
+      call('error');
     },
   }),
 }));
 
-describe('updateUserAndSendMail tests', () => {
-  it('sends email', async done => {
+describe('#####UpdateUserEmail failure', () => {
+  it('calls callback with an error', async done => {
     sendEmail(done);
   });
 });

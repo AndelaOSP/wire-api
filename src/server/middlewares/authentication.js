@@ -17,7 +17,7 @@ const Auth = (req, res, next) => {
     if (err) {
       return res.status(401).json({
         success: false,
-        messsage: 'Invalid token provided',
+        message: 'Invalid token provided',
       });
     }
 

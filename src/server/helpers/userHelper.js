@@ -25,6 +25,7 @@ const getUserByEmail = email =>
     where: { email },
     include: includeRole,
   });
+
 const sendEmailCallback = error => {
   if (error) {
     return error;
@@ -58,10 +59,10 @@ const updateExistingUser = async (req, res, userExists) => {
   }
 };
 
-const createAndInviteUser = async (req, res, userExists) => {
+const createAndInviteUser = async (req, res) => {
   const validEmail = checkEmail(req.body.email);
   const emailBody = await generateEmailBody(req.body.email, req.body.roleId);
-  if (validEmail && !userExists) {
+  if (validEmail) {
     const name = getUsernameFromEmail(req.body.email);
     const userObject = {
       email: req.body.email,
@@ -69,11 +70,10 @@ const createAndInviteUser = async (req, res, userExists) => {
       roleId: req.body.roleId,
       locationId: req.body.locationId,
     };
-    const [createdUser, created] = await User.findOrCreate({
+    const [createdUser] = await User.findOrCreate({
       where: { email: userObject.email },
       defaults: userObject,
     });
-    if (!created) return updateUserAndSendMail(userObject, res);
     emailHelper.sendMail(emailBody, sendEmailCallback);
     const user = await User.findById(createdUser.id, { include });
     return res.status(200).send({ data: user, status: 'success' });

@@ -1,6 +1,6 @@
 const Note = require('../models').Notes;
 const User = require('../models').Users;
-const deleteFromResponseLocals = require('../helpers/deleteFromResponseLocals')
+const deleteFromResponseLocals = require('../helpers/deleteFromResponseLocals');
 
 let userAttributes = {
   model: User,
@@ -47,8 +47,8 @@ module.exports = {
   // update a note
   update: async (req, res) => {
     const note = await res.locals.note.update({
-      note: req.body.note || Note.note,
-      userEmail: req.body.userEmail || Note.userEmail,
+      note: req.body.note,
+      userEmail: req.body.userEmail,
     });
 
     const data = await findNoteById(note.id, res);

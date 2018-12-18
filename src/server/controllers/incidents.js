@@ -55,7 +55,7 @@ module.exports = {
         slackId: incidentReporter.slackId,
       });
     } else {
-      createdReporter = await findOrCreateUser(
+      [createdReporter] = await findOrCreateUser(
         incidentReporter,
         reporterLocation,
         res
@@ -126,12 +126,6 @@ module.exports = {
     const incident = await Incident.findById(req.params.id, {
       include,
     });
-
-    if (!incident) {
-      return res
-        .status(404)
-        .send({ message: 'Incident not found', status: 'fail' });
-    }
 
     return updateIncident(incident, req, res);
   },
