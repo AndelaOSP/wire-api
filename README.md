@@ -39,6 +39,8 @@ Set up the environment variables appropriately by renaming `.env.example` to `.e
 - EMAIL_SENDER : email address used to send invite emails (consult team lead)
 - EMAIL_PASSWORD : password for the above email address
 - SLACK_BUG_WEBHOOK_URL : webhook url for sending api errors to slack (consult team lead)
+- EMAIL_VERIFICATION_URL : andela user service endpoint for listing users (consult team lead)
+- API_TOKEN : authorization token used while querying the user service (consult team lead)
 
 Setup database url for migrations:
 ```

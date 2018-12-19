@@ -26,6 +26,18 @@ jest.mock('nodemailer', () => ({
   }),
 }));
 
+jest.mock('axios', () => ({
+  create: () => ({
+    defaults: { headers: { common: {} } },
+    get: () => ({
+      data: {
+        values: [{}],
+        total: 1,
+      },
+    }),
+  }),
+}));
+
 describe('User tests', () => {
   it('should create a user', done => {
     sendRequest('post', '/api/users', newUser, (err, res) => {

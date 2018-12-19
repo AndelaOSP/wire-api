@@ -9,6 +9,7 @@ const {
   updateExistingUser,
   createAndInviteUser,
 } = require('../helpers/userHelper');
+const { verifyEmail } = require('../helpers/emailHelper');
 
 require('dotenv').config();
 
@@ -92,11 +93,15 @@ module.exports = {
         },
       ],
     });
-
     return res.status(200).send(user);
   },
 
   inviteUser: async (req, res) => {
+    const { email } = req.body;
+    const validEmail = await verifyEmail(email);
+    if (!validEmail) {
+      return res.status(404).send({ message: 'That email does not exist' });
+    }
     const userExists = await getUserByEmail(req.body.email);
     if (userExists && userExists.Role) {
       // If user was created through reporting an incident, update the user with provided role
