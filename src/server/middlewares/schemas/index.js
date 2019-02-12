@@ -16,6 +16,15 @@ const userSchema = {
   roleId: Joi.number(),
 };
 
+const updateUserSchema = {
+  userId: Joi.string(),
+  email: Joi.string()
+    .email(),
+  username: Joi.string(),
+  imageUrl: Joi.string(),
+  roleId: Joi.number(),
+};
+
 const incidentReporterSchema = {
   ...userSchema,
   reporterLocation: locationSchema,
@@ -70,4 +79,5 @@ module.exports = {
   incidentSchema,
   newUserSchema,
   noteSchema,
+  updateUserSchema,
 };
