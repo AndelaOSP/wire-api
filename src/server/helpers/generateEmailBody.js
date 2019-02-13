@@ -2,7 +2,7 @@ const matchRoleIdToRoleName = require('./matchRoleIdToRoleName');
 const getUsernameFromEmail = require('./getUsernameFromEmail');
 
 const env = process.env.NODE_ENV || 'development';
-const config = require('../config/config.json')[env];
+const config = require('../config/config.js')[env];
 
 /**
  * @function generateEmailBody
