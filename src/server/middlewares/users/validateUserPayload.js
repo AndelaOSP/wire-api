@@ -1,6 +1,15 @@
-const { newUserSchema } = require('../schemas');
+const { newUserSchema, updateUserSchema } = require('../schemas');
 const validateBody = require('../validateBody');
 
-module.exports = (req, res, next) => {
-  validateBody(req, res, next, newUserSchema);
+function validateNewUserBody(req, res, next) {
+  return validateBody(req, res, next, newUserSchema);
+}
+
+function validateUpdateUserBody(req, res, next) {
+  return validateBody(req, res, next, updateUserSchema);
+}
+
+module.exports = {
+  validateNewUserBody,
+  validateUpdateUserBody
 };

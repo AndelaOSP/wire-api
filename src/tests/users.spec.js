@@ -192,9 +192,9 @@ describe('User tests', () => {
 
   it('Should edit the given user if they exist', done => {
     sendRequest(
-      'put',
-      '/api/users/cjl6egyei00005dnytqp4a06l',
-      { ...testUser, roleId: '1' },
+      'patch',
+      '/api/users/cjl6efcka00004tny9ilz7b61',
+      { roleId: '1' },
       (err, res) => {
         expect(res.body.data.roleId).toEqual(1);
         done();

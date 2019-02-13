@@ -17,6 +17,7 @@ const {
   validateIncidentPayload,
   validateIncidentId,
   validateUserPayload,
+  validateUpdateBody,
   validateUserId,
   validateNotePayload,
   validateNoteId,
@@ -79,7 +80,7 @@ module.exports = app => {
   app.post('/api/users/invite', usersService.inviteUser);
   app.get('/api/users/search', usersService.searchUser);
   app.use('/api/users/:id', validateUserId);
-  app.put('/api/users/:id', validateUserPayload, usersService.editUser);
+  app.patch('/api/users/:id', validateUpdateBody, usersService.editUser);
   app.delete('/api/users/:id', usersService.deleteUser);
   app.get('/api/users/:id', usersService.getUserById);
 
