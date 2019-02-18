@@ -200,13 +200,20 @@ const updateIncident = async (incident, req, res) => {
     return updateAssignedOrCcdUser(assignedUser, ccdUser, incident, res);
   }
 
-  await incident.update({
-    statusId: req.body.statusId || incident.statusId,
-    categoryId: req.body.categoryId || incident.categoryId,
-    levelId: req.body.levelId || incident.levelId,
-  });
+  const id = req.params.id;
+  const { statusId, levelId, categoryId } = req.body;
 
-  return res.status(200).send({ data: incident, status: 'success' });
+  await Incident.update({ statusId, levelId, categoryId }, { where: {id} });
+
+  return res.status(200).send({ data: { statusId, levelId, categoryId }, status: 'success'})
+
+  // await Incident.update({
+  //   statusId: req.body.statusId || incident.statusId,
+  //   // categoryId: req.body.categoryId || incident.categoryId,
+  //   levelId: req.body.levelId || incident.levelId,
+  // });
+
+  // return res.status(200).send({ data: { statusId, levelId }, status: 'success' });
 };
 
 module.exports = {
