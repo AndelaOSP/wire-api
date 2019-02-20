@@ -50,7 +50,6 @@ module.exports = app => {
   app.get('/api/incidents/:id', incidentsService.findById);
   app.put(
     '/api/incidents/:id',
-    validateIncidentPayload,
     incidentsService.update
   );
 
