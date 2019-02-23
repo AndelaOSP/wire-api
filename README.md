@@ -20,7 +20,7 @@ git clone https://github.com/AndelaOSP/wire-api.git
 
 Navigate to repo:
 ```
-cd src/wire-api
+cd wire-api/src
 ```
 
 Install all dependencies:
@@ -67,4 +67,4 @@ Navigate to the port and test the endpoints on postman
 ### Api Documentation
 The documentation for the endpoints can be found at [api endpoints][a7b389c1].
 
-  [a7b389c1]: https://github.com/AndelaOSP/wire-api/blob/master/docs/endpoints.md "Api Endpoints"
+  [a7b389c1]: https://github.com/AndelaOSP/wire-api/blob/develop/docs/endpoints.md "Api Endpoints"
