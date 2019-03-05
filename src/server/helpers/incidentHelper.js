@@ -206,6 +206,9 @@ const updateIncident = async (incident, req, res) => {
     levelId: req.body.levelId || incident.levelId,
   });
 
+  // Send notification to client about a CC'd user
+  if (ccdUser) req.app.socket.notifyCC([ccdUser], 'Someone has been CC`d!');
+
   return res.status(200).send({ data: incident, status: 'success' });
 };
 
