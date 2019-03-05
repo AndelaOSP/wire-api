@@ -43,11 +43,11 @@ module.exports = {
     const user = await User.findOne({ where: { email: req.body.email } });
 
     if (!user) {
-      return res.status(401).send({ message: 'User does not exist' });
+      return res.status(404).send({ message: 'User does not exist' });
     }
 
     if (user.roleId === 1) {
-      return res.status(403).send({ message: 'You are not aunthorized' });
+      return res.status(403).send({ message: 'You are not authorized' });
     }
 
     const userToken = token(user);
@@ -127,8 +127,8 @@ module.exports = {
 
   /**
    * @function deleteUser
-   * @param Object req
-   * @param Object res
+   * @param {Object} req
+   * @param {Object} res
    * @return Status Code & Object
    */
   deleteUser: async (req, res) => {
@@ -139,8 +139,8 @@ module.exports = {
 
   /**
    * @function searchUser
-   * @param Object req
-   * @param Object res
+   * @param {Object} req
+   * @param {Object} res
    * @return Status Code & Object with array of users
    */
 

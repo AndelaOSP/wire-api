@@ -46,7 +46,7 @@ describe('User tests', () => {
     });
   });
 
-  it('should  login an authorised user', done => {
+  it('should login an authorised user', done => {
     sendRequest(
       'post',
       '/api/users/login',
@@ -64,7 +64,7 @@ describe('User tests', () => {
       '/api/users/login',
       { email: 'batian.sss@andela.com' },
       (err, res) => {
-        expect(res.body.message).toEqual('You are not aunthorized');
+        expect(res.body.message).toEqual('You are not authorized');
         done();
       }
     );
@@ -108,7 +108,7 @@ describe('User tests', () => {
     );
   });
 
-  it('should rsearch users', done => {
+  it('should research users', done => {
     sendRequest('get', '/api/users/search?q=bat', null, (err, res) => {
       expect(res.body.data.users.length).toBeGreaterThan(0);
       done();
