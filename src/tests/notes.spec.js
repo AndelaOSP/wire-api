@@ -1,5 +1,6 @@
+/* eslint-disable max-lines-per-function */
 const Note = require('../server/models').Notes;
-const sendRequest = require('./sendRequest');
+const { sendRequest } = require('./helpers/request');
 
 const testPayload = {
   userEmail: 'batian.muthoga@andela.com',
@@ -7,7 +8,7 @@ const testPayload = {
 };
 
 let noteId;
-const notesEndpoint = '/api/incidents/cjfkubrlv0001tsjksuis3/notes';
+const notesEndpoint = '/api/incidents/cjfkubrlv0002tgxs3mre/notes';
 
 describe('NOTE tests', () => {
   beforeEach(done => {

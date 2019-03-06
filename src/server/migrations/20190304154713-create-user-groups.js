@@ -3,17 +3,28 @@ const cuid = require('cuid');
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('NotificationTypes', {
+    return queryInterface.createTable('UserGroups', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.STRING,
         defaultValue: () => cuid(),
       },
-      name: {
+      notificationGroupId: {
         type: Sequelize.STRING,
+        references: {
+          model: 'NotificationGroups',
+          key: 'id',
+        },
         allowNull: false,
-        allowEmpty: false,
+      },
+      userId: {
+        type: Sequelize.STRING,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
@@ -27,6 +38,6 @@ module.exports = {
   },
 
   down: queryInterface => {
-    return queryInterface.dropTable('NotificationTypes');
+    return queryInterface.dropTable('UserGroups');
   },
 };

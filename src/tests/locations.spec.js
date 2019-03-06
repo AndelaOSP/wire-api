@@ -1,5 +1,6 @@
+/* eslint-disable max-lines-per-function */
 const Location = require('../server/models').Locations;
-const sendRequest = require('./sendRequest');
+const { sendRequest } = require('./helpers/request');
 
 const testLocation = {
   name: 'Grass',
@@ -26,7 +27,7 @@ describe('Locations controller', () => {
 
   it('Should not create duplicate location', done => {
     sendRequest('post', locationsEndpoint, testLocation, (error, response) => {
-      id = response.body.id;
+      ({ id } = response.body);
       sendRequest('post', locationsEndpoint, testLocation, (err, res) => {
         expect(res.text).toEqual('Location already exists');
         done();
@@ -46,7 +47,7 @@ describe('Locations controller', () => {
   it('Should create a location', done => {
     sendRequest('post', locationsEndpoint, testLocation, async (err, res) => {
       expect(res.body).toHaveProperty('id');
-      id = res.body.id;
+      ({ id } = res.body.id);
       done();
     });
   });

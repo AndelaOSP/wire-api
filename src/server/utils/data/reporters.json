@@ -1,0 +1,40 @@
+{
+    "reporters": [
+        {
+            "incidentId": "cjfkubrlv0001tgxs3mre",
+            "userId": "cjl6ege6e000053nyv67otq7a",
+            "createdAt": "2019-03-07 11:08:03.326+03",
+            "updatedAt": "2019-03-07 11:08:03.326+03"
+        },
+        {
+            "incidentId": "cjfkubrlv0002tgxs3mre",
+            "userId": "cjl6efcka00004tny9ilz7b61",
+            "createdAt": "2019-03-07 11:08:03.326+03",
+            "updatedAt": "2019-03-07 11:08:03.326+03"
+        },
+        {
+            "incidentId": "cjfkubrlv0003tgxs3mre",
+            "userId": "cjl6fecrb11115vf09xly2f65",
+            "createdAt": "2019-03-07 11:08:03.326+03",
+            "updatedAt": "2019-03-07 11:08:03.326+03"
+        },
+        {
+            "incidentId": "cjfkubrlv0004tgxs3mre",
+            "userId": "cjl6egyei00005dnytqp4a06l",
+            "createdAt": "2019-03-07 11:08:03.326+03",
+            "updatedAt": "2019-03-07 11:08:03.326+03"
+        },
+        {
+            "incidentId": "cjfkubrlv0005tgxs3mre",
+            "userId": "cjl6egyei00005dnytqp4a06l",
+            "createdAt": "2019-03-07 11:08:03.326+03",
+            "updatedAt": "2019-03-07 11:08:03.326+03"
+        },
+        {
+            "incidentId": "cjfkubrlv0006tgxs3mre",
+            "userId": "cjl6egyei00005dnytqp4a06l",
+            "createdAt": "2019-03-07 11:08:03.326+03",
+            "updatedAt": "2019-03-07 11:08:03.326+03"
+        }
+    ]
+}

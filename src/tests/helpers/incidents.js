@@ -1,5 +1,5 @@
-const { token } = require('../server/middlewares/authentication');
-const sendRequest = require('./sendRequest');
+const { token } = require('../../server/middlewares/authentication');
+const { sendRequest } = require('./request');
 
 const testIncident = {
   subject: 'incident payload',
@@ -55,7 +55,7 @@ const ccdRequestBody = {
   ...testIncident,
   ccd: [
     {
-      userId: 'cjl6ege6e000053nyv67otq7a',
+      userId: 'cjl6fecrb11115vf09xly2f65',
       incidentId: 'cjfkubrlv0001tgxs3',
     },
   ],

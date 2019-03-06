@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 const controllers = require('../controllers/index');
 
 const incidentsService = controllers.incidents;
@@ -15,6 +16,7 @@ const {
 } = require('../middlewares/authentication'); // authorise routes
 const {
   validateIncidentPayload,
+  validateIncidentUpdatePayload,
   validateIncidentId,
   validateUserPayload,
   validateUpdateBody,
@@ -50,6 +52,7 @@ module.exports = app => {
   app.get('/api/incidents/:id', incidentsService.findById);
   app.put(
     '/api/incidents/:id',
+    validateIncidentUpdatePayload,
     incidentsService.update
   );
 

@@ -18,8 +18,7 @@ const userSchema = {
 
 const updateUserSchema = {
   userId: Joi.string(),
-  email: Joi.string()
-    .email(),
+  email: Joi.string().email(),
   username: Joi.string(),
   imageUrl: Joi.string(),
   roleId: Joi.number(),
@@ -63,6 +62,19 @@ const incidentSchema = {
   ccd: Joi.array().items(incidentUserSchema),
 };
 
+const incidentUpdateSchema = {
+  statusId: Joi.number(),
+  subject: Joi.string(),
+  description: Joi.string(),
+  dateOccurred: Joi.date(),
+  levelId: Joi.string(),
+  location: locationSchema,
+  incidentReporter: incidentReporterSchema,
+  witnesses: Joi.array().items(witnessSchema),
+  assignee: incidentUserSchema,
+  ccd: Joi.array().items(incidentUserSchema),
+};
+
 const { userId, ...rest } = userSchema;
 
 const newUserSchema = {
@@ -77,6 +89,7 @@ module.exports = {
   incidentReporterSchema,
   witnessSchema,
   incidentSchema,
+  incidentUpdateSchema,
   newUserSchema,
   noteSchema,
   updateUserSchema,
