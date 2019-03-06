@@ -1,130 +1,40 @@
 {
-    "reporters":[
-      {
-        "incidentId": "c1jfkubrlv0001tgxs3",
-        "userId": "cjl6efcka00004tny9ilz7b61",
-        "createdAt": "2019-03-21T08:50:38.895Z",
-        "updatedAt": "2019-03-21T08:50:38.895Z"
-      },
-      {
-        "incidentId": "c2jfkubrlv0001tgxs3",
-        "userId": "cjl6efcka00004tny9ilz7b61",
-        "createdAt": "2019-03-21T08:50:38.895Z",
-        "updatedAt": "2019-03-21T08:50:38.895Z"
-      },
-      {
-        "incidentId": "c3jfkubrlv0001tgxs3",
-        "userId": "cjl6efcka00004tny9ilz7b61",
-        "createdAt": "2019-03-21T08:50:38.895Z",
-        "updatedAt": "2019-03-21T08:50:38.895Z"
-      },
-      {
-        "incidentId": "c4jfkubrlv0001tgxs3",
-        "userId": "cjl6efcka00004tny9ilz7b66",
-        "createdAt": "2019-03-21T08:50:38.895Z",
-        "updatedAt": "2019-03-21T08:50:38.895Z"
-      },
-      {
-        "incidentId": "c5jfkubrlv0001tgxs3",
-        "userId": "cjl6efcka00004tny9ilz7b66",
-        "createdAt": "2019-03-21T08:50:38.895Z",
-        "updatedAt": "2019-03-21T08:50:38.895Z"
-      },
-      {
-        "incidentId": "c6jfkubrlv0001tgxs3",
-        "userId": "cjl6efcka00004tny9ilz7b66",
-        "createdAt": "2019-03-21T08:50:38.895Z",
-        "updatedAt": "2019-03-21T08:50:38.895Z"
-      },
-      {
-        "incidentId": "cj1fkubrlv0001tsjksuis3",
-        "userId": "cjl6ege6e000053nyv67otq7a",
-        "createdAt": "2019-03-21T08:50:38.895Z",
-        "updatedAt": "2019-03-21T08:50:38.895Z"
-      },
-      {
-        "incidentId": "cj2fkubrlv0001tsjksuis3",
-        "userId": "cjl6ege6e000053nyv67otq7a",
-        "createdAt": "2019-03-21T08:50:38.895Z",
-        "updatedAt": "2019-03-21T08:50:38.895Z"
-      },
-      {
-        "incidentId": "cj3fkubrlv0001tsjksuis3",
-        "userId": "cjl6ege6e000053nyv67otq7a",
-        "createdAt": "2019-03-21T08:50:38.895Z",
-        "updatedAt": "2019-03-21T08:50:38.895Z"
-      },
-      {
-        "incidentId": "cj4fkubrlv0001tsjksuis3",
-        "userId": "cjl6egyei00005dnytqp4a06l",
-        "createdAt": "2019-03-21T08:50:38.895Z",
-        "updatedAt": "2019-03-21T08:50:38.895Z"
-      },
-      {
-        "incidentId": "cj5fkubrlv0001tsjksuis3",
-        "userId": "cjl6egyei00005dnytqp4a06l",
-        "createdAt": "2019-03-21T08:50:38.895Z",
-        "updatedAt": "2019-03-21T08:50:38.895Z"
-      },
-      {
-        "incidentId": "cj6fkubrlv0001tsjksuis3",
-        "userId": "cjl6egyei00005dnytqp4a06l",
-        "createdAt": "2019-03-21T08:50:38.895Z",
-        "updatedAt": "2019-03-21T08:50:38.895Z"
-      },
-      {
-        "incidentId": "cjfkubrlv0001tgxs3",
-        "userId": "cjpjfaq5h0000fim3xv1ijlpa",
-        "createdAt": "2019-03-21T08:50:38.895Z",
-        "updatedAt": "2019-03-21T08:50:38.895Z"
-      },
-      {
-        "incidentId": "cjfkubrlv0001tgxs3mre",
-        "userId": "cjpjfaq5h0000fim3xv1ijlpa",
-        "createdAt": "2019-03-21T08:50:38.895Z",
-        "updatedAt": "2019-03-21T08:50:38.895Z"
-      },
-      {
-        "incidentId": "cjfkubrlv0001tsjksuis3",
-        "userId": "cjl6efcka00004tny9ilz7b61",
-        "createdAt": "2019-03-21T08:50:38.895Z",
-        "updatedAt": "2019-03-21T08:50:38.895Z"
-      },               
-      {
-        "incidentId": "cjfkubrlv0002tgxs3mre",
-        "userId": "cjpjfaq7h0000fim3xv1ijlpa2",
-        "createdAt": "2019-03-21T08:50:38.895Z",
-        "updatedAt": "2019-03-21T08:50:38.895Z"
-      },
-      {
-        "incidentId": "cjfkubrlv0003tgxs3mre",
-        "userId": "cjpjfaq7h0000fim3xv1ijlpa2",
-        "createdAt": "2019-03-21T08:50:38.895Z",
-        "updatedAt": "2019-03-21T08:50:38.895Z"
-      },
-      {
-        "incidentId": "cjfkubrlv0004tgxs3mre",
-        "userId": "cjpjfaq7h0000fim3xv1ijlpa2",
-        "createdAt": "2019-03-21T08:50:38.895Z",
-        "updatedAt": "2019-03-21T08:50:38.895Z"
-      },
-      {
-        "incidentId": "cjfkubrlv0005tgxs3mre",
-        "userId": "cjpjfaq6h0000fim3xv1ijlpa1",
-        "createdAt": "2019-03-21T08:50:38.895Z",
-        "updatedAt": "2019-03-21T08:50:38.895Z"
-      },
-      {
-        "incidentId": "cjfkubrlv0006tgxs3mre",
-        "userId": "cjpjfaq6h0000fim3xv1ijlpa1",
-        "createdAt": "2019-03-21T08:50:38.895Z",
-        "updatedAt": "2019-03-21T08:50:38.895Z"
-      },
-      {
-        "incidentId": "cjfkubrlv0007tgxs3mre",
-        "userId": "cjpjfaq8h0000fim3xv1ijlpa3",
-        "createdAt": "2019-03-21T08:50:38.895Z",
-        "updatedAt": "2019-03-21T08:50:38.895Z"
-      }
+    "reporters": [
+        {
+            "incidentId": "cjfkubrlv0001tgxs3mre",
+            "userId": "cjl6ege6e000053nyv67otq7a",
+            "createdAt": "2019-03-07 11:08:03.326+03",
+            "updatedAt": "2019-03-07 11:08:03.326+03"
+        },
+        {
+            "incidentId": "cjfkubrlv0002tgxs3mre",
+            "userId": "cjl6efcka00004tny9ilz7b61",
+            "createdAt": "2019-03-07 11:08:03.326+03",
+            "updatedAt": "2019-03-07 11:08:03.326+03"
+        },
+        {
+            "incidentId": "cjfkubrlv0003tgxs3mre",
+            "userId": "cjl6fecrb11115vf09xly2f65",
+            "createdAt": "2019-03-07 11:08:03.326+03",
+            "updatedAt": "2019-03-07 11:08:03.326+03"
+        },
+        {
+            "incidentId": "cjfkubrlv0004tgxs3mre",
+            "userId": "cjl6egyei00005dnytqp4a06l",
+            "createdAt": "2019-03-07 11:08:03.326+03",
+            "updatedAt": "2019-03-07 11:08:03.326+03"
+        },
+        {
+            "incidentId": "cjfkubrlv0005tgxs3mre",
+            "userId": "cjl6egyei00005dnytqp4a06l",
+            "createdAt": "2019-03-07 11:08:03.326+03",
+            "updatedAt": "2019-03-07 11:08:03.326+03"
+        },
+        {
+            "incidentId": "cjfkubrlv0006tgxs3mre",
+            "userId": "cjl6egyei00005dnytqp4a06l",
+            "createdAt": "2019-03-07 11:08:03.326+03",
+            "updatedAt": "2019-03-07 11:08:03.326+03"
+        }
     ]
 }

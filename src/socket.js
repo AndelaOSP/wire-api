@@ -15,9 +15,9 @@ class Socket {
     // Add cors for socket
     this.io.origins('*:*');
 
-    // Client associations [[socketId, userId, token], ...]
+    // Client associations { userId: [socketId, token], ... }
     // REVIEW: Should this be stored in the Db?
-    this.clients = [];
+    this.clients = {};
 
     // Set up connections
     this.establishConnection();
@@ -29,6 +29,7 @@ class Socket {
   establishConnection() {
     // Using promise to get the socket value
     this.connection = new Promise(resolve => {
+      console.log('[server] Ready for connection');
       // The following happens when a new connection is established.
       this.io.on('connection', socket => {
         // Handle new connections
@@ -50,17 +51,15 @@ class Socket {
   handleNewConnection(socket) {
     console.log(`[server] A client (${socket.id}) just connected!`);
     // Do something with the data recieved.
-    socket.on('new-connection', token => {
-      console.log(
-        `[server] client (${socket.id}): ${JSON.stringify(token, null, 2)}`
-      );
+    socket.on('new-connection', ({ token }) => {
+      // If token is provided
+      if (token) {
+        // Authenticate user and register to list of connected clients.
+        const userDetails = this.authenticate(token, socket);
 
-      // TODO: Successful token verification only works through Postman currently. Need to investigate
-      // Authenticate user and register to list of connected clients.
-      // const userDetails = this.authenticate(token, socket);
-
-      // Register client
-      // this.registerClient(userDetails);
+        // Register client
+        this.registerClient(userDetails);
+      }
     });
   }
 
@@ -70,7 +69,7 @@ class Socket {
    **/
   registerClient(userDetails) {
     userDetails.then(({ socket, user, token }) => {
-      this.clients.push([socket.id, user.id, token]);
+      this.clients[user.id] = [socket.id, token];
     });
   }
 
@@ -84,11 +83,17 @@ class Socket {
     );
 
     // Remove client from list of connected clients.
-    this.clients = this.clients.filter(item => item[0] != socket.id);
+    let entries = Object.entries(this.clients).filter(
+      ([, value]) => value[0] !== socket.id
+    );
+
+    this.clients = entries.reduce((prev, [key, value]) => {
+      prev[key] = value;
+      return prev;
+    }, {});
   }
 
   /**
-   * TODO: Successful token verification only works through Postman currently. Need to investigate
    * Authenticates a new connected client
    * @param token string
    * @param socket object
@@ -97,28 +102,37 @@ class Socket {
     return new Promise(resolve =>
       jwt.verify(token, secretKey, (err, decoded) => {
         if (err) {
-          console.log(`[server] (${socket.id}) token cannot be verified!`);
+          console.log(err);
         } else {
-          // Do something with decoded token.
-          console.log(
-            `[server] (${socket.id}) ${JSON.stringify(decoded, null, 2)}!`
-          );
-
-          resolve({ socket, decoded, token });
+          resolve({ socket, user: decoded, token });
         }
       })
     );
   }
 
   /**
-   * TODO: Should emit message to clients with userIds but authentication doesn't work yet
    * Sends a response back to the client to update its UI on notify-cc
    * @param userIds array
    * @param message string
    **/
   notifyCCChange(userIds, message) {
-    this.connection.then(socket => {
-      socket.emit('notify-cc', { message });
+    this.connection.then(() => {
+      // Notify each user affected
+      this.messageToUsers(userIds, 'notify-cc', message);
+    });
+  }
+
+  /**
+   * Sends a response back to the client to update its UI on notify-cc
+   * @param userIds array
+   * @param message string
+   **/
+  messageToUsers(userIds, eventName, message) {
+    userIds.forEach(id => {
+      const client = this.clients[id];
+      if (client) {
+        this.io.to(`${client[0]}`).emit(eventName, { message });
+      }
     });
   }
 }

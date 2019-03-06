@@ -2,7 +2,6 @@ const app = require('express')();
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-// Add express app to server
 const server = require('http').Server(app);
 const Socket = require('./socket');
 
@@ -51,4 +50,4 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Require routes
 require('./server/routes/index')(app);
 
-module.exports = server;
+module.exports = { server, socket };

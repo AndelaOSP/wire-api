@@ -1,4 +1,5 @@
-const sendRequest = require('./sendRequest');
+/* eslint-disable max-lines-per-function */
+const { sendRequest } = require('./helpers/request');
 
 const testUser = {
   email: 'Khalid.omar@andela.com',

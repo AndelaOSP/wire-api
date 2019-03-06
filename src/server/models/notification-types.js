@@ -11,13 +11,8 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: () => cuid(),
       },
       name: {
-        type: DataTypes.ENUM(
-          'ChatUpdate',
-          'AssigneeStatusChanged',
-          'CCOnIncident',
-          'NewIncidentAdded',
-          'AssignedToIncident'
-        ),
+        type: DataTypes.TEXT,
+        allowEmpty: false,
         allowNull: false,
       },
     },

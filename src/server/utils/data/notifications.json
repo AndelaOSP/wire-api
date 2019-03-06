@@ -1,0 +1,13 @@
+{
+    "notifications": [
+        {
+            "id": "cjee22lsq0000cqxs5tmmpf1g",
+            "message": "",
+            "notificationTypeId": "1",
+            "incidentId": "cjfkubrlv0001tgxs3mre",
+            "notificationGroupId": "cjee22lsq5555cqxs5tmmpf1g",
+            "createdAt": "2019-03-07 11:08:03.326+03",
+            "updatedAt": "2019-03-07 11:08:03.326+03"
+        }
+    ]
+}

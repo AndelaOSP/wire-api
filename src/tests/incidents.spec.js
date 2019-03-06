@@ -1,7 +1,8 @@
+/* eslint-disable max-lines-per-function */
 const incidents = require('../server/models').Incidents;
 const User = require('../server/models').Users;
 const Incident = require('../server/models').Incidents;
-const sendRequest = require('./sendRequest');
+const { sendRequest } = require('./helpers/request');
 
 const {
   assigneeRequestBody,
@@ -9,7 +10,7 @@ const {
   assigneeUserToken,
   makeServerCall,
   testIncident,
-} = require('./incidentsTestHelper');
+} = require('./helpers/incidents');
 
 const incidentsEndpoint = '/api/incidents';
 

@@ -1,8 +1,9 @@
-const sendRequest = require('./sendRequest');
+/* eslint-disable max-lines-per-function */
+const { sendRequest } = require('./helpers/request');
 
 const request = require('supertest');
 
-const app = require('../index');
+const { server } = require('../index');
 
 const { token } = require('../server/middlewares/authentication');
 
@@ -19,7 +20,7 @@ const cannotViewIncidentsToken = token({
 });
 
 const makeRequest = (done, message, token) => {
-  let getRequest = request(app).get('/');
+  let getRequest = request(server).get('/');
   if (token) getRequest = getRequest.set('Authorization', token);
   getRequest.expect(401).end((err, res) => {
     expect(res.body.message).toEqual(message);

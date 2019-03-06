@@ -15,13 +15,11 @@ const Auth = (req, res, next) => {
 
   jwt.verify(token, secretKey, (err, decoded) => {
     if (err) {
-      console.log('[server-api] client token cannot be verified!');
       return res.status(401).json({
         success: false,
         message: 'Invalid token provided',
       });
     }
-    console.log('[server-api] client token verified!');
 
     res.locals.currentUser = decoded;
 
