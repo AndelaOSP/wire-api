@@ -42,6 +42,11 @@ const noteSchema = {
     .required(),
 };
 
+const chatSchema = {
+    chat: Joi.string().required(),
+    userEmail: Joi.string().email().required(),
+};
+
 const incidentUserSchema = {
   userId: Joi.string().required(),
   incidentId: Joi.string().required(),
@@ -78,6 +83,6 @@ module.exports = {
   witnessSchema,
   incidentSchema,
   newUserSchema,
-  noteSchema,
+  noteSchema, chatSchema,
   updateUserSchema,
 };

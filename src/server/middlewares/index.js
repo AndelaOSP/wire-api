@@ -5,6 +5,7 @@ const validateUpdateBody = require('./users/validateUserPayload').validateUpdate
 const validateUserId = require('./users/validateUserId');
 const validateNotePayload = require('./notes/validateNotePayload');
 const validateNoteId = require('./notes/validateNoteId');
+const validateChatPayload = require('./chats/validateChatPayload');
 
 module.exports = {
   validateIncidentPayload,
@@ -13,5 +14,5 @@ module.exports = {
   validateUpdateBody,
   validateUserId,
   validateNotePayload,
-  validateNoteId,
+  validateNoteId, validateChatPayload,
 };

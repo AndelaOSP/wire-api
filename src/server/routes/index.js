@@ -3,16 +3,19 @@ const controllers = require('../controllers/index');
 const incidentsService = controllers.incidents;
 const locationsService = controllers.locations;
 const notesService = controllers.notes;
+const chatsService = controllers.chats;
 const categoriesService = controllers.categories;
 const usersService = controllers.users;
 const rolesService = controllers.roles;
 const { catchErrors } = controllers;
 
+// authorise routes
 const {
   Auth,
   isAdmin,
   canViewIncidents,
-} = require('../middlewares/authentication'); // authorise routes
+} = require('../middlewares/authentication');
+
 const {
   validateIncidentPayload,
   validateIncidentId,
@@ -20,7 +23,7 @@ const {
   validateUpdateBody,
   validateUserId,
   validateNotePayload,
-  validateNoteId,
+  validateNoteId, validateChatPayload
 } = require('../middlewares');
 
 module.exports = app => {
@@ -35,6 +38,7 @@ module.exports = app => {
   app.post('/api/users/login', usersService.login);
 
   app.use(Auth);
+
   // locations endpoints
   app.post('/api/locations', locationsService.create);
   app.get('/api/locations', locationsService.list);
@@ -64,6 +68,9 @@ module.exports = app => {
   app.get('/api/notes/:id', notesService.findById);
   app.put('/api/notes/:id', validateNotePayload, notesService.update);
   app.delete('/api/notes/:id', notesService.delete);
+
+  // notes endpoints
+  app.post( '/api/incidents/:id/chats', validateChatPayload, chatsService.create);
 
   // categories endpoints
   app.get('/api/categories', categoriesService.list);

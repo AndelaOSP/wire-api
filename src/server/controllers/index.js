@@ -1,6 +1,7 @@
 const incidents = require('./incidents');
 const locations = require('./locations');
 const notes = require('./notes');
+const chats = require('./chats');
 const categories = require('./categories');
 const users = require('./users');
 const roles = require('./roles');
@@ -13,5 +14,5 @@ module.exports = {
   categories,
   users,
   roles,
-  catchErrors,
+  catchErrors, chats,
 };
