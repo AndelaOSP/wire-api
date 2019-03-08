@@ -1,0 +1,53 @@
+{
+    "locations":
+        [
+            {
+                "id": "cjee22lsq0000cqxs5tmmpf1g",
+                "name": "Quiet Room",
+                "centre": "Nairobi",
+                "country": "Kenya",
+                "createdAt": "2019-03-08T15:34:48.750Z",
+                "updatedAt": "2019-03-08T15:34:48.750Z"
+            },
+            {
+                "id": "cjee241h20000g7xsfzd572sl",
+                "name": "Cafeteria",
+                "centre": "Nairobi",
+                "country": "Kenya",
+                "createdAt": "2019-03-08T15:34:48.750Z",
+                "updatedAt": "2019-03-08T15:34:48.750Z"
+            },
+            {
+                "id": "cjee24cz40000guxs6bdner6l",
+                "name": "Block A 1st Floor",
+                "centre": "Nairobi",
+                "country": "Kenya",
+                "createdAt": "2019-03-08T15:34:48.750Z",
+                "updatedAt": "2019-03-08T15:34:48.750Z"
+            },
+            {
+                "id": "cjee24n0n0000hfxsefer9tjh",
+                "name": "Block A 2nd Floor",
+                "centre": "Lagos",
+                "country": "Nigeria",
+                "createdAt": "2019-03-08T15:34:48.750Z",
+                "updatedAt": "2019-03-08T15:34:48.750Z"
+            },
+            {
+                "id": "cjee24xnn0000i2xsh9qauyn5",
+                "name": "Tsavo",
+                "centre": "Nairobi",
+                "country": "Kenya",
+                "createdAt": "2019-03-08T15:34:48.750Z",
+                "updatedAt": "2019-03-08T15:34:48.750Z"
+            },
+            {
+                "id": "cjee256gt0000ioxs69v4870x",
+                "name": "Bootcamp Room",
+                "centre": "Kampala",
+                "country": "Uganda",
+                "createdAt": "2019-03-08T15:34:48.750Z",
+                "updatedAt": "2019-03-08T15:34:48.750Z"
+            }
+        ]
+}
