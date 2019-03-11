@@ -1,8 +1,8 @@
-const categories = require('../utils/data/categories');
+const categories = require('../utils/data/categories.json');
 
 module.exports = {
   up(queryInterface) {
-    return queryInterface.bulkInsert('Categories', categories);
+    return queryInterface.bulkInsert('Categories', categories.categories);
   },
 
   down(queryInterface) {

@@ -1,8 +1,8 @@
-const users = require('../utils/data/users');
+const users = require('../utils/data/users.json');
 
 module.exports = {
   up(queryInterface) {
-    return queryInterface.bulkInsert('Users', users);
+    return queryInterface.bulkInsert('Users', users.users);
   },
 
   down(queryInterface) {

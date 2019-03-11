@@ -1,8 +1,8 @@
-const locations = require('../utils/data/locations');
+const locations = require('../utils/data/locations.json');
 
 module.exports = {
   up(queryInterface) {
-    return queryInterface.bulkInsert('Locations', locations);
+    return queryInterface.bulkInsert('Locations', locations.locations);
   },
 
   down(queryInterface) {

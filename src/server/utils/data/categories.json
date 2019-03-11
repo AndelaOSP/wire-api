@@ -1,0 +1,174 @@
+{
+   "categories": [
+      {
+      "name": "Frequent office absence without authorization",
+      "visible": true,
+      "levelId": 1,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    },
+    {
+      "name": "Use of abusive language",
+      "visible": true,
+      "levelId": 1,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    },
+    {
+      "name": "Theft",
+      "visible": true,
+      "levelId": 1,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    },
+    {
+      "name": "Fraud",
+      "visible": true,
+      "levelId": 1,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    },
+    {
+      "name": "Workplace injury e.g. Burns, fatal injuries",
+      "visible": true,
+      "levelId": 1,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    },
+    {
+      "name": "Violence at the workplace or intimidation",
+      "visible": true,
+      "levelId": 1,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    },
+    {
+      "name": "Self-inflicted harm",
+      "visible": true,
+      "levelId": 1,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    },
+    {
+      "name": "Intoxication during working hours",
+      "visible": true,
+      "levelId": 1,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    },
+    {
+      "name": "Supply, use or possession of illicit drugs",
+      "visible": true,
+      "levelId": 1,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    },
+    {
+      "name": "Insubordination",
+      "visible": true,
+      "levelId": 1,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    },
+    {
+      "name": "Serious infringement of Health and Safety Rules",
+      "visible": true,
+      "levelId": 1,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    },
+    {
+      "name": "Deliberate damage of company property",
+      "visible": true,
+      "levelId": 1,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    },
+    {
+      "name":
+"       'Providing confidential Company information to competitors or unauthorised bodies",
+      "visible": true,
+      "levelId": 1,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    },
+    {
+      "name": "Unauthorised use/sell of Company property, facilities, or resources",
+      "visible": true,
+      "levelId": 1,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    },
+    {
+      "name": "Any form of discrimination",
+      "visible": true,
+      "levelId": 1,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    },
+    {
+      "name": "Bullying",
+      "visible": true,
+      "levelId": 1,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    },
+    {
+      "name": "Aggressive and/or intimidating behaviour",
+      "visible": true,
+      "levelId": 1,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    },
+    {
+      "name": "Any form of harassment",
+      "visible": true,
+      "levelId": 1,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    },
+    {
+      "name": "Bad attitude towards colleagues",
+      "visible": false,
+      "levelId": 2,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    },
+    {
+      "name":
+"       'Taking extended leave days without prior notification and approval the Line manager",
+      "visible": false,
+      "levelId": 2,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    },
+    {
+      "name": "Excessive tardiness",
+      "visible": false,
+      "levelId": 2,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    },
+    {
+      "name": "Disrespect of colleagues space and/or beliefs",
+      "visible": false,
+      "levelId": 2,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    },
+    {
+      "name": "Not following the laid down procedures",
+      "visible": false,
+      "levelId": 3,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    },
+    {
+      "name": "Improper use of work tools and equipments",
+      "visible": false,
+      "levelId": 3,
+      "createdAt": "2019-03-07 11:08:03.326+03",
+      "updatedAt": "2019-03-07 11:08:03.326+03"
+    }
+  ]
+}
