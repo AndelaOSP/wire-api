@@ -14,13 +14,13 @@ const { verifyEmail } = require('../helpers/emailHelper');
 require('dotenv').config();
 
 module.exports = {
-  // add a user
+    // add a user
   create: async (req, res) => {
     let { email, username, imageUrl, location, userId: id } = req.body;
     let roleId = 2;
     const foundLocation = await findOrCreateLocation(location, res);
 
-    const [user] = await User.findOrCreate({
+    const user = await User.findOrCreate({
       where: {
         id,
         email,
@@ -29,9 +29,10 @@ module.exports = {
         roleId,
         locationId: foundLocation.id,
       },
-    });
+    }).then(([user]) => {
+        return res.status(201).send({ data: user, status: 'success' });
+    }).catch(error => res.status(409).send({message: error.errors[0].message}));
 
-    return res.status(201).send({ data: user, status: 'success' });
   },
 
   // login a user
@@ -112,8 +113,8 @@ module.exports = {
 
   /**
    * @function editUser
-   * @param Object req
-   * @param Object res
+   * @param {Object} req
+   * @param {Object} res
    * @return Status Code & Object
    */
 
