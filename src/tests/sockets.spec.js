@@ -14,8 +14,6 @@ const {
 const port = 3000;
 server.listen(port);
 
-let clientSocket;
-
 describe('Socket tests', () => {
   // beforeEach(done => {
   //   clientSocket = new ClientSocket(`http://wire.andela.com:${port}`);

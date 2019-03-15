@@ -19,6 +19,8 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "jest": {
+    "roots": ["tests"],
+    "testRegex": "\\.spec\\.js",
     "collectCoverage": true,
     "forceExit": true
   },
