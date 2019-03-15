@@ -6,8 +6,6 @@ const handleCCUpdateNotification = async (
   incidentId,
   message
 ) => {
-  if (!ccdUser) return;
-
   // Get ccd users
   let userIds = ccdUser.map(user => user.userId);
 

@@ -50,4 +50,4 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Require routes
 require('./server/routes/index')(app);
 
-module.exports = { server, socket };
+module.exports = { server, app, socket };

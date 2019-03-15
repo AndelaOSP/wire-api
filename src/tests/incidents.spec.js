@@ -1,25 +1,18 @@
 /* eslint-disable max-lines-per-function */
 const incidents = require('../server/models').Incidents;
 const User = require('../server/models').Users;
-const Incident = require('../server/models').Incidents;
 const { sendRequest } = require('./helpers/request');
 
 const {
   assigneeRequestBody,
   ccdRequestBody,
   assigneeUserToken,
+  addAssignee,
   makeServerCall,
   testIncident,
 } = require('./helpers/incidents');
 
 const incidentsEndpoint = '/api/incidents';
-
-const addAssignee = async res => {
-  const incident = await Incident.findById(res.body.data.id);
-  const assignee = await User.findById('cjl6ege6e000053nyv67otq7a');
-
-  await incident.addAssignee(assignee);
-};
 
 jest.mock('nodemailer', () => ({
   createTransport: () => ({

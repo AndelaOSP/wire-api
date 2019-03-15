@@ -1,14 +1,17 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const { token } = require('../../server/middlewares/authentication');
+const { NotificationTypes } = require('../../server/models');
 const io = require('socket.io-client');
 
 const validUserToken = token({
-  id: 3453,
+  id: 'cjl6fecrb11115vf09xly2f65',
   roleId: 3,
-  username: 'Batian Muthoga',
+  username: 'Steve Akinyemi',
 });
 
-const invalidUserToken = '';
+const invalidUserToken = 'hhdsgdgdssdhbshjbvoc';
+
+const newNotification = NotificationTypes.create({ name: 'NEW' });
 
 class ClientSocket {
   constructor(url) {
@@ -34,10 +37,15 @@ class ClientSocket {
       func(data);
     });
   }
+
+  disconnect() {
+    this.socket.disconnect();
+  }
 }
 
 module.exports = {
   validUserToken,
   invalidUserToken,
   ClientSocket,
+  newNotification,
 };

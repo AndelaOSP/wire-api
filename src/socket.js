@@ -52,14 +52,13 @@ class Socket {
     console.log(`[server] A client (${socket.id}) just connected!`);
     // Do something with the data recieved.
     socket.on('new-connection', ({ token }) => {
-      // If token is provided
-      if (token) {
-        // Authenticate user and register to list of connected clients.
-        const userDetails = this.authenticate(token, socket);
+      console.log('[server] token!', token);
 
-        // Register client
-        this.registerClient(userDetails);
-      }
+      // Authenticate user and register to list of connected clients.
+      const userDetails = this.authenticate(token, socket);
+
+      // Register client
+      this.registerClient(userDetails);
     });
   }
 
@@ -130,9 +129,7 @@ class Socket {
   messageToUsers(userIds, eventName, message) {
     userIds.forEach(id => {
       const client = this.clients[id];
-      if (client) {
-        this.io.to(`${client[0]}`).emit(eventName, { message });
-      }
+      client && this.io.to(`${client[0]}`).emit(eventName, { message });
     });
   }
 }
