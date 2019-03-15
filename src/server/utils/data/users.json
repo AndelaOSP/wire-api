@@ -1,95 +1,103 @@
 {
-    "users":
-        [
-            {
-                "id": "cjl6efcka00004tny9ilz7b61",
-                "slackId": "U7LEPG8LF",
-                "email": "batian.muthoga@andela.com",
-                "username": "Batian Muthoga",
-                "imageUrl":"https://avatars.slack-edge.com/2018-01-31/308111298950_b15a779680c4d2bb093c_48.png",
-                "roleId": 2,
-                "locationId": "cjee24xnn0000i2xsh9qauyn5",
-                "createdAt": "2019-03-08T14:54:51.710",
-                "updatedAt": "2019-03-08T14:54:51.710"
-              },
-              {
-                "id": "cjl6ege6e000053nyv67otq7a",
-                "slackId": "U7LHY6W4B",
-                "email": "mercy.muchai@andela.com",
-                "username": "Mercy Muchai",
-                "imageUrl":"https://secure.gravatar.com/avatar/cf493cf28e96f654602b2f71e4d655e2.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2F66f9%2Fimg%2Favatars%2Fava_0003-48.png",
-                "roleId": 2,
-                "locationId": "cjee24xnn0000i2xsh9qauyn5",
-                "createdAt": "2019-03-08T14:54:51.710",
-                "updatedAt": "2019-03-08T14:54:51.710"
-              },
-              {
-                "id": "cjl6egyei00005dnytqp4a06l",
-                "slackId": "U7LHY6T4B",
-                "email": "eugene.omar@andela.com",
-                "username": "Eugene Omar",
-                "imageUrl": "https://ca.slack-edge.com/T02R3LKBA-U4GHQF7BQ-89b22f3000e2-48",
-                "roleId": 3,
-                "locationId": "cjee24xnn0000i2xsh9qauyn5",
-                "createdAt": "2019-03-08T14:54:51.710",
-                "updatedAt": "2019-03-08T14:54:51.710"
-              },
-              {
-                "id": "cjl6efcka00004tny9ilz7b66",
-                "slackId": "U7LEPG8LF",
-                "email": "batian.sss@andela.com",
-                "username": "Batian Sss",
-                "imageUrl":"https://avatars.slack-edge.com/2018-01-31/308111298950_b15a779680c4d2bb093c_48.png",
-                "roleId": 1,
-                "locationId": "cjee24xnn0000i2xsh9qauyn5",
-                "createdAt": "2019-03-08T14:54:51.710",
-                "updatedAt": "2019-03-08T14:54:51.710"
-              },
-              {
-                "id": "cjpjfaq5h0000fim3xv1ijlpa",
-                "slackId": "U4DCMF8EL",
-                "email": "joseph.nzau@andela.com",
-                "username": "Joseph Nzau",
-                "imageUrl": "https://ca.slack-edge.com/T02R3LKBA-U4GHQF7BQ-89b22f3000e2-48",
-                "roleId": 3,
-                "locationId": "cjee24xnn0000i2xsh9qauyn5",
-                "createdAt": "2019-03-08T14:54:51.710",
-                "updatedAt": "2019-03-08T14:54:51.710"
-              },
-              {
-                "id": "cjpjfaq6h0000fim3xv1ijlpa1",
-                "slackId": "UC113SZTL",
-                "email": "derrick.kirwa@andela.com",
-                "username": "Derrick Kirwa",
-                "imageUrl": "https://ca.slack-edge.com/T02R3LKBA-UC113SZTL-d2f9a49bbef2-48",
-                "roleId": 3,
-                "locationId": "cjee24xnn0000i2xsh9qauyn5",
-                "createdAt": "2019-03-08T14:54:51.710",
-                "updatedAt": "2019-03-08T14:54:51.710"
-              },
-              {
-                "id": "cjpjfaq7h0000fim3xv1ijlpa2",
-                "slackId": "UC102AB50",
-                "email": "esther.mutua@andela.com",
-                "username": "Esther Mutua",
-                "imageUrl": "https://ca.slack-edge.com/T02R3LKBA-UC102AB50-a677bd700540-48",
-                "roleId": 3,
-                "locationId": "cjee24xnn0000i2xsh9qauyn5",
-                "createdAt": "2019-03-08T14:54:51.710",
-                "updatedAt": "2019-03-08T14:54:51.710"
-              },
-              {
-                "id": "cjpjfaq8h0000fim3xv1ijlpa3",
-                "slackId": "UC113SZTL",
-                "email": "derrick.korir@andela.com",
-                "username": "UC2JG34RE",
-                "imageUrl": "https://ca.slack-edge.com/T02R3LKBA-UC2JG34RE-6f54d41ef301-48",
-                "roleId": 3,
-                "locationId": "cjee24xnn0000i2xsh9qauyn5",
-                "createdAt": "2019-03-08T14:54:51.710",
-                "updatedAt": "2019-03-08T14:54:51.710"
-              }
-           
-            
-        ]
+  "users": [
+    {
+      "id": "cjl6efcka00004tny9ilz7b61",
+      "slackId": "U7LEPG8LF",
+      "email": "batian.muthoga@andela.com",
+      "username": "Batian Muthoga",
+      "imageUrl": "https://avatars.slack-edge.com/2018-01-31/308111298950_b15a779680c4d2bb093c_48.png",
+      "roleId": 2,
+      "locationId": "cjee24xnn0000i2xsh9qauyn5",
+      "createdAt": "2019-03-08T14:54:51.710",
+      "updatedAt": "2019-03-08T14:54:51.710"
+    },
+    {
+      "id": "cjl6ege6e000053nyv67otq7a",
+      "slackId": "U7LHY6W4B",
+      "email": "mercy.muchai@andela.com",
+      "username": "Mercy Muchai",
+      "imageUrl": "https://secure.gravatar.com/avatar/cf493cf28e96f654602b2f71e4d655e2.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2F66f9%2Fimg%2Favatars%2Fava_0003-48.png",
+      "roleId": 2,
+      "locationId": "cjee24xnn0000i2xsh9qauyn5",
+      "createdAt": "2019-03-08T14:54:51.710",
+      "updatedAt": "2019-03-08T14:54:51.710"
+    },
+    {
+      "id": "cjl6egyei00005dnytqp4a06l",
+      "slackId": "U7LHY6T4B",
+      "email": "eugene.omar@andela.com",
+      "username": "Eugene Omar",
+      "imageUrl": "https://ca.slack-edge.com/T02R3LKBA-U4GHQF7BQ-89b22f3000e2-48",
+      "roleId": 3,
+      "locationId": "cjee24xnn0000i2xsh9qauyn5",
+      "createdAt": "2019-03-08T14:54:51.710",
+      "updatedAt": "2019-03-08T14:54:51.710"
+    },
+    {
+      "id": "cjl6efcka00004tny9ilz7b66",
+      "slackId": "U7LEPG8LF",
+      "email": "batian.sss@andela.com",
+      "username": "Batian Sss",
+      "imageUrl": "https://avatars.slack-edge.com/2018-01-31/308111298950_b15a779680c4d2bb093c_48.png",
+      "roleId": 1,
+      "locationId": "cjee24xnn0000i2xsh9qauyn5",
+      "createdAt": "2019-03-08T14:54:51.710",
+      "updatedAt": "2019-03-08T14:54:51.710"
+    },
+    {
+      "id": "cjpjfaq5h0000fim3xv1ijlpa",
+      "slackId": "U4DCMF8EL",
+      "email": "joseph.nzau@andela.com",
+      "username": "Joseph Nzau",
+      "imageUrl": "https://ca.slack-edge.com/T02R3LKBA-U4GHQF7BQ-89b22f3000e2-48",
+      "roleId": 3,
+      "locationId": "cjee24xnn0000i2xsh9qauyn5",
+      "createdAt": "2019-03-08T14:54:51.710",
+      "updatedAt": "2019-03-08T14:54:51.710"
+    },
+    {
+      "id": "cjpjfaq6h0000fim3xv1ijlpa1",
+      "slackId": "UC113SZTL",
+      "email": "derrick.kirwa@andela.com",
+      "username": "Derrick Kirwa",
+      "imageUrl": "https://ca.slack-edge.com/T02R3LKBA-UC113SZTL-d2f9a49bbef2-48",
+      "roleId": 3,
+      "locationId": "cjee24xnn0000i2xsh9qauyn5",
+      "createdAt": "2019-03-08T14:54:51.710",
+      "updatedAt": "2019-03-08T14:54:51.710"
+    },
+    {
+      "id": "cjpjfaq7h0000fim3xv1ijlpa2",
+      "slackId": "UC102AB50",
+      "email": "esther.mutua@andela.com",
+      "username": "Esther Mutua",
+      "imageUrl": "https://ca.slack-edge.com/T02R3LKBA-UC102AB50-a677bd700540-48",
+      "roleId": 3,
+      "locationId": "cjee24xnn0000i2xsh9qauyn5",
+      "createdAt": "2019-03-08T14:54:51.710",
+      "updatedAt": "2019-03-08T14:54:51.710"
+    },
+    {
+      "id": "cjpjfaq8h0000fim3xv1ijlpa3",
+      "slackId": "UC113SZTL",
+      "email": "derrick.korir@andela.com",
+      "username": "UC2JG34RE",
+      "imageUrl": "https://ca.slack-edge.com/T02R3LKBA-UC2JG34RE-6f54d41ef301-48",
+      "roleId": 3,
+      "locationId": "cjee24xnn0000i2xsh9qauyn5",
+      "createdAt": "2019-03-08T14:54:51.710",
+      "updatedAt": "2019-03-08T14:54:51.710"
+    },
+    {
+      "id": "cjl6fecrb11115vf09xly2f65",
+      "slackId": "U7LEPG8LF",
+      "email": "steve.akinyemi@andela.com",
+      "username": "Steve Akinyemi",
+      "imageUrl": "https://lh5.googleusercontent.com/-y43zvp9GhzM/AAAAAAAAAAI/AAAAAAAAAAc/T1jXZCv_VZE/s50/photo.jpg",
+      "roleId": 3,
+      "locationId": "cjee24n0n0000hfxsefer9tjh",
+      "createdAt": "2019-03-08T14:54:51.710",
+      "updatedAt": "2019-03-08T14:54:51.710"
+    }
+  ]
 }

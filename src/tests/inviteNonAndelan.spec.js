@@ -1,6 +1,6 @@
 const request = require('supertest');
 
-const app = require('../index');
+const { server } = require('../index');
 
 const { token } = require('../server/middlewares/authentication');
 
@@ -24,7 +24,7 @@ jest.mock('axios', () => ({
 
 describe('##### Non-andelan email', () => {
   it('Returns false when email is non-andelan', async done => {
-    request(app)
+    request(server)
       .post('/api/users/invite')
       .set('Authorization', apiToken)
       .send({

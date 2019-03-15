@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 let cuid = require('cuid');
 
 module.exports = (sequelize, DataTypes) => {
@@ -65,6 +66,9 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: 'userId',
             as: 'incidentWitnesses',
             otherKey: 'incidentId',
+          });
+          Users.belongsToMany(models.NotificationGroups, {
+            through: 'UserGroup',
           });
         },
       },

@@ -1,4 +1,4 @@
-const sendRequest = require('./sendRequest');
+const { sendRequest } = require('./helpers/request');
 
 describe('/GET roles', () => {
   it('Should return all the roles', done => {

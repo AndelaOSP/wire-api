@@ -1,6 +1,11 @@
-const { incidentSchema } = require('../schemas');
+const { incidentSchema, incidentUpdateSchema } = require('../schemas');
 const validateBody = require('../validateBody');
 
-module.exports = (req, res, next) => {
-  validateBody(req, res, next, incidentSchema);
+module.exports = {
+  validateNewIncidentBody: (req, res, next) => {
+    validateBody(req, res, next, incidentSchema);
+  },
+  validateUpdateIncidentBody: (req, res, next) => {
+    validateBody(req, res, next, incidentUpdateSchema);
+  },
 };
