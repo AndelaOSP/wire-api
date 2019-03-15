@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const server = require('../index.js'); // The express app we just created
+const { server } = require('../index.js'); // The express app we just created
 
 const port = parseInt(process.env.PORT, 10) || 8000;
 

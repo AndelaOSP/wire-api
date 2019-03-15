@@ -19,6 +19,9 @@ class Socket {
     // REVIEW: Should this be stored in the Db?
     this.clients = {};
 
+    // Holds client socket ids
+    this.clientIds = {};
+
     // Set up connections
     this.establishConnection();
   }
@@ -52,14 +55,11 @@ class Socket {
     console.log(`[server] A client (${socket.id}) just connected!`);
     // Do something with the data recieved.
     socket.on('new-connection', ({ token }) => {
-      // If token is provided
-      if (token) {
-        // Authenticate user and register to list of connected clients.
-        const userDetails = this.authenticate(token, socket);
+      // Authenticate user and register to list of connected clients.
+      const userDetails = this.authenticate(token, socket);
 
-        // Register client
-        this.registerClient(userDetails);
-      }
+      // Register client
+      this.registerClient(userDetails);
     });
   }
 
@@ -69,6 +69,7 @@ class Socket {
    **/
   registerClient(userDetails) {
     userDetails.then(({ socket, user, token }) => {
+      this.clientIds[socket.id] = {};
       this.clients[user.id] = [socket.id, token];
     });
   }
@@ -78,19 +79,21 @@ class Socket {
    * @param socket object
    **/
   handleDisconnection(socket) {
-    socket.on('disconnect', () =>
-      console.log(`[server] A client (${socket.id}) just disconnected!`)
-    );
+    socket.on('disconnect', () => {
+      console.log(`[server] A client (${socket.id}) just disconnected!`);
 
-    // Remove client from list of connected clients.
-    let entries = Object.entries(this.clients).filter(
-      ([, value]) => value[0] !== socket.id
-    );
+      delete this.clientIds[socket.id];
 
-    this.clients = entries.reduce((prev, [key, value]) => {
-      prev[key] = value;
-      return prev;
-    }, {});
+      // Remove client from list of connected clients.
+      let entries = Object.entries(this.clients).filter(
+        ([, value]) => value[0] !== socket.id
+      );
+
+      this.clients = entries.reduce((prev, [key, value]) => {
+        prev[key] = value;
+        return prev;
+      }, {});
+    });
   }
 
   /**
@@ -130,9 +133,7 @@ class Socket {
   messageToUsers(userIds, eventName, message) {
     userIds.forEach(id => {
       const client = this.clients[id];
-      if (client) {
-        this.io.to(`${client[0]}`).emit(eventName, { message });
-      }
+      client && this.io.to(`${client[0]}`).emit(eventName, { message });
     });
   }
 }

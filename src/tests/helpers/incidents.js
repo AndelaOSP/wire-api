@@ -1,5 +1,7 @@
 const { token } = require('../../server/middlewares/authentication');
 const { sendRequest } = require('./request');
+const User = require('../../server/models').Users;
+const Incident = require('../../server/models').Incidents;
 
 const testIncident = {
   subject: 'incident payload',
@@ -69,6 +71,12 @@ const assigneeUserToken = token({
   username: 'Mercy Muchai',
 });
 
+const addAssignee = async res => {
+  const incident = await Incident.findById(res.body.data.id);
+  const assignee = await User.findById('cjl6ege6e000053nyv67otq7a');
+  await incident.addAssignee(assignee);
+};
+
 const makeServerCall = (requestBody, done, method, init) => {
   sendRequest('post', incidentsEndpoint, testIncident, async (error, res) => {
     if (init) await init(res);
@@ -85,5 +93,6 @@ module.exports = {
   ccdRequestBody,
   assigneeUserToken,
   makeServerCall,
+  addAssignee,
   testIncident,
 };

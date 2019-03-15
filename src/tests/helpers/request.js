@@ -1,9 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const request = require('supertest');
-
-const { token } = require('../../server/middlewares/authentication');
-
 const { server, socket } = require('../../index');
+const { token } = require('../../server/middlewares/authentication');
 
 const userToken = token({
   id: 3453,
@@ -22,4 +20,5 @@ module.exports = {
       });
   },
   serverSocket: socket,
+  server,
 };
