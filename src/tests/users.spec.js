@@ -1,12 +1,12 @@
 const sendRequest = require('./sendRequest');
 
 const testUser = {
-  email: 'eugene.omar@andela.com',
-  username: 'Eugene Omar',
+  email: 'Khalid.omar@andela.com',
+  username: 'Khalid Omar',
   roleId: 1,
   imageUrl: 'https://ca.slack-edge.com/T02R3LKBA-U4GHQF7BQ-89b22f3000e2-48',
   location: {
-    name: 'Oculus',
+    name: 'Valhalla',
     centre: 'Nairobi',
     country: 'Kenya',
   },
@@ -14,8 +14,8 @@ const testUser = {
 
 const newUser = {
   ...testUser,
-  email: 'oliver.omar@andela.com',
-  username: 'Oliver Omar',
+  email: 'oliver.brice@andela.com',
+  username: 'Oliver Brice',
 };
 
 jest.mock('nodemailer', () => ({
@@ -43,6 +43,15 @@ describe('User tests', () => {
     sendRequest('post', '/api/users', newUser, (err, res) => {
       expect(res.body.data).toHaveProperty('id');
       done();
+    });
+  });
+
+  it('should not create a user twice', done => {
+    sendRequest('post', '/api/users', newUser, () => {
+      sendRequest('post', '/api/users', newUser, (err, res) => {
+        expect(res.text).toMatch('email must be unique');
+        done();
+      });
     });
   });
 
