@@ -1,0 +1,35 @@
+
+{
+    "notificationTypes": [
+        {
+            "id": "1",
+            "name": "CC_ON_INCIDENT",
+            "createdAt": "2019-03-07 11:08:03.326+03",
+            "updatedAt": "2019-03-07 11:08:03.326+03"
+        },
+        {
+            "id": "2",
+            "name": "ASSIGNEE_STATUS_CHANGED",
+            "createdAt": "2019-03-07 11:08:03.326+03",
+            "updatedAt": "2019-03-07 11:08:03.326+03"
+        },
+        {
+            "id": "3",
+            "name": "NEW_CHAT_MESSAGE",
+            "createdAt": "2019-03-07 11:08:03.326+03",
+            "updatedAt": "2019-03-07 11:08:03.326+03"
+        },
+        {
+            "id": "4",
+            "name": "ASSIGNED_TO_INCIDENT",
+            "createdAt": "2019-03-07 11:08:03.326+03",
+            "updatedAt": "2019-03-07 11:08:03.326+03"
+        },
+        {
+            "id": "5",
+            "name": "NEW_INCIDENT_ADDED",
+            "createdAt": "2019-03-07 11:08:03.326+03",
+            "updatedAt": "2019-03-07 11:08:03.326+03"
+        }
+    ]
+}

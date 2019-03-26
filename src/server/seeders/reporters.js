@@ -1,8 +1,8 @@
-const reporters = require('../utils/data/reporters.json');
+const { reporters } = require('../utils/data/reporters.json');
 
 module.exports = {
   up(queryInterface) {
-    return queryInterface.bulkInsert('userIncidents', reporters.reporters);
+    return queryInterface.bulkInsert('userIncidents', reporters);
   },
 
   down(queryInterface) {

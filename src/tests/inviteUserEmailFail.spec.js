@@ -1,4 +1,4 @@
-const sendRequest = require('./sendRequest');
+const { sendRequest } = require('./helpers/request');
 
 jest.mock('nodemailer', () => ({
   createTransport: () => ({

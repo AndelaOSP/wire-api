@@ -1,0 +1,16 @@
+{
+    "witnesses": [
+        {
+            "incidentId": "cjfkubrlv0001tgxs3mre",
+            "userId": "cjl6efcka00004tny9ilz7b61",
+            "createdAt": "2019-03-08T14:54:51.710",
+            "updatedAt": "2019-03-08T14:54:51.710"
+        },
+        {
+            "incidentId": "cjfkubrlv0002tgxs3mre",
+            "userId": "cjl6efcka00004tny9ilz7b61",
+            "createdAt": "2019-03-08T14:54:51.710",
+            "updatedAt": "2019-03-08T14:54:51.710"
+        }
+    ]
+}

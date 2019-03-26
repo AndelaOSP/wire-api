@@ -1,7 +1,9 @@
-const express = require('express');
+const app = require('express')();
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const server = require('http').Server(app);
+const Socket = require('./socket');
 
 const { NODE_ENV } = process.env;
 
@@ -10,8 +12,11 @@ if (NODE_ENV !== 'development') {
   require('dotenv').load();
 }
 
-// set up the express app
-const app = express();
+// Create a socket connection for this server.
+const socket = Socket(server);
+
+// Attach socket to app for use in express middleware.
+app.socket = socket;
 
 app.use(cors());
 
@@ -45,4 +50,4 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Require routes
 require('./server/routes/index')(app);
 
-module.exports = app;
+module.exports = { server, app, socket };

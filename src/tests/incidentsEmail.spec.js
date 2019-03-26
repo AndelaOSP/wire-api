@@ -1,7 +1,7 @@
 const {
   makeServerCall,
   assigneeRequestBody,
-} = require('./incidentsTestHelper.js');
+} = require('./helpers/incidents.js');
 
 jest.mock('nodemailer', () => ({
   createTransport: () => ({
