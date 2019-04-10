@@ -7,13 +7,15 @@ const notesService = controllers.notes;
 const categoriesService = controllers.categories;
 const usersService = controllers.users;
 const rolesService = controllers.roles;
+const slackEventsService = controllers.slackEvents;
 const { catchErrors } = controllers;
 
+// authorise routes
 const {
   Auth,
   isAdmin,
   canViewIncidents,
-} = require('../middlewares/authentication'); // authorise routes
+} = require('../middlewares/authentication');
 const {
   validateIncidentPayload,
   validateIncidentUpdatePayload,
@@ -35,6 +37,9 @@ module.exports = app => {
   //no auth needed
   app.post('/api/incidents', validateIncidentPayload, incidentsService.create);
   app.post('/api/users/login', usersService.login);
+
+  // slack chats endpoints
+  app.post( '/api/slack/chats', slackEventsService.createSlackEvent);
 
   app.use(Auth);
   // locations endpoints

@@ -1,0 +1,16 @@
+{
+  "slackEvents": [
+    {
+      "id": "EvHJD54087",
+      "type": "message",
+      "eventTs": "1554473664.025900",
+      "userId": "UHC32KE69",
+      "ts": "1554473664.025900",
+      "text": "Twitter/Facebook style is the ideal.",
+      "channelId": "CGXDP5NQM",
+      "channelType": "channel",
+      "createdAt": "2019-03-08T14:11:04.139Z",
+      "updatedAt": "2019-03-08T14:11:04.139Z"
+    }
+  ]
+}

@@ -10,6 +10,8 @@ const validateUpdateBody = require('./users/validateUserPayload')
 const validateUserId = require('./users/validateUserId');
 const validateNotePayload = require('./notes/validateNotePayload');
 const validateNoteId = require('./notes/validateNoteId');
+const slackUserRequest = require('./slack/getSlackInfo');
+
 
 module.exports = {
   validateIncidentPayload,
@@ -20,4 +22,5 @@ module.exports = {
   validateUserId,
   validateNotePayload,
   validateNoteId,
+  slackUserRequest
 };
