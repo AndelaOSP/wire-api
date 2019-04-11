@@ -14,13 +14,14 @@ module.exports = {
       eventTs: {
         type: Sequelize.STRING
       },
-      userId: {
+      slackUserId: {
         type: Sequelize.STRING,
         onDelete: 'CASCADE',
         references: {
           model: 'slackUsers',
           key: 'id',
-          as: 'userId'
+          as: 'slackUserId',
+          allowNull: false
         }
       },
       ts: {
