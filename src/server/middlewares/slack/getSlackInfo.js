@@ -8,6 +8,7 @@ async function createSlackUser({user: {id, profile}}) {
     models.slackUsers.create({
       id,
       username: profile.real_name,
+      email: profile.email
     });
   }
 

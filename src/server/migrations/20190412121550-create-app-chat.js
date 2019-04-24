@@ -1,25 +1,17 @@
 'use strict';
+const cuid = require('cuid');
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('slackUsers', {
+    return queryInterface.createTable('appChats', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.STRING,
+        defaultValue: () => cuid(),
       },
-      username: {
-        type: Sequelize.STRING
-      },
-      email: {
-        type: Sequelize.STRING,
-        validate: {
-          isEmail: true
-        },
-        unique: true,
-      },
-      channelName: {
-        type: Sequelize.STRING
+      text: {
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,
@@ -32,6 +24,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('slackUsers');
+    return queryInterface.dropTable('appChats');
   }
 };

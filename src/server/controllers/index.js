@@ -5,6 +5,7 @@ const categories = require('./categories');
 const users = require('./users');
 const roles = require('./roles');
 const slackEvents = require('./chats/slackEvents');
+const appChats = require('./chats/appChats');
 const { catchErrors } = require('./errorLogs');
 
 module.exports = {
@@ -15,5 +16,6 @@ module.exports = {
   users,
   roles,
   slackEvents,
+  appChats,
   catchErrors,
 };

@@ -5,14 +5,24 @@ module.exports = (sequelize, DataTypes) => {
     id: {
       type: DataTypes.STRING,
       primaryKey: true,
+      allowNull: false,
     },
     username: DataTypes.STRING,
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isEmail: true,
+      },
+      unique: true,
+    },
     channelName: DataTypes.STRING
   }, {
     classMethods: {
       associate: (models) => {
-        slackUsers.hasOne(models.slackEvents, {
-          foreignKey: 'userId',
+        slackUsers.hasMany(models.slackEvents, {
+          foreignKey: 'slackUserId',
+          sourceKey: 'id',
           as: 'slackEvents'
         });
       }

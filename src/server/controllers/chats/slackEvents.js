@@ -1,11 +1,12 @@
 const slackEvent = require('../../models/index').slackEvents;
+const slackUser = require('../../models/index').slackUsers;
 const {slackUserRequest} = require('../../middlewares/index');
 
 const createSlackEvents = payload => ({
   id: payload.event_id,
   type: payload.event.type,
   eventTs: payload.event.event_ts,
-  userId: payload.event.user,
+  slackUserId: payload.event.user,
   ts: payload.event.ts,
   text: payload.event.text,
   channelId: payload.event.channel,
@@ -43,5 +44,18 @@ module.exports = {
           message: err.errors ? err.errors[0].message : err.message
         });
       });
+  },
+
+  // get slack chats
+  getSlackChats: async (req, res) => {
+    const chats = await slackEvent.findAll({
+      include: [{
+        model: slackUser,
+        as: 'slackUser',
+      }],
+    });
+
+    return res.status(200).send({data: { chats }, status: 'success'});
+
   },
 };

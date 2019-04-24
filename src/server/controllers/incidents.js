@@ -1,6 +1,6 @@
 const Incident = require('../models').Incidents;
 const User = require('../models').Users;
-const { findOrCreateLocation } = require('../helpers/locationHelper');
+const {findOrCreateLocation} = require('../helpers/locationHelper');
 const findOrCreateUser = require('../helpers/findOrCreateUser');
 const listAssigneeIncidentsIncludes = require('../helpers/listAssigneeIncidentsIncludes');
 const {
@@ -28,7 +28,7 @@ module.exports = {
       statusId,
       levelId,
     } = req.body;
-    const { reporterLocation } = incidentReporter;
+    const {reporterLocation} = incidentReporter;
     let [dd, mm, yy] = dateOccurred.split('-');
     dateOccurred = `${mm}-${dd}-${yy}`;
 
@@ -44,7 +44,7 @@ module.exports = {
       levelId: levelId || 3,
     });
     const user = await User.findOne({
-      where: { email: incidentReporter.email },
+      where: {email: incidentReporter.email},
     });
     let createdReporter;
     if (user) {
@@ -60,7 +60,7 @@ module.exports = {
     }
     await incident.addReporter(createdReporter);
     const witnessCreationPromises = witnesses.map(witness => {
-      let { witnessLocation } = witness;
+      let {witnessLocation} = witness;
       return findOrCreateUser(witness, witnessLocation);
     });
     const createdWitnesses = await Promise.all(witnessCreationPromises);
@@ -71,7 +71,7 @@ module.exports = {
       await Promise.all(addedWitnessesPromises);
     }
     const data = await findIncidentById(incident.id, res);
-    return res.status(201).send({ data, status: 'success' });
+    return res.status(201).send({data, status: 'success'});
   },
 
   // get all incidents
@@ -80,7 +80,7 @@ module.exports = {
       const includeForAssignee = listAssigneeIncidentsIncludes();
 
       const findIncidents = await User.findOne({
-        where: { id: res.locals.currentUser.id },
+        where: {id: res.locals.currentUser.id},
         include: includeForAssignee,
       });
 
@@ -89,16 +89,16 @@ module.exports = {
 
       return res
         .status(200)
-        .send({ data: { incidents: mappedIncidents }, status: 'success' });
+        .send({data: {incidents: mappedIncidents}, status: 'success'});
     }
 
-    const incidents = await Incident.findAll({ include });
+    const incidents = await Incident.findAll({include});
 
     const mappedIncidents = mapIncidents(incidents);
 
     return res
       .status(200)
-      .send({ data: { incidents: mappedIncidents }, status: 'success' });
+      .send({data: {incidents: mappedIncidents}, status: 'success'});
   },
 
   // retrieve an incident by ID
@@ -107,7 +107,7 @@ module.exports = {
     incident.assignees = mapAssignees(incident.assignees);
     [incident.dataValues.reporter] = incident.dataValues.reporter;
 
-    return res.status(200).send({ data: incident, status: 'success' });
+    return res.status(200).send({data: incident, status: 'success'});
   },
 
   // update an incident
@@ -127,29 +127,30 @@ module.exports = {
   //search an incident by subject or description.
   search: async (req, res) => {
     if (!req.query.q) {
-      return res.status(400).send({ message: 'please provide query' });
+      return res.status(400).send({message: 'please provide query'});
     }
 
     const incidents = await Incident.findAll({
       include,
       where: {
         $or: [
-          { subject: { $ilike: `%${req.query.q}%` } },
-          { description: { $ilike: `%${req.query.q}%` } },
+          {subject: {$ilike: `%${req.query.q}%`}},
+          {description: {$ilike: `%${req.query.q}%`}},
         ],
       },
     });
 
-    return res.status(200).send({ data: { incidents }, status: 'success' });
+    return res.status(200).send({data: {incidents}, status: 'success'});
   },
 
   // filter incidents by category
   listIncidents: async (req, res) => {
     const incidents = await Incident.findAll({
-      where: { categoryId: req.params.id },
+      where: {categoryId: req.params.id},
       include,
     });
 
-    return res.status(200).send({ data: { incidents }, status: 'success' });
+    return res.status(200).send({data: {incidents}, status: 'success'});
   },
 };
+

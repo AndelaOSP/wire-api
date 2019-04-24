@@ -8,6 +8,7 @@ const categoriesService = controllers.categories;
 const usersService = controllers.users;
 const rolesService = controllers.roles;
 const slackEventsService = controllers.slackEvents;
+const chatsService = controllers.appChats;
 const { catchErrors } = controllers;
 
 // authorise routes
@@ -24,7 +25,7 @@ const {
   validateUpdateBody,
   validateUserId,
   validateNotePayload,
-  validateNoteId,
+  validateNoteId
 } = require('../middlewares');
 
 module.exports = app => {
@@ -40,6 +41,10 @@ module.exports = app => {
 
   // slack chats endpoints
   app.post( '/api/slack/chats', slackEventsService.createSlackEvent);
+  app.get( '/api/slack/chats', slackEventsService.getSlackChats);
+
+  // chats endpoints
+  app.post( '/api/chats', chatsService.createAppChat);
 
   app.use(Auth);
   // locations endpoints

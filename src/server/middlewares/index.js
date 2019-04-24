@@ -11,6 +11,7 @@ const validateUserId = require('./users/validateUserId');
 const validateNotePayload = require('./notes/validateNotePayload');
 const validateNoteId = require('./notes/validateNoteId');
 const slackUserRequest = require('./slack/getSlackInfo');
+const postChat = require('./chats/postChat');
 
 
 module.exports = {
@@ -22,5 +23,6 @@ module.exports = {
   validateUserId,
   validateNotePayload,
   validateNoteId,
-  slackUserRequest
+  slackUserRequest,
+  postChat
 };
