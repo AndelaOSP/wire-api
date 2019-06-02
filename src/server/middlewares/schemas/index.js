@@ -51,7 +51,7 @@ const incidentSchema = {
   statusId: Joi.number(),
   subject: Joi.string().required(),
   description: Joi.string().required(),
-  dateOccurred: Joi.date().required(),
+  dateOccurred: Joi.required(),
   levelId: Joi.string().required(),
   location: locationSchema,
   incidentReporter: incidentReporterSchema,
