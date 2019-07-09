@@ -8,6 +8,7 @@ const categoriesService = controllers.categories;
 const usersService = controllers.users;
 const rolesService = controllers.roles;
 const slackEventsService = controllers.slackEvents;
+const slackChannelsService = controllers.slackChannels;
 const { catchErrors } = controllers;
 
 // authorise routes
@@ -37,6 +38,7 @@ module.exports = app => {
   //no auth needed
   app.post('/api/incidents', validateIncidentPayload, incidentsService.create);
   app.post('/api/users/login', usersService.login);
+  app.post('/api/slack/channel', slackChannelsService.create);
 
   // slack chats endpoints
   app.post( '/api/slack/chats', slackEventsService.createSlackEvent);
