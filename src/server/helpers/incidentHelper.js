@@ -6,7 +6,10 @@ const Status = require('../models').Statuses;
 const AssigneeModel = require('../models').assigneeIncidents;
 const generateAssigneeOrCcdEmailBody = require('../helpers/generateAssigneeOrCcdEmailBody');
 const emailHelper = require('../helpers/emailHelper');
-const { handleCCUpdateNotification } = require('./notificationHelper');
+const {
+  handleCCUpdateNotification,
+  handleStatusUpdateNotification,
+} = require('./notificationHelper');
 
 let userAttributes = ['username', 'slackId', 'imageUrl', 'email'];
 
@@ -192,25 +195,26 @@ const updateAssignedOrCcdUser = async (
       incidentId: incident.id,
     },
   });
-
-  await handleCCUpdateNotification(req, ccdUser, incident.id, '');
-
+  if (ccdUser) {
+    await handleCCUpdateNotification(req, ccdUser, incident.id, '');
+  }
   return selectedUser.action({ ...selectedUser.arguments, incident, res });
 };
 
 const updateIncident = async (incident, req, res) => {
-  let { assignee: assignedUser, ccd: ccdUser } = req.body;
+  let { assignee: assignedUser, ccd: ccdUser, statusId: status } = req.body;
 
   if (assignedUser || ccdUser) {
     return updateAssignedOrCcdUser(assignedUser, ccdUser, incident, req, res);
   }
-
   await incident.update({
     statusId: req.body.statusId || incident.statusId,
     categoryId: req.body.categoryId || incident.categoryId,
     levelId: req.body.levelId || incident.levelId,
   });
-
+  if (status) {
+    await handleStatusUpdateNotification(req, incident.assignees, incident.id);
+  }
   return res.status(200).send({ data: incident, status: 'success' });
 };
 

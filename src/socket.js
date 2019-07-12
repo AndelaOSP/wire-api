@@ -124,7 +124,11 @@ class Socket {
       this.messageToUsers(userIds, 'notify-cc', message);
     });
   }
-
+  notifyIncidentStatusChange(users, message) {
+    this.connection.then(() => {
+      this.messageToUsers(users, 'notify-status', message);
+    });
+  }
   /**
    * Sends a response back to the client to update its UI on notify-cc
    * @param userIds array
