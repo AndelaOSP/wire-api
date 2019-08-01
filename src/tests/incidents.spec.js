@@ -80,14 +80,61 @@ describe('Incident Tests', () => {
       });
     });
   });
-
-  it('should update an incident provided an existing incident ID', done => {
+  it('should update an incident when someone gets assigned to the incident', done => {
     sendRequest('post', incidentsEndpoint, testIncident, (err, res) => {
-      const updateIncidentUrl = '/api/incidents/' + res.body.data.id;
+      const { id } = res.body.data;
+      const updateIncidentUrl = '/api/incidents/' + id;
       sendRequest(
         'put',
         updateIncidentUrl,
-        { ...testIncident, statusId: 3 },
+        {
+          ...testIncident,
+          assignee: {
+            userId: 'cjl6egyei00005dnytqp4a06l',
+            incidentId: id,
+          },
+        },
+        (error, response) => {
+          expect(response.body.status).toEqual('success');
+          done();
+        }
+      );
+    });
+  });
+  it('should update an incident when someone gets ccd to the incident', done => {
+    sendRequest('post', incidentsEndpoint, testIncident, (err, res) => {
+      const { id } = res.body.data;
+      const updateIncidentUrl = '/api/incidents/' + id;
+      sendRequest(
+        'put',
+        updateIncidentUrl,
+        {
+          ...testIncident,
+          ccd: [
+            {
+              userId: 'cjl6fecrb11115vf09xly2f65',
+              incidentId: id,
+            },
+          ],
+        },
+        (error, response) => {
+          expect(response.body.status).toEqual('success');
+          done();
+        }
+      );
+    });
+  });
+  it('should update an incident when the status is updated', done => {
+    sendRequest('post', incidentsEndpoint, testIncident, (err, res) => {
+      const { id } = res.body.data;
+      const updateIncidentUrl = '/api/incidents/' + id;
+      sendRequest(
+        'put',
+        updateIncidentUrl,
+        {
+          ...testIncident,
+          statusId: 3,
+        },
         (error, response) => {
           expect(response.body.data.statusId).toEqual(3);
           done();
@@ -96,10 +143,9 @@ describe('Incident Tests', () => {
     });
   });
 
-  it('should update an incident when someone gets assigned to it', done => {
+  it('should update an incident when someone gets ccd to it', done => {
     makeServerCall(assigneeRequestBody, done, 'put');
   });
-
   it('should update an incident when someone gets ccd to it', done => {
     makeServerCall(ccdRequestBody, done, 'put');
   });
