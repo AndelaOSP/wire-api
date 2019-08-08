@@ -98,6 +98,17 @@
       "locationId": "cjee24n0n0000hfxsefer9tjh",
       "createdAt": "2019-03-08T14:54:51.710",
       "updatedAt": "2019-03-08T14:54:51.710"
+    },
+    {
+      "id": "cjl6fecrb11115vf09xly2fdgd",
+      "slackId": "UFLJZAEQP",
+      "email": "collins.otuoma@andela.com",
+      "username": "TheSteelGuy",
+      "imageUrl": "https://ca.slack-edge.com/T02R3LKBA-UC2JG34RE-6f54d41ef301-48",
+      "roleId": 3,
+      "locationId": "cjee24xnn0000i2xsh9qauyn5",
+      "createdAt": "2019-03-08T14:54:51.710",
+      "updatedAt": "2019-03-08T14:54:51.710"
     }
   ]
 }

@@ -1,6 +1,7 @@
 'use strict';
 
 module.exports = {
+  // eslint-disable-next-line max-lines-per-function
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('slackUsers', {
       id: {
@@ -10,6 +11,13 @@ module.exports = {
       },
       username: {
         type: Sequelize.STRING
+      },
+      email: {
+        type: Sequelize.STRING,
+        validate: {
+          isEmail: true
+        },
+        unique: true,
       },
       channelName: {
         type: Sequelize.STRING

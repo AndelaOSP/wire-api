@@ -1,0 +1,13 @@
+{
+  "SlackChannels": 
+  [
+   {
+    "incidentId": "cjfkubrlv0003tgxs3mre",
+    "channelId": "UHC32KE69",
+    "channelName": "test-channel",
+    "channelMembers":"testuser,testuser2",
+    "createdAt": "2019-03-07 11:08:03.326+03",
+    "updatedAt": "2019-03-07 11:08:03.326+03"
+   }
+ ]
+}

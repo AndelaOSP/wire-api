@@ -10,6 +10,7 @@ const rolesService = controllers.roles;
 const slackEventsService = controllers.slackEvents;
 const slackChannelsService = controllers.slackChannels;
 const { catchErrors } = controllers;
+const chatsService = controllers.appChats;
 
 // authorise routes
 const {
@@ -102,6 +103,8 @@ module.exports = app => {
       message: 'Welcome to WIRE.',
     });
   });
+  // chats endpoints
+  app.post('/api/chats', chatsService.createAppChat);
 
   app.use(catchErrors);
 };
