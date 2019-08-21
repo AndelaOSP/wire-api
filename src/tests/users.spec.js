@@ -19,6 +19,13 @@ const newUser = {
   username: 'Oliver Brice',
 };
 
+const newUserCaps = {
+  ...testUser,
+  email: 'oliver.BRICE@andela.com',
+  username: 'Oliver Brice',
+};
+
+
 jest.mock('nodemailer', () => ({
   createTransport: () => ({
     sendMail: (options, call) => {
@@ -50,6 +57,15 @@ describe('User tests', () => {
   it('should not create a user twice', done => {
     sendRequest('post', '/api/users', newUser, () => {
       sendRequest('post', '/api/users', newUser, (err, res) => {
+        expect(res.text).toMatch('email must be unique');
+        done();
+      });
+    });
+  });
+
+  it('should normalize email', done => {
+    sendRequest('post', '/api/users', newUser, () => {
+      sendRequest('post', '/api/users', newUserCaps, (err, res) => {
         expect(res.text).toMatch('email must be unique');
         done();
       });
