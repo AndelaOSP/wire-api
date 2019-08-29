@@ -11,6 +11,13 @@ module.exports = {
       username: {
         type: Sequelize.STRING
       },
+      email: {
+        type: Sequelize.STRING,
+        validate: {
+          isEmail: true
+        },
+        unique: true,
+      },
       channelName: {
         type: Sequelize.STRING
       },

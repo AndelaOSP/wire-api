@@ -100,4 +100,13 @@ describe('SlackEvent Tests', () => {
       done();
     });
   });
+
+  it('should fetch all slack chats', done => {
+    sendRequest('get', slackEventEndpoint, null, (err, req) => {
+      expect(req.body.status).toEqual('success');
+      expect(req.body.data.chats.length).toBeGreaterThan(0);
+      done();
+    });
+  });
+
 });

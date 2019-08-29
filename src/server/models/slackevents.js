@@ -8,18 +8,21 @@ module.exports = (sequelize, DataTypes) => {
     },
     type: DataTypes.STRING,
     eventTs: DataTypes.STRING,
-    userId: DataTypes.STRING,
+    slackUserId: DataTypes.STRING,
     ts: DataTypes.STRING,
     text: DataTypes.TEXT,
     channelId: DataTypes.STRING,
     channelType: DataTypes.STRING,
   }, {
-    associate: (models) => {
-      slackEvents.belongsTo(models.slackUsers, {
-        foreignKey: 'userId',
-        onDelete: 'CASCADE',
-        allowNull: false,
-      });
+    classMethods: {
+      associate: (models) => {
+        slackEvents.belongsTo(models.slackUsers, {
+          foreignKey: 'slackUserId',
+          as: 'slackUser',
+          onDelete: 'CASCADE',
+          allowNull: false,
+        });
+      }
     }
   });
   return slackEvents;

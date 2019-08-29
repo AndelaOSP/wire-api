@@ -42,6 +42,7 @@ module.exports = app => {
 
   // slack chats endpoints
   app.post( '/api/slack/chats', slackEventsService.createSlackEvent);
+  app.get( '/api/slack/chats', slackEventsService.getSlackChats);
 
   app.use(Auth);
   // locations endpoints
