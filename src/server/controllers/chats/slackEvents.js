@@ -1,5 +1,7 @@
-const slackEvent = require('../../models/index').slackEvents;
-const {slackUserRequest} = require('../../middlewares/index');
+/* eslint-disable indent */
+const slackEvent = require('../../models/index').SlackWireEvents;
+const { slackUserRequest } = require('../../middlewares/index');
+const slackUser = require('../../models/index').slackUsers;
 
 const createSlackEvents = payload => ({
   id: payload.event_id,
@@ -23,24 +25,25 @@ module.exports = {
   createSlackEvent: async (req, res) => {
     if (req.body.challenge) {
       const data = urlVerification(req);
-      return res.status(201).send({data, status: 'success'});
+      return res.status(201).send({ data, status: 'success' });
     }
     // Get event payload
     let payload = req.body;
-
     await slackUserRequest.getSlackUsers(payload.event.user);
-
-    slackEvent.create(createSlackEvents(payload))
+    slackEvent
+      .create(createSlackEvents(payload))
       .then(() => {
-        slackUserRequest.getSlackChannel(payload.event.channel, payload.event.user);
-
+        slackUserRequest.getSlackChannel(
+          payload.event.channel,
+          payload.event.user
+        );
         // slack response should be returned within 3 seconds
-        res.status(201).send({status: 'success'});
+        res.status(201).send({ status: 'success' });
       })
       .catch(err => {
         res.status(400).send({
           status: 'failure',
-          message: err.errors ? err.errors[0].message : err.message
+          message: err.errors ? err.errors[0].message : err.message,
         });
       });
   },

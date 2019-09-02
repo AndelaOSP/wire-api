@@ -20,7 +20,6 @@ const Auth = (req, res, next) => {
         message: 'Invalid token provided',
       });
     }
-
     res.locals.currentUser = decoded;
 
     return next();

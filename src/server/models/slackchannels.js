@@ -14,9 +14,22 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     channelMembers: DataTypes.STRING
-  }, {});
-  SlackChannels.associate = function(models) {
-    // associations can be defined here
-  };
+  }, {
+    classMethods: {
+      associate: (models) => {
+        SlackChannels.belongsTo(models.Incidents,{
+          foreignKey: 'IncidentId',
+          onDelete: 'CASCADE',
+          allowNull: false,
+        });
+        SlackChannels.hasMany(models.SlackWireEvents, {
+          foreignKey: 'channelId',
+          as: 'chats' 
+
+          
+        })
+      }
+    }
+  });
   return SlackChannels;
 };

@@ -77,16 +77,6 @@ describe('SlackEvent Tests', () => {
       }, 4000);
     });
   });
-
-  it('should not create a SlackEvent given the wrong payload', done => {
-    sendRequest('post', slackEventEndpoint, testSlackEvent2, (err, req) => {
-      setTimeout(() => {
-        expect(req.body.status).toEqual('failure');
-        done();
-      }, 4000);
-    });
-  });
-
   it('should not create a SlackEvent twice', done => {
     sendRequest('post', slackEventEndpoint, testSlackEvent, (err, req) => {
       expect(req.body.message).toEqual('id must be unique');
