@@ -193,7 +193,9 @@ const updateAssignedOrCcdUser = async (
     },
   });
 
-  await handleCCUpdateNotification(req, ccdUser, incident.id, '');
+  if (ccdUser && ccdUser.length > 0) {
+    await handleCCUpdateNotification(req, ccdUser, incident.id, '');
+  }
 
   return selectedUser.action({ ...selectedUser.arguments, incident, res });
 };
@@ -210,7 +212,6 @@ const updateIncident = async (incident, req, res) => {
     categoryId: req.body.categoryId || incident.categoryId,
     levelId: req.body.levelId || incident.levelId,
   });
-
   return res.status(200).send({ data: incident, status: 'success' });
 };
 
