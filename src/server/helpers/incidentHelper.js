@@ -193,7 +193,10 @@ const updateAssignedOrCcdUser = async (
     },
   });
 
-  await handleCCUpdateNotification(req, ccdUser, incident.id, '');
+  if (typeof ccdUser !== 'undefined' || typeof ccdUser !== null){
+    await handleCCUpdateNotification(req, ccdUser, incident.id, '');
+  }
+  
 
   return selectedUser.action({ ...selectedUser.arguments, incident, res });
 };
