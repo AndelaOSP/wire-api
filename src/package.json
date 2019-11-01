@@ -40,7 +40,7 @@
     "nodemon": "^1.14.11",
     "pg": "^6.2.3",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^3.30.4",
+    "sequelize": "^5.15.1",
     "sequelize-cli": "^4.1.1",
     "slack-error-notify": "^1.0.4",
     "socket.io": "^2.2.0",
